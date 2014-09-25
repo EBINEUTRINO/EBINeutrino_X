@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="valueSetterDialog" title="Settings:" icon="../images/write.png" Location="100,100" Size="570,420" visualproperties="false" assignable="false" modal="true" >
+ 		<label name="name" title="Name" Location="9,20" Size="103,20"/>
+		<textfield name="nameValue" tabindex="1" Location="104,20" Size="303,20"/>
+		<button name="saveValue" tabindex="2" title="Save" Location="413,20" Size="130,23"/>
+		<button name="closeDialog" tabindex="3" title="Close" Location="408,389" Size="150,25"/>
+		<table name="valueTable" Location="10,103" Size="548,277"/>
+		<button name="newBnt" Location="11,75" Size="27,22"/>
+		<button name="deleteBnt" Location="70,75" Size="27,22"/>
+		<button name="editBnt" Location="40,75" Size="27,22"/>
+</dialog>

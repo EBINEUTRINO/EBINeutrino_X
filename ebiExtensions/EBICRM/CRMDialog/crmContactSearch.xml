@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="searchCRMContact" title="Search Contact" icon="..\images\people.png" Location="100,100" Size="900,440" visualproperties="false" assignable="false" modal="true" resizable="true" >
+ 		<button name="cancelButton" title="cancel" fitonresize="true" Location="776,377" Size="107,29"/>
+		<button name="applyButton" title="apply" fitonresize="true" Location="643,377" Size="132,29"/>
+		<label name="name" title="EBI_LANG_FILTER" Location="10,9" Size="76,20"/>
+		<textfield name="filterTableText" tabindex="2" Location="89,9" Size="261,20"/>
+		<button name="searchButton" tabindex="6" title="searchButton" Location="356,7" Size="117,25"/>
+		<table name="searchContactTable" title="searchContactTable" Location="9,36" Size="100%,87%"/>
+</dialog>

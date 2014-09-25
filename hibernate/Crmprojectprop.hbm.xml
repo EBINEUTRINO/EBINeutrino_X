@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Crmprojectprop" table="CRMPROJECTPROP" >
+        <id name="propertiesid" type="java.lang.Integer">
+            <column name="PROPERTIESID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="crmprojecttask" class="ebiNeutrinoSDK.model.hibernate.Crmprojecttask" fetch="select">
+            <column name="TASKID" />
+        </many-to-one>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="value" type="string">
+            <column name="VALUE" />
+        </property>
+    </class>
+</hibernate-mapping>

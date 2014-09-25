@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<visualpanel name="Prosol" title="Problem / Solution" Location="0,0" Size="1024,768" visualproperties="true" checkable="true" >
+ <panel name="prosolData" title="Problem / Solutions data" Location="11,7" Size="376,200">
+		<label name="prosolNr" title="prosolNr" Location="9,18" Size="113,20"/>
+		<textfield name="prosolNrText" Location="115,18" Size="245,20"/>
+		<label name="prosolName" title="Name" Location="9,43" Size="113,20"/>
+		<textfield name="prosolNameText" Location="115,43" Size="245,20"/>
+		<label name="prosolCategory" title="Category" Location="9,91" Size="108,20"/>
+		<combobox name="prosolCategoryText" Location="117,91" Size="245,20"/>
+		<label name="prosolType" title="Type" Location="9,115" Size="107,20"/>
+		<combobox name="prosolTypeText" Location="117,115" Size="245,20"/>
+		<label name="prosolStatus" title="Status" Location="11,140" Size="104,20"/>
+		<combobox name="prosolStatusText" Location="117,140" Size="245,20"/>
+		<button name="saveprosol" title="Save" Location="212,167" Size="150,25"/>
+		<label name="prosolClassification" title="prosolClassification" Location="9,68" Size="108,20"/>
+		<combobox name="prosolClassificationText" title="" Location="118,68" Size="243,20"/>
+</panel>
+<panel name="prosolDocument" title="Problem/Solution documents" Location="391,7" Size="100%,200">
+		<button name="newprosolDoc" icon="" Location="8,15" Size="25,20"/>
+		<button name="showprosolDoc" icon="" Location="37,15" Size="25,20"/>
+		<button name="deleteprosolDoc" icon="" Location="67,15" Size="25,20"/>
+		<table name="prosolTableDocument" Location="11,38" Size="100%,100%"/>
+</panel>
+<panel name="prosolProduct" title="Problem / Solution Product" Location="11,211" Size="100%,161">
+		<table name="tableprosolProduct" Location="8,40" Size="100%,100%"/>
+		<button name="newprosolProduct" icon="" Location="8,15" Size="25,20"/>
+		<button name="deleteprosolProduct" icon="" Location="37,15" Size="25,20"/>
+</panel>
+<panel name="prosolDescription" title="Description" Location="11,380" Size="100%,190">
+		<textarea name="prosolDescriptionText" Location="10,20" Size="100%,100%"/>
+</panel>
+<panel name="avprosol" title="Available Problem / Solutions" Location="10,571" Size="100%,100%">
+		<table name="prosolTable" Location="8,40" Size="100%,100%"/>
+		<button name="newprosol" icon="" Location="8,15" Size="25,20"/>
+		<button name="editprosol" icon="" Location="37,15" Size="25,20"/>
+		<button name="deleteprosol" icon="" Location="67,15" Size="25,20"/>
+		<button name="reportprosol" icon="" Location="97,15" Size="25,20"/>
+		<button name="historyprosol" icon="" Location="127,15" Size="25,20"/>
+</panel>
+</visualpanel>

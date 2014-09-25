@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Ebipessimistic" table="EBIPESSIMISTIC" >
+        <id name="optimisticid" type="java.lang.Integer">
+            <column name="OPTIMISTICID" />
+            <generator class="native" />
+        </id>
+        <property name="recordid" type="java.lang.Integer">
+            <column name="RECORDID" />
+        </property>
+        <property name="modulename" type="string">
+            <column name="MODULENAME" />
+        </property>
+        <property name="user" type="string">
+            <column name="USER" />
+        </property>
+        <property name="lockdate" type="timestamp">
+            <column name="LOCKDATE" length="19" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS" />
+        </property>
+    </class>
+</hibernate-mapping>

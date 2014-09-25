@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<visualpanel name="Project" title="EBI_LANG_C_TAB_PROJECT" Location="0,0" Size="1024,1000" visualproperties="true" assignable="true" checkable="true" >
+ <panel name="avProject" title="EBI_LANG_C_AVAILABLE_PROJECT" Location="8,627" Size="100%,100%">
+		<table name="projectTable" Location="6,53" Size="100%,100%">
+		<column name="" title="EBI_LANG_PROJECT_NR" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_NAME" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_PROJECT_MANAGER" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_START_DATE" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_END_DATE" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_STATUS" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_PROJECT_BUDGET" Location="0,0" Size="0,0"/>
+		<column name="" title="EBI_LANG_ACTUAL_COST" Location="0,0" Size="0,0"/>
+</table>
+		<button name="newProject" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="8,20" Size="31,27"/>
+		<button name="editProject" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="43,20" Size="31,27"/>
+		<button name="copyProject" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="79,20" Size="31,27"/>
+		<button name="deleteProject" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="114,20" Size="31,27"/>
+		<button name="reportProject" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="150,20" Size="31,27"/>
+		<button name="historyProject" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_HISTORY" Location="186,20" Size="31,27"/>
+		<button name="createProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_CREATE_PRODUCT" Location="223,20" Size="31,27"/>
+		<label name="filterTable" title="EBI_LANG_FILTER" Location="326,22" Size="77,23"/>
+		<textfield name="filterTableText" Location="410,22" Size="357,20"/>
+</panel>
+<panel name="generalProject" title="EBI_LANG_C_TAB_PROJECT" Location="8,4" Size="100%,154">
+		<label name="projectNr" title="EBI_LANG_PROJECT_NR" Location="21,24" Size="100,20"/>
+		<label name="projectName" title="EBI_LANG_NAME" Location="21,51" Size="100,20"/>
+		<label name="projectManager" title="EBI_LANG_PROJECT_MANAGER" Location="21,80" Size="100,20"/>
+		<label name="startDate" title="EBI_LANG_START_DATE" Location="463,24" Size="100,20"/>
+		<label name="endDate" title="EBI_LANG_END_DATE" Location="463,51" Size="100,20"/>
+		<label name="projectStatus" title="EBI_LANG_STATUS" Location="463,80" Size="100,20"/>
+		<textfield name="prjNrText" tabindex="1" Location="123,24" Size="299,20"/>
+		<textfield name="prjNameText" tabindex="2" Location="123,51" Size="300,20"/>
+		<textfield name="prjManagerText" tabindex="3" Location="123,80" Size="300,20"/>
+		<timepicker name="prjstartDateText" tabindex="4" Location="565,24" Size="256,20"/>
+		<timepicker name="prjendDateText" tabindex="5" Location="565,51" Size="256,20"/>
+		<combobox name="prjStatusText" tabindex="6" Location="565,80" Size="280,20"/>
+		<button name="saveProject" tabindex="8" title="EBI_LANG_SAVE" fitonresize="true" Location="872,91" Size="133,30"/>
+		<label name="projectBudget" title="EBI_LANG_PROJECT_BUDGET" Location="463,108" Size="100,20"/>
+		<formattedtextfield name="budgetText" tabindex="7" Location="565,108" Size="280,20"/>
+		<label name="actualCost" title="EBI_LANG_ACTUAL_COST" Location="21,108" Size="100,20"/>
+		<formattedtextfield name="actualCostText" Location="123,108" Size="300,20"/>
+		<button name="openView" title="EBI_LANG_FULLSCREEN" Location="869,17" Size="132,26"/>
+</panel>
+<panel name="taskGraph" Location="9,162" Size="100%,462"/>
+		<codecontrol name="groovy" path="EBICRM/openView.groovy" classname="" />
+</visualpanel>

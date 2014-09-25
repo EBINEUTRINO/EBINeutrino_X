@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="autoIncNrDialog" title="Autoinc.Nr" icon="../images/write.png" Location="100,100" Size="570,450" visualproperties="false" assignable="false" modal="true" resizable="true" >
+ 		<label name="category" title="Category" Location="9,20" Size="103,20"/>
+		<button name="saveValue" tabindex="5" title="Save" Location="413,20" Size="130,23"/>
+		<table name="valueTable" Location="9,140" Size="100%,95%"/>
+		<button name="newBnt" Location="9,111" Size="27,22"/>
+		<button name="deleteBnt" Location="72,111" Size="27,22"/>
+		<button name="editBnt" Location="41,111" Size="27,22"/>
+		<combobox name="categoryCombo" tabindex="1" Location="119,20" Size="289,20"/>
+		<label name="numberFrom" title="Number From" Location="202,52" Size="100,20"/>
+		<textfield name="numberFromText" tabindex="3" Location="304,52" Size="67,20"/>
+		<label name="numberTo" title="Number To" Location="373,52" Size="100,20"/>
+		<textfield name="numberToText" tabindex="4" Location="474,52" Size="67,20"/>
+		<label name="BeginCharText" title="EBI_LANG_BEGIN_CHAR" Location="8,52" Size="109,20"/>
+		<textfield name="beginCharText" tabindex="2" Location="120,52" Size="78,20"/>
+</dialog>

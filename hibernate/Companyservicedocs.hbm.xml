@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Companyservicedocs" table="COMPANYSERVICEDOCS" >
+        <id name="servicedocid" type="java.lang.Integer">
+            <column name="SERVICEDOCID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="companyservice" class="ebiNeutrinoSDK.model.hibernate.Companyservice" fetch="select">
+            <column name="SERVICEID" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="files" type="binary">
+            <column name="FILES" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

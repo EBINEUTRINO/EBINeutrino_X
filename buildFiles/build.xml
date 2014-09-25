@@ -1,0 +1,546 @@
+<?xml version="1.0"?>
+<!-- **************************************** -->
+<!-- ANT TASKS PROPERTIES CONFIGURATION ITEMS -->
+<!-- **************************************** -->
+
+<project name="Destribute EBINeutrino R1" basedir=".">
+    <property name="destLinux" value="/home/franz"/>
+    <property name="destWindows" value="d:\\"/>
+    <property name="bin" value="bin"/>
+    <property name="lib" value="lib"/>
+    <property name="images" value="images"/>
+    <property name="ebiExtensions" value="ebiExtensions"/>
+    <property name="language" value="language"/>
+    <property name="reports" value="reports"/>
+    <property name="script" value="script"/>
+    <property name="hibernate" value="hibernate"/>
+    <property name="config" value="config"/>
+    <property name="system" value="system"/>
+    <property name="update" value="update"/>
+    <property name="sql" value="sql"/>
+    <property name="tmp" value="tmp"/>
+    <property name="EBINeutrino" value="EBINeutrino"/>
+    <property name="build" value="bin"/>
+    <property name="src" value="src"/>
+    <property name="buildFiles" value="buildFiles"/>
+    <property name="publish" value="publish"/>
+    <property name="jdbc.driver.jar.mysql" value="mysql-connector.jar"/>
+    <property name="jdbc.driver.jar.oracle" value="ojdbc14.jar"/>
+    <property name="hibernateIncubator" value="hibernateIncubator"/>
+    <property name="schema.file.name.mysql" value="mysql.sql"/>
+    <property name="schema.file.name.oracle" value="oracle.ddl"/>
+    <property name="schema.file.name.hsql" value="hsql.sql"/>
+
+
+    <!-- ************************************************************** -->
+    <!-- Hibernate Tasks used for generating XML and Java mapping files -->
+    <!-- ************************************************************** -->
+
+    <path id="toolslib">
+        <path location="../${lib}/hibernate-tools.jar"/>
+        <path location="../${lib}/hibernate3.jar"/>
+        <path location="../${lib}/freemarker.jar"/>
+        <path location="../${lib}/commons-logging.jar"/>
+        <path location="../${lib}/commons-collections-3.1.jar"/>
+        <path location="../${lib}/commons-javaflow.jar"/>
+        <path location="../${lib}/mysql-connector.jar"/>
+        <path location="../${lib}/jtidy-r8-20060801.jar"/>
+        <path location="../${lib}/dom4j-1.6.1.jar"/>
+    	<path location="../${lib}/log4j-1.2.15.jar"/>
+        <path location="../${lib}/slf4j-api-1.5.8.jar"/>
+        <path location="../${lib}/slf4j-log4j12-1.5.8.jar"/>
+        <path location="../${lib}/ojdbc14.jar"/>
+        <path location="../${lib}/hsqldb.jar"/>        
+        <pathelement path="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate"/>
+    </path>
+
+
+
+    <target name="hibernateSchemaHSQL">
+        <taskdef name="hibernatetool"
+                 classname="org.hibernate.tool.ant.HibernateToolTask"
+                 classpathref="toolslib"/>
+
+        <replace dir="../${hibernateIncubator}">
+            <include name="hibernate.cfg.xml"/>
+            <replacetoken>ebiNeutrinoSDK/model/hibernate/</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+
+
+        <hibernatetool destdir="../${sql}">
+            <configuration configurationfile="../${hibernateIncubator}/hibernate.cfg.xml"/>
+            <hbm2ddl export="false" format="true" outputfilename="${schema.file.name.hsql}"/>
+        </hibernatetool>
+
+
+        <replaceregexp file="../${sql}/${schema.file.name.hsql}"
+                       match="^\Z$"
+                       replace="/"
+                       byline="true"/>
+
+        <replace dir="../${sql}">
+            <include name="${schema.file.name.hsql}"/>
+            <replacetoken>type=InnoDB</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+
+    </target>
+    
+
+     <target name="hibernateSchemaOracle">
+        <taskdef name="hibernatetool"
+                 classname="org.hibernate.tool.ant.HibernateToolTask"
+                 classpathref="toolslib"/>
+
+        <replace dir="../${hibernateIncubator}">
+            <include name="hibernate.cfg.xml"/>
+            <replacetoken>ebiNeutrinoSDK/model/hibernate/</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+
+
+        <hibernatetool destdir="../${sql}">
+            <configuration configurationfile="../${hibernateIncubator}/hibernate.cfg.xml"/>
+            <hbm2ddl export="false" format="true" outputfilename="${schema.file.name.oracle}"/>
+        </hibernatetool>
+
+
+        <replaceregexp file="../${sql}/${schema.file.name.oracle}"
+                       match="^\Z$"
+                       replace="/"
+                       byline="true"/>
+
+        <replace dir="../${sql}">
+            <include name="${schema.file.name.oracle}"/>
+            <replacetoken>type=InnoDB</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+
+         <replace dir="../${sql}">
+            <include name="${schema.file.name.oracle}"/>
+            <replacetoken>;</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+    </target>
+
+    <target name="hibernateSchemaMySQL">
+        <taskdef name="hibernatetool"
+                 classname="org.hibernate.tool.ant.HibernateToolTask"
+                 classpathref="toolslib"/>
+
+        <replace dir="../${hibernateIncubator}">
+            <include name="hibernate.cfg.xml"/>
+            <replacetoken>ebiNeutrinoSDK/model/hibernate/</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+
+
+        <hibernatetool destdir="../${sql}">
+            <configuration configurationfile="../${hibernateIncubator}/hibernate.cfg.xml"/>
+            <hbm2ddl export="false" format="true" outputfilename="${schema.file.name.mysql}"/>
+        </hibernatetool>
+
+        <replace file="../${sql}/${schema.file.name.mysql}" token="type=InnoDB;"
+                 value="ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;"/>
+
+        <replace file="../${sql}/${schema.file.name.mysql}" token="create table"
+                 value="create table if not exists "/>
+        
+        <replaceregexp file="../${sql}/${schema.file.name.mysql}"
+                       match="^\Z$"
+                       replace="/"
+                       byline="true"/>
+
+        <replace dir="../${sql}">
+            <include name="${schema.file.name.mysql}"/>
+            <replacetoken>tinyblob</replacetoken>
+            <replacevalue>longblob</replacevalue>
+        </replace>
+
+        <replace dir="../${sql}">
+            <include name="${schema.file.name.mysql}"/>
+            <replacetoken>longtext</replacetoken>
+            <replacevalue>text</replacevalue>
+        </replace>
+
+        <replace dir="../${sql}">
+            <include name="${schema.file.name.mysql}"/>
+            <replacetoken>);</replacetoken>
+            <replacevalue>) ON DELETE CASCADE ON UPDATE CASCADE;</replacevalue>
+        </replace>
+
+
+    </target>
+
+    <target name="hibernateMySQL">
+        <taskdef name="hibernatetool"
+                 classname="org.hibernate.tool.ant.HibernateToolTask"
+                 classpathref="toolslib"/>
+
+        <hibernatetool destdir="../${hibernateIncubator}">
+            <jdbcconfiguration propertyfile="hibernate.properties" packagename="ebiNeutrinoSDK.model.hibernate" detectmanytomany="true"/>
+            <hbm2hbmxml destdir="../${hibernateIncubator}"/>
+            <hbm2java jdk5="true"/>
+            <hbm2cfgxml destdir="../${hibernateIncubator}"/>
+        </hibernatetool>
+
+         <replace dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate">
+            <include name="**/*.xml"/>
+            <replacetoken>class="identity"</replacetoken>
+            <replacevalue>class="native"</replacevalue>
+        </replace>
+
+        <replace dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate">
+            <include name="**/*.xml"/>
+            <replacetoken>catalog="ebineutrinodb"</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+
+        <replace dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate">
+            <include name="**/*.xml"/>
+            <replacetoken>table="\s*[a-z]\$"</replacetoken>
+            <replacevalue>table="\s*[A-Z]\$"</replacevalue>
+        </replace>
+
+
+        <delete>
+            <fileset dir="../${hibernate}" includes="**/*.xml"/>
+        </delete>
+
+        <delete>
+            <fileset dir="../${src}/ebiNeutrinoSDK/model/hibernate" includes="**/*.java"/>
+        </delete>
+
+        <copy todir="../${hibernate}">
+            <fileset dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="../${src}/ebiNeutrinoSDK/model/hibernate">
+            <fileset dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate" excludes="**/*.xml"/>
+        </copy>
+
+    </target>
+
+    <target name="hibernateOracle">
+        <taskdef name="hibernatetool"
+                 classname="org.hibernate.tool.ant.HibernateToolTask"
+                 classpathref="toolslib"/>
+
+        <hibernatetool destdir="../${hibernateIncubator}">
+            <jdbcconfiguration propertyfile="hibernateOracle.properties" packagename="ebiNeutrinoSDK.model.hibernate" detectmanytomany="true"/>
+            <hbm2hbmxml destdir="../${hibernateIncubator}"/>
+            <hbm2java jdk5="true"/>
+            <hbm2cfgxml destdir="../${hibernateIncubator}"/>
+        </hibernatetool>
+
+        <replace dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate">
+            <include name="**/*.xml"/>
+            <replacetoken>class="assigned"</replacetoken>
+            <replacevalue>class="native"</replacevalue>
+        </replace>
+
+
+        <delete>
+            <fileset dir="../${hibernate}" includes="**/*.xml"/>
+        </delete>
+
+        <delete>
+            <fileset dir="../${src}/ebiNeutrinoSDK/model/hibernate" includes="**/*.java"/>
+        </delete>
+
+        <copy todir="../${hibernate}">
+            <fileset dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate" excludes="**/*.java"/>
+        </copy>
+
+
+        <copy todir="../${src}/ebiNeutrinoSDK/model/hibernate">
+            <fileset dir="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate" excludes="**/*.xml"/>
+        </copy>
+
+
+    </target>
+
+    <!-- **************************************************** -->
+    <!-- "LINUX" CREATE A RELEASE FOR DESTRIBUTE EBI NEUTRINO -->
+    <!-- **************************************************** -->
+
+    <target name="destributeLinux" depends="init">
+        <tstamp/>
+        <mkdir dir="${destLinux}/${EBINeutrino}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${bin}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${lib}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${images}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${ebiExtensions}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${language}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${reports}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${script}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${sql}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${hibernate}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${config}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${update}"/>
+		<mkdir dir="${destLinux}/${EBINeutrino}/${system}"/>
+        <mkdir dir="${destLinux}/${EBINeutrino}/${tmp}"/>
+
+
+        <copy todir="${destLinux}/${EBINeutrino}/${images}">
+            <fileset dir="../${images}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${lib}">
+            <fileset dir="../${lib}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${hibernate}">
+            <fileset dir="../${hibernate}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${config}">
+            <fileset dir="../${config}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${update}">
+            <fileset dir="../${update}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${reports}">
+            <fileset dir="../${reports}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${ebiExtensions}">
+            <fileset dir="../${ebiExtensions}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${sql}">
+            <fileset dir="../${sql}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${language}">
+            <fileset dir="../${language}" excludes="**/*.java"/>
+        </copy>
+		
+		<copy todir="${destLinux}/${EBINeutrino}/${system}">
+            <fileset dir="../${system}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/${script}">
+            <fileset dir="../${script}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destLinux}/${EBINeutrino}/">
+            <fileset dir="../${buildFiles}" excludes="build.xml">
+                <exclude name="build.xml"/>
+                <exclude name="**/*.c"/>
+                <exclude name="cprhf.sh"/>
+                <exclude name="rschema.sh"/>
+                <exclude name="hibernate.properties"/>
+                <exclude name="hibernate.reveng.xml"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ****************************************************** -->
+    <!-- "WINDOWS" CREATE A RELEASE FOR DESTRIBUTE EBI NEUTRINO -->
+    <!-- ****************************************************** -->
+
+    <target name="init">
+        <mkdir dir="../${build}"/>
+        <mkdir dir="../${build}/Icon"/>
+        <copy todir="../${build}/Icon">
+            <fileset dir="../${src}/Icon" />
+        </copy>
+    </target>
+
+
+    <target name="destributeWindows" depends="init">
+        <tstamp/>
+        <mkdir dir="${destWindows}\${EBINeutrino}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${bin}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${lib}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${images}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${ebiExtensions}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${language}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${reports}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${script}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${sql}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${hibernate}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${config}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${update}"/>
+		<mkdir dir="${destLinux}/${EBINeutrino}/${system}"/>
+        <mkdir dir="${destWindows}\${EBINeutrino}\${tmp}"/>
+
+
+        <!-- <copy file="../update.xml" tofile="${destWindows}\${EBINeutrino}\update.xml"/> 
+        <copy file="../install.xml" tofile="${destWindows}\${EBINeutrino}\install.xml"/>
+        <copy file="../License.txt" tofile="${destWindows}\${EBINeutrino}\License.txt"/>
+        <copy file="../ReadMe.txt" tofile="${destWindows}\${EBINeutrino}\ReadMe.txt"/>-->
+
+        <copy todir="${destWindows}\${EBINeutrino}\${images}">
+            <fileset dir="../${images}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${lib}">
+            <fileset dir="../${lib}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${hibernate}">
+            <fileset dir="../${hibernate}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${config}">
+            <fileset dir="../${config}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${update}">
+            <fileset dir="../${update}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${reports}">
+            <fileset dir="../${reports}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${ebiExtensions}">
+            <fileset dir="../${ebiExtensions}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${sql}">
+            <fileset dir="../${sql}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}\${EBINeutrino}\${language}">
+            <fileset dir="../${language}" excludes="**/*.java"/>
+        </copy>
+
+		<copy todir="${destWindows}\${EBINeutrino}\${system}">
+            <fileset dir="../${system}" excludes="**/*.java"/>
+        </copy>
+		
+        <copy todir="${destWindows}\${EBINeutrino}\${script}">
+            <fileset dir="../${script}" excludes="**/*.java"/>
+        </copy>
+
+        <copy todir="${destWindows}/${EBINeutrino}/">
+            <fileset dir="../${buildFiles}" excludes="build.xml">
+                <exclude name="build.xml"/>
+                <exclude name="**/*.c"/>
+                <exclude name="cprhf.sh"/>
+                <exclude name="rschema.sh"/>
+                <exclude name="hibernate.properties"/>
+                <exclude name="hibernate.reveng.xml"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- *********************** -->
+    <!-- EBI Neutrino class Path -->
+    <!-- *********************** -->
+
+    <path id="files-classpath">
+        <fileset dir="../${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- **************************** -->
+    <!-- "LINUX" Compile Source       -->
+    <!-- **************************** -->
+
+    <target name="compileLinux" depends="init">
+
+        <javac target="1.5" srcdir="../${src}" destdir="../${build}">
+            <classpath>
+                <path refid="files-classpath"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- ****************************** -->
+    <!-- "WINDOWS" Compile Source       -->
+    <!-- ****************************** -->
+
+    <target name="compileWindows" depends="init" >
+        <javac target="1.5" srcdir="../${src}" destdir="../${build}">
+            <classpath>
+                <path refid="files-classpath"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- *********************************************** -->
+    <!-- "LINUX" Deploy and generate ebiNeutrinoSDK.jar  -->
+    <!-- *********************************************** -->
+
+    <target name="deployLinux" depends="compileLinux">
+
+        <jar destfile="${destLinux}/${EBINeutrino}/${bin}/ebiNeutrinoR1.jar" basedir="../${build}">
+            <manifest>
+                <attribute name="Main-Class" value="ebiNeutrino.core.EBIMain"/>
+            </manifest>
+        </jar>
+
+        <jar destfile="../${update}/ebiNeutrinoUpdate.jar" basedir="../${build}"  >
+            <manifest>
+                <attribute name="Main-Class" value="ebiNeutrino.core.update.EBINeutrinoUpdate"/>
+            </manifest>
+        </jar>
+       
+        <jar jarfile="../${lib}/ebiNeutrinoSDK.jar" basedir="../${build}" includes="ebiNeutrinoSDK/**,ebiNeutrinoSDK.model.hibernate/**"/>
+        
+        <copy file="../${lib}/ebiNeutrinoSDK.jar" toFile="${destLinux}/${EBINeutrino}/${lib}/ebiNeutrinoSDK.jar"/>
+        
+        <chmod dir="${destLinux}/${EBINeutrino}" perm="755" includes="**/*.*"/>
+
+    </target>
+
+    <!-- *********************************************** -->
+    <!-- "WINDOWS" Deploy and generate ebiNeutrinoSDK.jar  -->
+    <!-- *********************************************** -->
+
+    <target name="deployWindows" depends="compileWindows" >
+
+        <jar destfile="${destWindows}\${EBINeutrino}\${bin}\ebiNeutrinoR1.jar" basedir="../${build}">
+            <manifest>        
+                <attribute name="Main-Class" value="ebiNeutrino.core.EBIMain"/>
+            </manifest>
+        </jar>
+
+        <jar destfile="../${update}/ebiNeutrinoUpdate.jar" basedir="../${build}"  >
+            <manifest>
+                <attribute name="Main-Class" value="ebiNeutrino.core.update.EBINeutrinoUpdate"/>
+            </manifest>
+        </jar>
+
+        <jar jarfile="../${lib}/ebiNeutrinoSDK.jar" basedir="../${build}" includes="ebiNeutrinoSDK/**,ebiNeutrinoSDK.model.hibernate/**"/>
+
+        <copy file="../${lib}/ebiNeutrinoSDK.jar" toFile="${destWindows}\${EBINeutrino}\${lib}\ebiNeutrinoSDK.jar"/>
+
+    </target>
+
+
+    <!-- *************************************************** -->
+    <!-- "LINUX" Run from the destribution location EBI Neutrino  -->
+    <!-- *************************************************** -->
+
+    <target name="runLinux" depends="deployLinux">
+        <exec executable="${destLinux}/${EBINeutrino}/startNeutrino.out"/>
+    </target>
+
+    <!-- ******************************************************** -->
+    <!-- "WINDOWS" Run from the destribution location EBI Neutrino -->
+    <!-- ******************************************************** -->
+
+    <target name="runWindows" depends="deployWindows">
+        <exec executable="${destWindows}\${EBINeutrino}\startNeutrino.exe"/>
+    </target>
+
+
+    <!-- ************************************** -->
+    <!-- Clean the project                      -->
+    <!-- ************************************** -->
+
+
+    <target name="clean">
+        <delete file="../${build}"/>
+    </target>
+
+</project>

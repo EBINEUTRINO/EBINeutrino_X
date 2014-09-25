@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<visualpanel name="Summary" title="EBI_LANG_C_SUMMARY" Location="0,0" Size="900,650" visualproperties="false" assignable="false" >
+ <panel name="gnSummary" title="EBI_LANG_C_GENERAL_SEARCH" background="#ffffff" Location="10,2" Size="375,213">
+		<label name="summaryType" title="EBI_LANG_TYPE" Location="7,44" Size="113,20"/>
+		<combobox name="summarytypeText" editable="false" tabindex="4" Location="121,44" Size="245,20"/>
+		<label name="summaryStatus" title="EBI_LANG_C_STATUS" Location="7,68" Size="113,20"/>
+		<combobox name="summaryStatusText" tabindex="5" Location="121,68" Size="245,20"/>
+		<label name="summaryName" title="EBI_LANG_NAME" Location="7,92" Size="113,20"/>
+		<textfield name="summaryNameText" tabindex="6" Location="122,92" Size="245,20"/>
+		<label name="summaryCreatedFrom" title="EBI_LANG_CREATED_FROM" Location="7,117" Size="113,20"/>
+		<timepicker name="summaryCreatedFromText" tabindex="7" Location="123,117" Size="244,20"/>
+		<label name="summaryCreatedTo" title="EBI_LANG_CREATED_TO" Location="7,144" Size="113,20"/>
+		<timepicker name="summaryCreatedToText" tabindex="8" Location="123,144" Size="244,20"/>
+		<button name="searchSummary" tabindex="10" title="EBI_LANG_UPDATE" Location="247,176" Size="119,24"/>
+		<label name="company" title="EBI_LANG_COMPANY" Location="6,21" Size="114,21"/>
+		<textfield name="companyText" tabindex="1" Location="121,21" Size="73,20"/>
+		<button name="seachCompName" tabindex="2" i18ntooltip="EBI_LANG_C_TOOL_TIP_SEARCH_COMPANY" Location="196,19" Size="30,22"/>
+		<combobox name="companyCategoryText" tabindex="3" Location="227,21" Size="140,20"/>
+		<checkbox name="showForUser" tabindex="9" title="EBI_LANG_SHOW_FROM_LOGGED_USER" background="#ffffff" Location="10,176" Size="192,22"/>
+</panel>
+<panel name="avCharts" background="#ffffff" Location="10,216" Size="371,176"/>
+<panel name="avSummary" title="EBI_LANG_C_AVAILABLE_SUMMARY" background="#ffffff" Location="12,395" Size="100%,100%">
+		<table name="companySummaryTable" tabindex="11" Location="8,47" Size="100%,100%"/>
+		<button name="showSummary" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_RECORD" Location="8,17" Size="31,27"/>
+		<label name="filterTable" title="EBI_LANG_FILTER" Location="251,17" Size="77,23"/>
+		<textfield name="filterTableText" Location="330,18" Size="405,20"/>
+</panel>
+<panel name="productChart" background="#ffffff" Location="387,0" Size="100%,393"/>
+</visualpanel>

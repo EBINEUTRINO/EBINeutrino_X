@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Workstation>
+  <Item Name="EBI CRM" Location="44,85" Class="ebiCRM.EBICRMModule" ClassPath="ebiExtensions/ebiCRM.jar" Icon="{JarPath}/ModuleIcon" />
+</Workstation>
+

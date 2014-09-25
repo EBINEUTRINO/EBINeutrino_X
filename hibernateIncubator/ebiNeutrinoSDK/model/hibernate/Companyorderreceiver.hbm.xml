@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Companyorderreceiver" table="companyorderreceiver" >
+        <id name="receiverid" type="java.lang.Integer">
+            <column name="RECEIVERID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="companyorder" class="ebiNeutrinoSDK.model.hibernate.Companyorder" fetch="select">
+            <column name="ORDERID" />
+        </many-to-one>
+        <property name="cnum" type="java.lang.Integer">
+            <column name="CNUM" />
+        </property>
+        <property name="receivervia" type="string">
+            <column name="RECEIVERVIA" length="50" />
+        </property>
+        <property name="gender" type="string">
+            <column name="GENDER" length="20" />
+        </property>
+        <property name="surname" type="string">
+            <column name="SURNAME" length="150" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="150" />
+        </property>
+        <property name="mittelname" type="string">
+            <column name="MITTELNAME" length="150" />
+        </property>
+        <property name="position" type="string">
+            <column name="POSITION" length="150" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="50" />
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="30" />
+        </property>
+        <property name="fax" type="string">
+            <column name="FAX" length="30" />
+        </property>
+        <property name="street" type="string">
+            <column name="STREET" length="50" />
+        </property>
+        <property name="zip" type="string">
+            <column name="ZIP" length="15" />
+        </property>
+        <property name="location" type="string">
+            <column name="LOCATION" length="100" />
+        </property>
+        <property name="pbox" type="string">
+            <column name="PBOX" length="100" />
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" length="100" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

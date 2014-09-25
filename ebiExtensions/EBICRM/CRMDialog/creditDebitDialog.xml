@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="creditDebitDialog" title="EBI_LANG_CREDIT_DEBIT_DIALOG" icon="..\images\write.png" Location="100,100" Size="570,190" visualproperties="false" assignable="false" modal="true" >
+ 		<label name="number" title="EBI_LANG_NUMBER" Location="10,42" Size="98,20"/>
+		<textfield name="numberText" tabindex="2" Location="110,42" Size="93,20"/>
+		<button name="saveValue" tabindex="5" title="EBI_LANG_SAVE" Location="282,139" Size="131,27"/>
+		<button name="closeDialog" tabindex="6" title="EBI_LANG_CLOSE" Location="416,139" Size="124,27"/>
+		<label name="name" title="EBI_LANG_NAME" Location="228,42" Size="77,20"/>
+		<textfield name="nameText" tabindex="3" Location="306,42" Size="247,20"/>
+		<label name="taxType" title="EBI_LANG_TAX" Location="10,69" Size="97,20"/>
+		<combobox name="taxTypeText" tabindex="4" Location="110,69" Size="198,20"/>
+		<label name="taxValue" tabindex="4" title="0.0%" background="#f1fef1" Location="310,69" Size="126,20"/>
+		<label name="creditType" title="EBI_LANG_TYPE" Location="10,12" Size="98,20"/>
+		<combobox name="creditDebitTypeText" tabindex="1" Location="109,12" Size="198,20"/>
+		<label name="vale" visible="false" title="EBI_LANG_VALUE" Location="10,99" Size="98,20"/>
+		<formattedtextfield name="valueText" visible="false" Location="110,99" Size="197,20"/>
+</dialog>

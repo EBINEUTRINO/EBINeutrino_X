@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="addNewReceiverDialog" title="New Receiver Contact Dialog" icon="../images/people.png" Location="100,100" Size="400,440" visualproperties="false" assignable="false" modal="true" >
+ 		<button name="closeButton" tabindex="16" title="cancel" Location="270,373" Size="107,29"/>
+		<button name="applyButton" tabindex="15" title="apply" Location="130,373" Size="132,29"/>
+		<label name="gender" title="gender" Location="21,46" Size="100,20"/>
+		<label name="position" title="position" Location="21,74" Size="100,20"/>
+		<label name="name" title="name" Location="21,103" Size="100,20"/>
+		<label name="surname" title="surname" Location="22,132" Size="100,20"/>
+		<label name="fax" title="fax" Location="22,281" Size="100,20"/>
+		<label name="email" title="email" Location="22,311" Size="100,20"/>
+		<combobox name="genderText" tabindex="4" Location="124,46" Size="116,20"/>
+		<textfield name="positionText" tabindex="5" Location="124,74" Size="256,20"/>
+		<textfield name="nameText" tabindex="6" Location="124,103" Size="256,20"/>
+		<textfield name="surnameText" tabindex="7" Location="124,132" Size="256,20"/>
+		<textfield name="faxText" tabindex="13" Location="124,281" Size="256,20"/>
+		<textfield name="emailText" tabindex="14" Location="124,312" Size="256,20"/>
+		<label name="typeDispatch" title="typeDispatch" Location="20,19" Size="100,20"/>
+		<combobox name="typeDispatchText" tabindex="1" Location="124,20" Size="189,20"/>
+		<label name="street" title="street" Location="23,161" Size="100,20"/>
+		<textfield name="streetText" tabindex="8" Location="124,161" Size="256,20"/>
+		<label name="zipLocation" title="zipLocation" Location="23,190" Size="100,20"/>
+		<textfield name="zipText" tabindex="9" Location="124,190" Size="100,20"/>
+		<textfield name="locationText" tabindex="10" Location="231,190" Size="149,20"/>
+		<label name="postCode" title="postCode" Location="23,220" Size="100,20"/>
+		<textfield name="postcodeText" tabindex="11" Location="124,220" Size="256,20"/>
+		<label name="country" title="country" Location="23,250" Size="100,20"/>
+		<textfield name="countryText" tabindex="12" Location="124,250" Size="256,20"/>
+		<button name="newReciever" tabindex="2" Location="315,20" Size="31,25"/>
+		<button name="searchReciever" tabindex="3" Location="349,20" Size="31,25"/>
+		<checkbox name="mainContact" title="EBI_LANG_MAIN_CONTACT" Location="130,339" Size="186,24"/>
+</dialog>

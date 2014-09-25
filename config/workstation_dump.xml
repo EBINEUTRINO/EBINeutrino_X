@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<Workstation>
+  <Item Name="Lieferschein Modul" Icon="hbilder/lieferschein.png" Location="10,120"   Class="ebiLieferschein.EBIPreisermittlung"/> 
+  <Item Name="CRM Modul" Icon="hbilder/crm.png" Location="10,170"   Class="ebiCRM.EBICRMModul"/>
+  <Item Name="Artikel Verwaltung" Icon="hbilder/av.png" Location="10,220" Class="C3"/>
+  <Item Name="Mietgärenten Verwaltung" Icon="hbilder/mietg.png" Location="10,270" Class="C4"/> 
+  <Item Name="Lagermodul" Icon="hbilder/lager.png" Location="10,320" Class="C4"/>
+  <Item Name="Fahrzeug Verwaltung" Icon="hbilder/fahrzeug.png" Location="10,370" Class="C4"/>
+  <Item Name="Objektmodul Franz" Icon="hbilder/object.png" Location="10,420" Class="C4"/>
+</Workstation>
+

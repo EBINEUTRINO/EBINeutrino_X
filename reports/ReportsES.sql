@@ -1,0 +1,26 @@
+DELETE FROM SET_REPORTFORMODULE;
+
+INSERT INTO `SET_REPORTFORMODULE` (`IDREPORTFORMODULE`, `REPORTNAME`, `REPORTCATEGORY`, `REPORTFILENAME`, `REPORTDATE`, `SHOWASPDF`, `SHOWASWINDOW`, `PRINTAUTO`, `ISACTIVE`) VALUES
+(1, 'Actividades de la empresa', '0', 'showActivityTODOReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(2, 'Reseña de las actividades', '0', 'ShowAllactivityTODOReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(3, 'Carta', '4', 'meetingCustomerLetterReport.jasper', '2011-11-21 21:59:48', b'0', b'1', NULL, b'1'),
+(4, 'Facturas de ventas', '0', 'salesReportInvoice.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(5, 'Descripción del producto', '9', 'productReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(6, 'Pedidos Facturación', '0', 'salesReportOrder.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(7, 'Datos corporativos', '0', 'ListCompanyData.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(8, 'Apuestas Prevista', '7', 'opportunityReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(9, 'Ofrecer', '5', 'offerReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(10, 'Pedido', '6', 'orderReportNew.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(11, 'Nota de entrega', '6', 'orderDeliveryReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(12, 'Nota de entrega simple', '6', 'orderDeliveryReportSimple.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(13, 'Resumen servicio', '12', 'serviceReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(14, 'Resumen campaña', '8', 'campaignReportShow.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(15, 'Resumen Problema / Solución', '10', 'prosolReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(16, 'Factura', '1', 'invoiceReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(17, 'Nota de entrega', '1', 'invoiceDeliveryReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(18, 'Nota de entrega simple', '1', 'invoiceDeliveryReportSimple.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(19, 'Resumen propiedades del proyecto', '11', 'projectReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(20, 'Resumen Costos del proyecto', '11', 'projectReportCost.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(25, 'Análisis Económico', '13', 'economyReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(26, 'Resumen contabilidad', '13', 'stackAccountReport.jasper', '2011-09-15 00:00:00', b'0', b'1', NULL, b'1'),
+(27, 'Solicitud de Pago', '1', 'invoiceDunningReport.jasper', '2011-11-04 00:00:00', b'0', b'1', NULL, b'1');

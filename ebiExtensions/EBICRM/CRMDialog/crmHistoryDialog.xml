@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="historyViewDialog" title="History Dialog" icon="..\images\timemashine.png" Location="100,100" Size="570,480" visualproperties="false" assignable="false" modal="true" resizable="true" >
+ 		<button name="closeButton" title="cancel" fitonresize="true" Location="450,421" Size="107,29"/>
+		<label name="history" title="history" Location="13,20" Size="100,20"/>
+		<combobox name="historyText" tabindex="1" title="historyText" Location="114,20" Size="321,20"/>
+		<button name="viewHistory" tabindex="2" title="viewHistory" Location="451,20" Size="100,28"/>
+		<editor name="viewhistoryText" Location="14,57" Size="100%,88%"/>
+</dialog>

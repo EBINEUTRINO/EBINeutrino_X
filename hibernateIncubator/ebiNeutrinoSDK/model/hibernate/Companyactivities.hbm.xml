@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Companyactivities" table="companyactivities" >
+        <id name="activityid" type="java.lang.Integer">
+            <column name="ACTIVITYID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="company" class="ebiNeutrinoSDK.model.hibernate.Company" fetch="select">
+            <column name="COMPANYID" />
+        </many-to-one>
+        <property name="activityname" type="string">
+            <column name="ACTIVITYNAME" length="150" />
+        </property>
+        <property name="activitytype" type="string">
+            <column name="ACTIVITYTYPE" length="50" />
+        </property>
+        <property name="activitystatus" type="string">
+            <column name="ACTIVITYSTATUS" length="50" />
+        </property>
+        <property name="duedate" type="timestamp">
+            <column name="DUEDATE" length="19" />
+        </property>
+        <property name="duration" type="java.lang.Integer">
+            <column name="DURATION" />
+        </property>
+        <property name="acolor" type="string">
+            <column name="ACOLOR" length="18" />
+        </property>
+        <property name="activityclosedate" type="timestamp">
+            <column name="ACTIVITYCLOSEDATE" length="19" />
+        </property>
+        <property name="activityisclosed" type="java.lang.Boolean">
+            <column name="ACTIVITYISCLOSED" />
+        </property>
+        <property name="activitydescription" type="string">
+            <column name="ACTIVITYDESCRIPTION" length="65535" />
+        </property>
+        <property name="islock" type="java.lang.Boolean">
+            <column name="ISLOCK" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <property name="timerstart" type="java.lang.Integer">
+            <column name="TIMERSTART" />
+        </property>
+        <property name="timerdisabled" type="java.lang.Integer">
+            <column name="TIMERDISABLED" />
+        </property>
+        <property name="timerExtra" type="string">
+            <column name="TIMER_EXTRA" length="65535" />
+        </property>
+        <set name="companyactivitiesdocses" table="companyactivitiesdocs" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACTIVITYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyactivitiesdocs" />
+        </set>
+    </class>
+</hibernate-mapping>

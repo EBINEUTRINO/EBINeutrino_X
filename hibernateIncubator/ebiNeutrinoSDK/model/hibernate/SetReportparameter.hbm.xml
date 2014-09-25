@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.SetReportparameter" table="set_reportparameter" >
+        <id name="paramid" type="java.lang.Integer">
+            <column name="PARAMID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="setReportformodule" class="ebiNeutrinoSDK.model.hibernate.SetReportformodule" fetch="select">
+            <column name="REPORTID" />
+        </many-to-one>
+        <property name="position" type="java.lang.Integer">
+            <column name="POSITION" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="paramname" type="string">
+            <column name="PARAMNAME" length="150" />
+        </property>
+        <property name="paramtype" type="string">
+            <column name="PARAMTYPE" length="150" />
+        </property>
+    </class>
+</hibernate-mapping>

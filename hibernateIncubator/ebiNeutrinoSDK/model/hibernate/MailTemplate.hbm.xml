@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.MailTemplate" table="mail_template" >
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="native" />
+        </id>
+        <property name="setfrom" type="string">
+            <column name="SETFROM" length="150" />
+        </property>
+        <property name="setdate" type="timestamp">
+            <column name="SETDATE" length="19" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="template" type="string">
+            <column name="TEMPLATE" length="65535" />
+        </property>
+        <property name="isactive" type="java.lang.Boolean">
+            <column name="ISACTIVE" />
+        </property>
+    </class>
+</hibernate-mapping>

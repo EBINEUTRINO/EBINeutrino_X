@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<visualpanel name="Company" title="EBI_LANG_C_COMPANY" Location="375,0" Size="900,650" visualproperties="true" assignable="false" >
+ <panel name="companyDataPanel" title="EBI_LANG_C_COMPANY_DATA" Location="10,0" Size="358,366">
+		<label name="comRoot" title="EBI_LANG_C_COMPANY_PARTNER" Location="9,20" Size="94,20"/>
+		<button name="selectRoot" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_PARENT" Location="309,20" Size="25,20"/>
+		<textfield name="rootText" tabindex="1" Location="104,20" Size="200,20"/>
+		<label name="comCustNr" title="EBI_LANG_C_COMPANY_CUSTOMER_NUMBER" Location="9,43" Size="94,20"/>
+		<textfield name="custNrText" tabindex="2" Location="104,43" Size="245,20"/>
+		<label name="comInternalNr" title="EBI_LANG_C_INTERNAL_NUMBER" Location="9,66" Size="94,20"/>
+		<textfield name="internalNrText" tabindex="3" Location="104,66" Size="245,20"/>
+		<label name="comName" title="EBI_LANG_C_COMPANY_NAME1" Location="9,89" Size="94,20"/>
+		<textfield name="nameText" tabindex="4" Location="104,89" Size="245,20"/>
+		<label name="comName1" title="EBI_LANG_C_COMPANY_NAME2" Location="9,112" Size="94,20"/>
+		<textfield name="name1Text" tabindex="5" Location="104,112" Size="245,20"/>
+		<label name="comCategory" editable="false" title="EBI_LANG_CATEGORY" Location="9,135" Size="94,20"/>
+		<combobox name="categoryText" editable="false" tabindex="6" Location="104,135" Size="245,20"/>
+		<label name="comCooperation" title="EBI_LANG_C_COOPERATION" Location="9,158" Size="94,20"/>
+		<combobox name="cooperationText" tabindex="7" Location="104,158" Size="245,20"/>
+		<label name="comTaxID" title="EBI_LANG_C_VAT_NR" Location="9,181" Size="95,20"/>
+		<textfield name="taxIDText" tabindex="8" Location="104,181" Size="245,20"/>
+		<label name="comEmployee" title="EBI_LANG_C_EMPLOYEE" Location="9,204" Size="94,20"/>
+		<textfield name="employeeText" tabindex="9" Location="104,204" Size="245,20"/>
+		<label name="comTelephon" title="EBI_LANG_C_TELEPHONE" Location="9,227" Size="94,20"/>
+		<textfield name="telephoneText" tabindex="10" Location="104,227" Size="245,20"/>
+		<label name="comFax" title="EBI_LANG_C_FAX_1" Location="9,250" Size="94,20"/>
+		<textfield name="faxText" tabindex="11" Location="104,250" Size="245,20"/>
+		<label name="comInternet" title="EBI_LANG_C_HINTERNET" Location="9,273" Size="94,20"/>
+		<textfield name="internetText" tabindex="12" Location="104,273" Size="245,20"/>
+		<label name="comEMail" title="EBI_LANG_EMAIL" Location="9,296" Size="94,20"/>
+		<textfield name="emailText" tabindex="13" Location="104,296" Size="245,20"/>
+		<label name="comClassification" title="EBI_LANG_C_CRM_CLASSIFICATION_TYPE" Location="9,319" Size="94,20"/>
+		<combobox name="classificationText" tabindex="14" Location="104,319" Size="150,20"/>
+		<checkbox name="lockCompany" tabindex="15" title="EBI_LANG_C_LOCKED" Location="260,319" Size="90,20"/>
+</panel>
+<panel name="companyAddressViewPanel" title="EBI_LANG_C_DESCRIPTION_ADRESS" Location="375,0" Size="602,367">
+		<textarea name="companyDescription" tabindex="16" Location="9,22" Size="579,126"/>
+		<table name="companyTableAddressView" Location="8,154" Size="580,204"/>
+</panel>
+<panel name="companyContactsViewPanel" title="EBI_LANG_C_CONTACT_LIST" Location="10,368" Size="100%,100%">
+		<table name="companyTableContactViewX" Location="8,20" Size="100%,100%"/>
+</panel>
+</visualpanel>

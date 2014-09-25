@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<visualpanel name="Order" title="EBI_LANG_C_ORDER" Location="0,0" Size="900,950" visualproperties="true" assignable="true" >
+ <panel name="orderData" title="EBI_LANG_C_PANEL_ORDER_DATA" Location="10,2" Size="380,324">
+		<label name="orderNr" title="EBI_LANG_ORDER_NUMBER" Location="9,18" Size="113,20"/>
+		<textfield name="orderNrText" tabindex="1" Location="115,18" Size="245,20"/>
+		<label name="orderName" title="EBI_LANG_NAME" Location="9,43" Size="113,20"/>
+		<textfield name="orderNameText" tabindex="2" Location="115,43" Size="245,20"/>
+		<label name="orderStatus" title="EBI_LANG_C_STATUS" Location="9,68" Size="113,20"/>
+		<combobox name="orderStatusText" tabindex="3" Location="115,68" Size="245,20"/>
+		<label name="orderCreateDate" title="EBI_LANG_SEND_DATE" Location="9,93" Size="113,20"/>
+		<timepicker name="orderCreatedText" tabindex="4" Location="115,93" Size="245,20"/>
+		<label name="orderReceiveDate" title="EBI_LANG_DATE" Location="9,118" Size="113,20"/>
+		<timepicker name="orderReceiveText" tabindex="5" Location="115,118" Size="245,20"/>
+		<label name="orderOffer" title="EBI_LANG_C_OFFER" Location="9,143" Size="113,20"/>
+		<textfield name="orderOfferText" tabindex="6" Location="115,143" Size="120,20"/>
+		<button name="searchOffer" tabindex="7" Location="240,143" Size="25,20"/>
+		<button name="showOffer" tabindex="8" title="EBI_LANG_SHOW" Location="270,144" Size="90,20"/>
+		<label name="odrDescription" title="EBI_LANG_DESCRIPTION" Location="9,168" Size="113,20"/>
+		<textarea name="orderDescription" tabindex="10" Location="9,193" Size="100%,87"/>
+		<button name="saveOrder" tabindex="11" title="EBI_LANG_SAVE" Location="220,287" Size="150,25"/>
+</panel>
+<panel name="orderDocument" title="EBI_LANG_C_PANEL_DOCUMENT" Location="400,4" Size="100%,135">
+		<table name="tableorderDocument" Location="7,50" Size="100%,100%"/>
+		<button name="neworderDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="8,20" Size="31,27"/>
+		<button name="showorderDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="42,20" Size="31,27"/>
+		<button name="deleteorderDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="77,20" Size="31,27"/>
+</panel>
+<panel name="orderProduct" title="EBI_LANG_C_PANEL_POSITION_PRODUCT" Location="400,138" Size="100%,188">
+		<table name="tableorderProduct" Location="6,50" Size="100%,100%"/>
+		<button name="neworderProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_PRODUCT" Location="7,20" Size="31,27"/>
+		<button name="deleteorderProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="42,20" Size="31,27"/>
+</panel>
+<panel name="orderReceiver" title="EBI_LANG_SENDED" Location="10,324" Size="100%,250">
+		<table name="tableOrderReceiver" Location="8,50" Size="100%,100%"/>
+		<button name="neworderReceiver" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_CONTACT" Location="9,20" Size="31,27"/>
+		<button name="deleteorderReceiver" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="79,20" Size="31,27"/>
+		<button name="editOrderReceiver" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="43,20" Size="31,27"/>
+</panel>
+<panel name="avorder" title="EBI_LANG_C_PANEL_AVAILABLE_ORDER" Location="10,574" Size="100%,100%">
+		<table name="companyorderTable" Location="8,53" Size="100%,100%"/>
+		<button name="neworder" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="9,20" Size="31,27"/>
+		<button name="editorder" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="43,20" Size="31,27"/>
+		<button name="copyorder" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="77,20" Size="31,27"/>
+		<button name="moveorder" i18ntooltip="EBI_LANG_C_TOOL_TIP_MOVE_RECORD" Location="111,20" Size="31,27"/>
+		<button name="deleteorder" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="145,20" Size="31,27"/>
+		<button name="reportorder" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="178,20" Size="31,27"/>
+		<button name="historyorder" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_HISTORY" Location="213,20" Size="31,27"/>
+		<button name="mailOrder" i18ntooltip="EBI_LANG_C_TOOL_TIP_MAIL_RECORD" Location="247,20" Size="31,27"/>
+		<button name="createService" i18ntooltip="EBI_LANG_C_TOOL_TIP_CREATE_SERVICE" Location="282,20" Size="31,27"/>
+		<button name="createInvoice" i18ntooltip="EBI_LANG_C_TOOL_TIP_CREATE_INVOICE" Location="317,20" Size="31,27"/>
+		<label name="filterTable" title="EBI_LANG_FILTER" Location="404,20" Size="77,23"/>
+		<textfield name="filterTableText" Location="484,22" Size="293,20"/>
+		<textfield name="avorder" title="EBI_LANG_C_PANEL_AVAILABLE_ORDER" Location="10,574" Size="100%,100%"/>
+</panel>
+</visualpanel>

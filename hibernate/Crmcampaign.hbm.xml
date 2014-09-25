@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Crmcampaign" table="CRMCAMPAIGN" >
+        <id name="campaignid" type="java.lang.Integer">
+            <column name="CAMPAIGNID" />
+            <generator class="native" />
+        </id>
+        <property name="campaignnr" type="string">
+            <column name="CAMPAIGNNR" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" />
+        </property>
+        <property name="validfrom" type="timestamp">
+            <column name="VALIDFROM" length="19" />
+        </property>
+        <property name="validto" type="timestamp">
+            <column name="VALIDTO" length="19" />
+        </property>
+        <set name="crmcampaignprops" table="CRMCAMPAIGNPROP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CAMPAIGNID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crmcampaignprop" />
+        </set>
+        <set name="crmcampaignpositions" table="CRMCAMPAIGNPOSITION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CAMPAIGNID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crmcampaignposition" />
+        </set>
+        <set name="crmcampaigndocses" table="CRMCAMPAIGNDOCS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CAMPAIGNID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crmcampaigndocs" />
+        </set>
+        <set name="crmcampaignreceivers" table="CRMCAMPAIGNRECEIVER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CAMPAIGNID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crmcampaignreceiver" />
+        </set>
+    </class>
+</hibernate-mapping>

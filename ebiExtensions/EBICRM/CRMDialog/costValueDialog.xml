@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="costValueDialog" title="EBI_LANG_COST" icon="../images/write.png" Location="100,100" Size="450,130" visualproperties="false" assignable="false" modal="true" >
+ 		<label name="name" title="EBI_LANG_VALUE" Location="10,54" Size="103,20"/>
+		<formattedtextfield name="nameValue" tabindex="1" Location="117,54" Size="303,20"/>
+		<button name="applyButton" tabindex="2" title="Save" Location="120,87" Size="130,25"/>
+		<button name="closeButton" tabindex="3" title="Close" Location="259,86" Size="131,25"/>
+		<label name="type" title="EBI_LANG_TYPE" Location="11,21" Size="100,20"/>
+		<combobox name="propertiesText" Location="117,21" Size="304,20"/>
+</dialog>

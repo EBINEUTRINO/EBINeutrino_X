@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="projectReportCost" pageWidth="742" pageHeight="595" orientation="Landscape" columnWidth="702" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5354e716-0666-4551-a15e-92422e9edb7a">
+	<property name="ireport.zoom" value="0.9090909090909108"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="38"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="ID" class="java.lang.Integer"/>
+	<parameter name="EBI_LANG" class="java.util.Properties" isForPrompting="false"/>
+	<parameter name="COMPANY_LOGO" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_NAME" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_STR_NR" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_ZIP" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_LOCATION" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_TELEPHONE" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_FAX" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_EMAIL" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_WEB" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_BANK_NAME" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_BANK_ACCOUNT_NR" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_BANK_BSB" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_BANK_BIC" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_BANK_IBAN" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_BANK_COUNTRY" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_TAX_INFORMATION" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_VATVAL" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_CONTACT_NAME" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_CONTACT_SURNAME" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_CONTACT_EMAIL" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_CONTACT_TELEPHONE" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_CONTACT_FAX" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_CONTACT_POSITION" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="COMPANY_NAME1" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new File(".").getAbsolutePath()+"/reports/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT pro.PROJECTID,pro.PROJECTNR, pro.NAME,pro.MANAGER, pro.BUDGET,pro.ACTUALCOST,pro.REMAINCOST,pro.STATUS,pro.VALIDFROM,pro.VALIDTO,
+task.TASKIID,task.PROJECTID,task.PARENTSTASKID,task.NAME as TASKNAME,task.STATUS as TASKSTATUS,task.TYPE as TASKTYPE,task.DURATION,
+task.COLOR as TCOLOR,task.DONE,task.DESCRIPTION FROM CRMPROJECT as pro LEFT JOIN CRMPROJECTTASK as task ON  pro.PROJECTID = task.PROJECTID where pro.PROJECTID = $P{ID}]]>
+	</queryString>
+	<field name="PROJECTID" class="java.lang.Integer"/>
+	<field name="PROJECTNR" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="MANAGER" class="java.lang.String"/>
+	<field name="BUDGET" class="java.lang.Double"/>
+	<field name="ACTUALCOST" class="java.lang.Double"/>
+	<field name="REMAINCOST" class="java.lang.Double"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="VALIDFROM" class="java.sql.Date"/>
+	<field name="VALIDTO" class="java.sql.Date"/>
+	<field name="TASKIID" class="java.lang.Integer"/>
+	<field name="PARENTSTASKID" class="java.lang.String"/>
+	<field name="TASKNAME" class="java.lang.String"/>
+	<field name="TASKSTATUS" class="java.lang.String"/>
+	<field name="TASKTYPE" class="java.lang.String"/>
+	<field name="DURATION" class="java.lang.Integer"/>
+	<field name="TCOLOR" class="java.lang.String"/>
+	<field name="DONE" class="java.lang.Integer"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<group name="Group1">
+		<groupExpression><![CDATA[(int)($V{REPORT_COUNT}/15)]]></groupExpression>
+	</group>
+	<title>
+		<band height="77" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="88365eda-a173-4303-a6de-b3bfd5ab85ad" key="textField" x="471" y="0" width="207" height="36"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{COMPANY_NAME}+"\n"+$P{COMPANY_NAME1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="cf08fb67-0445-43c0-8d88-fb82f7820ba8" key="textField" x="471" y="36" width="207" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{COMPANY_STR_NR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="03ac813a-804b-40e8-871b-45aed5d0d175" key="textField" x="471" y="51" width="207" height="18"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{COMPANY_ZIP}+" "+$P{COMPANY_LOCATION}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="8e0fd71d-2d11-40c7-afe2-57901c197d79" x="13" y="72" width="677" height="1" forecolor="#CCCCCC"/>
+			</line>
+			<image scaleImage="RealSize">
+				<reportElement uuid="dc53fcad-72ec-457f-88fe-aceb85273212" key="image-1" isPrintRepeatedValues="false" x="15" y="3" width="297" height="69"/>
+				<imageExpression><![CDATA[System.getProperty("user.dir")+"/images/logo.gif"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="213">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+			<textField pattern="">
+				<reportElement uuid="345f8862-e362-465e-9e98-a50c1744b8e7" x="13" y="0" width="385" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_C_PROJECT")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9d25faf3-6144-4f14-9a8f-d78c60ca1479" x="100" y="43" width="204" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROJECTNR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6cf59e70-b3f5-4ea0-9900-8b20bfb092ee" x="100" y="63" width="253" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fce9f418-887f-4c10-b20a-36896ce8aca7" x="509" y="43" width="186" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MANAGER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7d095282-99f2-4112-bc82-c0700eb9fa9e" x="100" y="83" width="222" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="97e5f56c-f4f3-4555-93b5-a45f8282dd27" x="13" y="43" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_PROJECT_NR")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7928ae98-3b71-4715-94f1-49ea6018a799" x="13" y="63" width="89" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_NAME")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0c440b3c-f3bc-49c4-91ab-edca95515833" x="13" y="83" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_STATUS")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7f761c77-c8f2-4c8b-a0ed-f1acab96586f" x="422" y="43" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_PROJECT_MANAGER")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="39c3e6c3-b97d-46f9-866d-20aac92f0369" x="422" y="83" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_PROJECT_BUDGET")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="36f4656b-4ed1-45b0-aa3b-ba6c4784e606" x="509" y="83" width="183" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BUDGET}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1506ccf5-6a0d-4c18-b759-4b6db9f46721" x="422" y="103" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_ACTUAL_COST")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="81f75b1f-735a-497e-b72b-5c5b80a23187" x="509" y="103" width="183" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTUALCOST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement uuid="c43b3f29-71d1-4039-9856-8592e0f3c7ba" x="102" y="123" width="222" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VALIDFROM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement uuid="c643f45d-163f-4115-9d2f-f49488fb30e6" x="102" y="143" width="222" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VALIDTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5abd4471-9357-4985-befd-a56fcc068ed1" x="15" y="123" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_START_DATE")+ ": "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e6bce616-c96d-45a6-840f-226660938c29" x="15" y="143" width="87" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_END_DATE")+ ": "]]></textFieldExpression>
+			</textField>
+			<rectangle radius="10">
+				<reportElement uuid="8f006743-e547-4b3e-bf6f-10448ad440ad" x="10" y="190" width="680" height="20" forecolor="#3333FF" backcolor="#E7E7F5"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="149d141e-0765-48d4-95f0-5b833d41e433" x="15" y="190" width="87" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_NAME")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="85dab921-9d27-4f7b-ac46-dbc147930866" x="141" y="190" width="111" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_STATUS")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4360a1c5-4467-4bc3-a5b3-49c5a89ffbde" x="252" y="190" width="111" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_TYPE")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7a724b85-c9c3-4ccf-8cd6-23f21a1d1846" x="363" y="190" width="82" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_DURATION")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a5232b7d-b87f-44f8-a343-1038597078c6" x="445" y="190" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_TASK_DONE")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1c49ac1d-f55a-4ef8-b238-ce6725e3efa0" x="545" y="190" width="133" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_DESCRIPTION")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="63" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b10a883c-71f6-4bfb-9fef-dd563f1c825f" x="524" y="5" width="178" height="58" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b5fa7e0b-02c5-44e0-a4f3-3b7146060a88" x="445" y="5" width="79" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DONE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="79745f5a-0dfb-4683-9c19-7e38a9792b5b" x="366" y="5" width="79" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DURATION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d3efc51e-c616-4b22-91c7-c8ca170c4ca6" x="252" y="5" width="111" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TASKTYPE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="316d68be-925e-4e7d-8d08-cb8d34e28170" x="141" y="5" width="111" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TASKSTATUS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c14d8206-da6d-4ba1-bbaf-ea2143e9cbac" x="15" y="5" width="126" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TASKNAME}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="false">
+				<reportElement uuid="f23737ab-f1eb-480c-9fde-cc12e4fbd900" x="0" y="25" width="509" height="30" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<subreportParameter name="EBI_LANG_SUMNAME">
+					<subreportParameterExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_SUM")]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TASKID">
+					<subreportParameterExpression><![CDATA[$F{TASKIID} == null ? 0 : $F{TASKIID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "projectReportCost_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement uuid="80b86e81-9a67-4741-9841-686674070e73" x="13" y="3" width="430" height="1" forecolor="#ECEBEB"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement uuid="250ec857-b1ea-491b-b8bd-ca71b904af6a" positionType="FixRelativeToBottom" x="0" y="0" width="690" height="4"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="91bd73b9-4dec-4ff5-b9a4-8ba2baf8ee63" mode="Opaque" x="0" y="0" width="690" height="25" forecolor="#D0B48E" backcolor="#F0F0F0"/>
+				<textField pattern="dd/MM/yyyy h.mm a">
+					<reportElement uuid="3292acb5-cd58-4705-96cc-1d317e191b8a" x="11" y="3" width="216" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="08f3cb13-cfe3-4342-a4ba-a1e51380b153" x="656" y="0" width="34" height="23"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Crminvoice" table="crminvoice" >
+        <id name="invoiceid" type="java.lang.Integer">
+            <column name="INVOICEID" />
+            <generator class="native" />
+        </id>
+        <property name="assosiation" type="string">
+            <column name="ASSOSIATION" length="150" />
+        </property>
+        <property name="invoicenr" type="java.lang.Integer">
+            <column name="INVOICENR" />
+        </property>
+        <property name="beginchar" type="string">
+            <column name="BEGINCHAR" length="10" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" />
+        </property>
+        <property name="category" type="string">
+            <column name="CATEGORY" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="DATE" length="19" />
+        </property>
+        <property name="taxtype" type="string">
+            <column name="TAXTYPE" length="150" />
+        </property>
+        <property name="gender" type="string">
+            <column name="GENDER" length="100" />
+        </property>
+        <property name="position" type="string">
+            <column name="POSITION" length="100" />
+        </property>
+        <property name="companyname" type="string">
+            <column name="COMPANYNAME" />
+        </property>
+        <property name="contactname" type="string">
+            <column name="CONTACTNAME" />
+        </property>
+        <property name="contactsurname" type="string">
+            <column name="CONTACTSURNAME" />
+        </property>
+        <property name="contactstreet" type="string">
+            <column name="CONTACTSTREET" />
+        </property>
+        <property name="contactzip" type="string">
+            <column name="CONTACTZIP" length="100" />
+        </property>
+        <property name="contactlocation" type="string">
+            <column name="CONTACTLOCATION" />
+        </property>
+        <property name="contactpostcode" type="string">
+            <column name="CONTACTPOSTCODE" />
+        </property>
+        <property name="contactcountry" type="string">
+            <column name="CONTACTCOUNTRY" />
+        </property>
+        <property name="contacttelephone" type="string">
+            <column name="CONTACTTELEPHONE" />
+        </property>
+        <property name="contactfax" type="string">
+            <column name="CONTACTFAX" />
+        </property>
+        <property name="contactemail" type="string">
+            <column name="CONTACTEMAIL" />
+        </property>
+        <property name="contactweb" type="string">
+            <column name="CONTACTWEB" />
+        </property>
+        <property name="contactdescription" type="string">
+            <column name="CONTACTDESCRIPTION" length="65535" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" />
+        </property>
+        <set name="crminvoicepositions" table="crminvoiceposition" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INVOICEID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crminvoiceposition" />
+        </set>
+    </class>
+</hibernate-mapping>

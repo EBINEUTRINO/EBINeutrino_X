@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="productInsertDialog" title="Product Insert Dialog" icon="/home/franz/Desktop/EBINeutrinoR1/..\images\product.png" Location="100,100" Size="660,600" visualproperties="false" assignable="false" modal="true" >
+ 		<button name="closeButton" tabindex="7" title="cancel" Location="545,565" Size="107,29"/>
+		<button name="applyButton" tabindex="6" title="apply" Location="416,565" Size="121,29"/>
+		<editor name="productText" Location="7,220" Size="644,331"/>
+		<label name="quantity" title="quantity" Location="284,19" Size="59,20"/>
+		<textfield name="quantityText" tabindex="2" Location="342,19" Size="64,20"/>
+		<label name="deduction" title="deduction" Location="423,19" Size="60,20"/>
+		<textfield name="deductionText" tabindex="3" Location="483,19" Size="58,20"/>
+		<label name="%" title="%" Location="541,19" Size="18,20"/>
+		<button name="newProduct" tabindex="4" Location="566,16" Size="32,27"/>
+		<button name="searchProduct" tabindex="5" Location="603,16" Size="32,27"/>
+		<label name="productNr" title="productNr" Location="18,19" Size="74,20"/>
+		<textfield name="productNrText" tabindex="1" Location="96,19" Size="171,20"/>
+		<label name="name" title="EBI_LANG_NAME" Location="18,47" Size="74,20"/>
+		<textfield name="nameText" Location="96,49" Size="311,20"/>
+<panel name="descriptionPanel" title="EBI_LANG_DESCRIPTION" Location="5,73" Size="646,146">
+		<textarea name="descriptionText" Location="8,15" Size="630,124"/>
+</panel>
+</dialog>

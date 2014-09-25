@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Companycontacts" table="companycontacts" >
+        <id name="contactid" type="java.lang.Integer">
+            <column name="CONTACTID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="company" class="ebiNeutrinoSDK.model.hibernate.Company" fetch="select">
+            <column name="COMPANYID" not-null="true" />
+        </many-to-one>
+        <property name="maincontact" type="java.lang.Boolean">
+            <column name="MAINCONTACT" />
+        </property>
+        <property name="gender" type="string">
+            <column name="GENDER" length="20" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" />
+        </property>
+        <property name="surname" type="string">
+            <column name="SURNAME" length="150" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="150" />
+        </property>
+        <property name="mittelname" type="string">
+            <column name="MITTELNAME" length="150" />
+        </property>
+        <property name="position" type="string">
+            <column name="POSITION" length="150" />
+        </property>
+        <property name="birddate" type="timestamp">
+            <column name="BIRDDATE" length="19" />
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="30" />
+        </property>
+        <property name="fax" type="string">
+            <column name="FAX" length="30" />
+        </property>
+        <property name="mobile" type="string">
+            <column name="MOBILE" length="30" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="50" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="65535" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <set name="companycontactaddresses" table="companycontactaddress" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACTID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companycontactaddress" />
+        </set>
+    </class>
+</hibernate-mapping>

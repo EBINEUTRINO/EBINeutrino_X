@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<visualpanel name="Service" title="EBI_LANG_C_SERVICE" Location="0,0" Size="900,950" visualproperties="true" assignable="true" >
+ <panel name="serviceData" title="EBI_LANG_C_PANEL_SERVICE_DATA" Location="10,2" Size="380,304">
+		<label name="serviceNr" title="EBI_LANG_SERVICE_NUMBER" Location="9,18" Size="113,20"/>
+		<textfield name="serviceNrText" tabindex="1" Location="115,18" Size="245,20"/>
+		<label name="serviceName" title="EBI_LANG_NAME" Location="9,43" Size="113,20"/>
+		<textfield name="serviceNameText" tabindex="2" Location="115,43" Size="245,20"/>
+		<label name="serviceCategory" title="EBI_LANG_CATEGORY" Location="9,68" Size="113,20"/>
+		<combobox name="serviceCategoryText" tabindex="3" Location="115,68" Size="245,20"/>
+		<label name="serviceType" title="EBI_LANG_TYPE" Location="9,93" Size="113,20"/>
+		<combobox name="serviceTypeText" tabindex="4" Location="115,93" Size="245,20"/>
+		<label name="serviceStatus" title="EBI_LANG_C_STATUS" Location="9,118" Size="113,20"/>
+		<combobox name="serviceStatusText" tabindex="5" Location="115,118" Size="245,20"/>
+		<label name="serviceDescription" title="EBI_LANG_DESCRIPTION" Location="9,146" Size="113,20"/>
+		<textarea name="serviceDescriptionText" tabindex="6" Location="8,169" Size="100%,90"/>
+		<button name="saveService" tabindex="7" title="EBI_LANG_SAVE" Location="220,266" Size="150,25"/>
+</panel>
+<panel name="serviceDocument" title="EBI_LANG_C_PANEL_DOCUMENT" Location="402,2" Size="100%,143">
+		<button name="newServiceDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="8,18" Size="31,27"/>
+		<button name="showServiceDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="43,18" Size="31,27"/>
+		<button name="deleteServiceDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="79,18" Size="31,27"/>
+		<table name="tableServiceDocument" title="tableServiceDocument" Location="7,49" Size="100%,100%"/>
+</panel>
+<panel name="serviceProduct" title="EBI_LANG_C_PANEL_POSITION_PRODUCT" Location="401,145" Size="100%,163">
+		<table name="tableServiceProduct" Location="8,47" Size="100%,100%"/>
+		<button name="newServiceProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_PRODUCT" Location="8,17" Size="31,27"/>
+		<button name="deleteServiceProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="44,17" Size="31,27"/>
+</panel>
+<panel name="serviceProsol" title="EBI_LANG_PROBLEM_SOLUTION" Location="10,308" Size="100%,272">
+		<table name="tableServiceProsol" Location="7,53" Size="100%,100%"/>
+		<button name="newServiceProsol" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_PROBLEM_SOLUTION" Location="8,20" Size="31,27"/>
+		<button name="deleteServiceProsol" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="44,20" Size="31,27"/>
+</panel>
+<panel name="avService" title="EBI_LANG_C_PANEL_AVAILABLE_SERVICE" Location="10,586" Size="100%,100%">
+		<table name="companyServiceTable" Location="9,53" Size="100%,100%"/>
+		<button name="newService" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="8,20" Size="31,27"/>
+		<button name="editService" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="43,20" Size="31,27"/>
+		<button name="copyService" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="79,20" Size="31,27"/>
+		<button name="moveService" i18ntooltip="EBI_LANG_C_TOOL_TIP_MOVE_RECORD" Location="114,20" Size="31,27"/>
+		<button name="deleteService" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="150,20" Size="31,27"/>
+		<button name="reportService" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="186,20" Size="31,27"/>
+		<button name="historyService" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_HISTORY" Location="221,20" Size="31,27"/>
+		<button name="mailService" i18ntooltip="EBI_LANG_C_TOOL_TIP_MAIL_RECORD" Location="256,20" Size="31,27"/>
+		<button name="createInvoice" i18ntooltip="EBI_LANG_C_TOOL_TIP_CREATE_INVOICE" Location="293,20" Size="31,27"/>
+		<label name="filterTable" title="EBI_LANG_FILTER" Location="399,19" Size="77,23"/>
+		<textfield name="filterTableText" Location="477,21" Size="194,20"/>
+</panel>
+</visualpanel>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Crmprojecttask" table="CRMPROJECTTASK" >
+        <id name="taskiid" type="java.lang.Integer">
+            <column name="TASKIID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="crmproject" class="ebiNeutrinoSDK.model.hibernate.Crmproject" fetch="select">
+            <column name="PROJECTID" />
+        </many-to-one>
+        <property name="taskid" type="string">
+            <column name="TASKID" />
+        </property>
+        <property name="parentstaskid" type="string">
+            <column name="PARENTSTASKID" length="65535" />
+        </property>
+        <property name="x" type="java.lang.Integer">
+            <column name="X" />
+        </property>
+        <property name="y" type="java.lang.Integer">
+            <column name="Y" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" />
+        </property>
+        <property name="type" type="string">
+            <column name="TYPE" />
+        </property>
+        <property name="duration" type="java.lang.Integer">
+            <column name="DURATION" />
+        </property>
+        <property name="color" type="string">
+            <column name="COLOR" length="12" />
+        </property>
+        <property name="done" type="java.lang.Integer">
+            <column name="DONE" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="65535" />
+        </property>
+        <set name="crmprojectprops" table="CRMPROJECTPROP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TASKID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crmprojectprop" />
+        </set>
+        <set name="crmprojectcosts" table="CRMPROJECTCOST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TASKID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Crmprojectcost" />
+        </set>
+    </class>
+</hibernate-mapping>

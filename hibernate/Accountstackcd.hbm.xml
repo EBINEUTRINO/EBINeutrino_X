@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Accountstackcd" table="ACCOUNTSTACKCD" >
+        <id name="accountstackcdid" type="java.lang.Integer">
+            <column name="ACCOUNTSTACKCDID" />
+            <generator class="native" />
+        </id>
+        <property name="accountstackid" type="java.lang.Integer">
+            <column name="ACCOUNTSTACKID" />
+        </property>
+        <property name="creditdebitnumber" type="string">
+            <column name="CREDITDEBITNUMBER" length="150" />
+        </property>
+        <property name="creditdebitname" type="string">
+            <column name="CREDITDEBITNAME" />
+        </property>
+        <property name="creditdebitvalue" type="java.lang.Double">
+            <column name="CREDITDEBITVALUE" precision="22" scale="0" />
+        </property>
+        <property name="creditdebittaxtname" type="string">
+            <column name="CREDITDEBITTAXTNAME" length="150" />
+        </property>
+        <property name="creditdebittype" type="java.lang.Integer">
+            <column name="CREDITDEBITTYPE" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

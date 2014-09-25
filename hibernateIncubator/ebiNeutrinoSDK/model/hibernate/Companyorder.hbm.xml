@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Companyorder" table="companyorder" >
+        <id name="orderid" type="java.lang.Integer">
+            <column name="ORDERID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="company" class="ebiNeutrinoSDK.model.hibernate.Company" fetch="select">
+            <column name="COMPANYID" />
+        </many-to-one>
+        <property name="ordernr" type="string">
+            <column name="ORDERNR" length="150" />
+        </property>
+        <property name="offerid" type="java.lang.Integer">
+            <column name="OFFERID" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="invoicecreated" type="java.lang.Boolean">
+            <column name="INVOICECREATED" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="150" />
+        </property>
+        <property name="orderversion" type="java.lang.Integer">
+            <column name="ORDERVERSION" />
+        </property>
+        <property name="offerdate" type="timestamp">
+            <column name="OFFERDATE" length="19" />
+        </property>
+        <property name="validto" type="timestamp">
+            <column name="VALIDTO" length="19" />
+        </property>
+        <property name="isrecieved" type="java.lang.Boolean">
+            <column name="ISRECIEVED" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="65535" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <set name="companyorderdocses" table="companyorderdocs" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ORDERID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyorderdocs" />
+        </set>
+        <set name="companyorderpositionses" table="companyorderpositions" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ORDERID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyorderpositions" />
+        </set>
+        <set name="companyorderreceivers" table="companyorderreceiver" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ORDERID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyorderreceiver" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="pessimisticViewDialog" title="CRM Pessimistic Locking" Location="100,100" Size="570,180" visualproperties="false" assignable="false" modal="true" resizable="true" >
+ 		<label name="userx" title="User" Location="21,20" Size="271,21"/>
+		<label name="statusx" title="Status" Location="302,21" Size="260,20"/>
+		<label name="timex" title="Time" Location="22,50" Size="270,20"/>
+		<button name="forceUnlock" title="EBI_LANG_FORCE_UNLOCK" Location="301,48" Size="189,27"/>
+</dialog>

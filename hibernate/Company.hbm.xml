@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Company" table="COMPANY" >
+        <id name="companyid" type="java.lang.Integer">
+            <column name="COMPANYID" />
+            <generator class="native" />
+        </id>
+        <property name="companynumber" type="java.lang.Integer">
+            <column name="COMPANYNUMBER" />
+        </property>
+        <property name="customernr" type="string">
+            <column name="CUSTOMERNR" />
+        </property>
+        <property name="beginchar" type="string">
+            <column name="BEGINCHAR" length="10" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="name2" type="string">
+            <column name="NAME2" />
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="50" />
+        </property>
+        <property name="fax" type="string">
+            <column name="FAX" length="50" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="50" />
+        </property>
+        <property name="employee" type="string">
+            <column name="EMPLOYEE" length="100" />
+        </property>
+        <property name="qualification" type="string">
+            <column name="QUALIFICATION" length="100" />
+        </property>
+        <property name="category" type="string">
+            <column name="CATEGORY" length="150" />
+        </property>
+        <property name="cooperation" type="string">
+            <column name="COOPERATION" length="150" />
+        </property>
+        <property name="islock" type="java.lang.Boolean">
+            <column name="ISLOCK" />
+        </property>
+        <property name="web" type="string">
+            <column name="WEB" length="150" />
+        </property>
+        <property name="taxnumber" type="string">
+            <column name="TAXNUMBER" length="50" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="65535" />
+        </property>
+        <property name="createdfrom" type="string">
+            <column name="CREATEDFROM" length="150" />
+        </property>
+        <property name="createddate" type="timestamp">
+            <column name="CREATEDDATE" length="19" />
+        </property>
+        <property name="changedfrom" type="string">
+            <column name="CHANGEDFROM" length="150" />
+        </property>
+        <property name="changeddate" type="timestamp">
+            <column name="CHANGEDDATE" length="19" />
+        </property>
+        <property name="isactual" type="java.lang.Boolean">
+            <column name="ISACTUAL" />
+        </property>
+        <set name="companycontactses" table="COMPANYCONTACTS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" not-null="true" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companycontacts" />
+        </set>
+        <set name="companyservices" table="COMPANYSERVICE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyservice" />
+        </set>
+        <set name="companyoffers" table="COMPANYOFFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyoffer" />
+        </set>
+        <set name="companymeetingprotocols" table="COMPANYMEETINGPROTOCOL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companymeetingprotocol" />
+        </set>
+        <set name="companybanks" table="COMPANYBANK" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companybank" />
+        </set>
+        <set name="companyaddresses" table="COMPANYADDRESS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyaddress" />
+        </set>
+        <set name="companyactivitieses" table="COMPANYACTIVITIES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyactivities" />
+        </set>
+        <set name="companyopportunities" table="COMPANYOPPORTUNITY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyopportunity" />
+        </set>
+        <set name="companyhirarchies" table="COMPANYHIRARCHIE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyhirarchie" />
+        </set>
+        <set name="companyorders" table="COMPANYORDER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANYID" />
+            </key>
+            <one-to-many class="ebiNeutrinoSDK.model.hibernate.Companyorder" />
+        </set>
+    </class>
+</hibernate-mapping>

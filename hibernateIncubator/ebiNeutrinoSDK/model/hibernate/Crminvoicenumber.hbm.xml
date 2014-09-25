@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-gen-2012 12.30.17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ebiNeutrinoSDK.model.hibernate.Crminvoicenumber" table="crminvoicenumber" >
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="crminvoicecategory" class="ebiNeutrinoSDK.model.hibernate.Crminvoicecategory" fetch="select">
+            <column name="CATEGORYID" />
+        </many-to-one>
+        <property name="category" type="string">
+            <column name="CATEGORY" />
+        </property>
+        <property name="beginchar" type="string">
+            <column name="BEGINCHAR" length="10" />
+        </property>
+        <property name="numberfrom" type="java.lang.Integer">
+            <column name="NUMBERFROM" />
+        </property>
+        <property name="numberto" type="java.lang.Integer">
+            <column name="NUMBERTO" />
+        </property>
+    </class>
+</hibernate-mapping>

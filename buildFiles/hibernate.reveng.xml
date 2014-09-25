@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+<type-mapping>
+	<sql-type jdbc-type="BLOB" hibernate-type="binary" length="1024"
+		not-null="false">
+	</sql-type>
+	<sql-type jdbc-type="LONGVARBINARY" hibernate-type="binary"
+		not-null="false" length="100">
+	</sql-type>
+	<sql-type jdbc-type="LONGVARBINARY" hibernate-type="binary"
+		not-null="false" length="100">
+	</sql-type>
+</type-mapping>
+
+
+</hibernate-reverse-engineering>
