@@ -1,7 +1,7 @@
-EBINeutrino_6
+EBINeutrino_X
 =============
 
-EBI Neutrino version 6
+EBI Neutrino version X
 
 EN:
 Java swing with Intellij IDE open source crm and erp system 
