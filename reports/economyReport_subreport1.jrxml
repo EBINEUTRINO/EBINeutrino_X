@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="economyReport_subreport1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="economyReport_subreport1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="66023339-c526-427a-9fb5-90d84f7aa344">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="startDate" class="java.util.Date"/>
 	<parameter name="endDate" class="java.util.Date"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["D:\\EBINEUTRINO1_1\\EBINeutrinoCORE\\reports\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="type" class="java.lang.Integer"/>
 	<parameter name="EBI_LANG" class="java.util.Properties" isForPrompting="false"/>
@@ -28,18 +28,18 @@
 	<columnHeader>
 		<band height="36">
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="0" y="9" width="358" height="20"/>
+				<reportElement isPrintRepeatedValues="false" x="0" y="9" width="358" height="20" uuid="01f66c99-1cec-4d0a-9183-9f43bb80b359"/>
 				<textElement>
-					<font isBold="true"/>
+					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{type} == 1 ? $P{EBI_LANG}.getProperty("EBI_LANG_COST") : $P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{type} == 1 ? $P{EBI_LANG}.getProperty("EBI_LANG_COST") : $P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="22">
 			<subreport isUsingCache="false">
-				<reportElement isPrintRepeatedValues="false" x="407" y="0" width="150" height="20"/>
+				<reportElement isPrintRepeatedValues="false" x="407" y="0" width="150" height="20" uuid="516c798b-af66-4c3d-b6ff-758256f38b4a"/>
 				<subreportParameter name="startDate">
 					<subreportParameterExpression><![CDATA[$P{startDate}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -51,17 +51,21 @@
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<returnValue subreportVariable="SUM_AMOUNT" toVariable="SUM_AMOUNT" calculation="Sum"/>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "economyReport_subreport1_subreport1.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "economyReport_subreport1_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement x="20" y="0" width="100" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{ACCOUNT_DEBIT}]]></textFieldExpression>
+				<reportElement x="20" y="0" width="100" height="20" uuid="ca2b8e7a-c2c0-4fcc-99dd-e00bb3a821dd"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_DEBIT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="120" y="0" width="287" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{ACCOUNT_D_NAME}]]></textFieldExpression>
+				<reportElement x="120" y="0" width="287" height="20" uuid="00fe6260-bb11-42da-95f5-44c38dfda086"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_D_NAME}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

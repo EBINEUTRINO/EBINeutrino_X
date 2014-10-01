@@ -37,7 +37,7 @@ public class EBIDataControlLeads {
 
     public boolean dataStore() {
       try{
-          ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
+          //ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
           ebiLeadsPanel.ebiModule.ebiContainer.showInActionStatus("Leads", true);
           //ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
 

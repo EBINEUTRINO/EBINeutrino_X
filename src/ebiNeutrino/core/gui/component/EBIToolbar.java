@@ -50,7 +50,7 @@ public class EBIToolbar extends JToolBar implements IEBIToolBar {
 
          Graphics2D g2 = (Graphics2D)g;
          // Draw bg top
-         Color startColor = new Color(240,240,240);
+         Color startColor = new Color(39,37,27);
          Color endColor = startColor.brighter();
 
          // A non-cyclic gradient

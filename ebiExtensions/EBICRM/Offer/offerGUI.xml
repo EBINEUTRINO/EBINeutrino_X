@@ -35,6 +35,7 @@
 		<button name="newOfferReceiver" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_CONTACT" Location="9,17" Size="31,27"/>
 		<button name="deleteOfferReceiver" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="78,17" Size="31,27"/>
 		<button name="editOfferReceiver" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="43,17" Size="31,27"/>
+		<textfield name="new_fields" Location="128,18" Size="274,24"/>
 </panel>
 <panel name="avOffer" title="EBI_LANG_C_PANEL_AVAILABLE_OFFER" Location="9,590" Size="100%,100%">
 		<table name="companyOfferTable" Location="9,55" Size="100%,100%"/>

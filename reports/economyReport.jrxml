@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Account Business Assesstement" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Account Business Assesstement" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="526eaa3e-6216-422e-85c4-5312361589a3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.1000000000000094"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="66"/>
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="1638"/>
+	<property name="ireport.y" value="796"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -82,8 +82,9 @@
 	<parameter name="startDate" class="java.util.Date"/>
 	<parameter name="endDate" class="java.util.Date"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["D:\\EBINEUTRINO1_1\\EBINeutrinoCORE\\reports\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TAXOFFICE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
 comp.NAME as COMPNAME, comp.CUSTOMERNR, comp.ISACTUAL
@@ -101,43 +102,49 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 		<variableExpression><![CDATA[$V{cost} - $V{income}]]></variableExpression>
 	</variable>
 	<title>
-		<band height="62" splitType="Stretch">
+		<band height="64" splitType="Stretch">
 			<line>
-				<reportElement key="line-1" x="14" y="59" width="521" height="1" forecolor="#CCCCFF" backcolor="#CCCCCC"/>
+				<reportElement key="line-1" x="14" y="59" width="521" height="1" forecolor="#CCCCCC" backcolor="#CCCCCC" uuid="12d39e4e-945e-4187-b100-9f1a2eb80d32"/>
 			</line>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="13" y="0" width="466" height="20"/>
+				<reportElement key="textField" x="13" y="0" width="466" height="20" uuid="54be4caf-630e-4e41-ba52-c8fccdd13f7a"/>
 				<textElement textAlignment="Right">
-					<font size="13" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Arial" size="15" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{COMPANY_NAME}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="70" y="40" width="80" height="20"/>
-				<textElement/>
+			<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement x="70" y="40" width="80" height="20" uuid="8f532b6c-b0ef-40e0-9b32-3bfd319327c4"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{startDate}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="183" y="39" width="100" height="20"/>
-				<textElement/>
+			<textField pattern="dd.MM.yyyy">
+				<reportElement x="183" y="40" width="100" height="19" uuid="728967fd-d9d7-4788-86d5-cd8099e9d39b"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{endDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="150" y="40" width="14" height="20"/>
+				<reportElement x="150" y="40" width="14" height="20" uuid="e1235ad5-6da7-4698-9b39-69308f5e65eb"/>
 				<textElement textAlignment="Left">
-					<font size="12" isBold="true"/>
+					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[-]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="19" y="40" width="51" height="20"/>
-				<textElement/>
+				<reportElement x="19" y="40" width="51" height="20" uuid="cfc1d0b6-81ab-4b9c-9857-5c525fbc4fc8"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_DATE")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="13" y="20" width="466" height="20"/>
+				<reportElement key="textField" x="13" y="20" width="466" height="20" uuid="c62a76fc-c1d0-40c7-8b13-bf5e95e9ed5f"/>
 				<textElement textAlignment="Right">
-					<font size="11" isBold="false" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Arial" size="11" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{COMPANY_NAME1}]]></textFieldExpression>
 			</textField>
@@ -147,28 +154,35 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 		<band height="65" splitType="Stretch">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="13" y="17" width="510" height="17"/>
+				<reportElement key="textField" x="13" y="17" width="510" height="17" uuid="8b16147f-8861-40e2-bf82-71bff526e7ec"/>
 				<textElement>
-					<font size="12" isBold="true"/>
+					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_C_ECONOMY_REPORT")]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd MMMMM yyyy">
-				<reportElement x="435" y="44" width="100" height="20"/>
-				<textElement/>
+			<textField pattern="dd.MM.yyyy">
+				<reportElement x="435" y="44" width="100" height="20" uuid="77ed2a83-dac5-453a-bc0b-c5122718a62c"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="44" width="35" height="20"/>
-				<textElement/>
+				<reportElement x="400" y="44" width="35" height="20" uuid="748e2069-2bde-4687-9ad6-2c4274562dfe"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_DATE")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="44">
+		<band height="45">
 			<subreport isUsingCache="false">
-				<reportElement isPrintRepeatedValues="false" x="14" y="16" width="521" height="20"/>
+				<reportElement isPrintRepeatedValues="false" x="14" y="16" width="521" height="20" uuid="1a44f5fe-71ea-4e36-9e8b-e1bfbb8b08b0"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
 				<subreportParameter name="startDate">
 					<subreportParameterExpression><![CDATA[$P{startDate}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -183,14 +197,20 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<returnValue subreportVariable="SUM_AMOUNT" toVariable="cost"/>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "economyReport_subreport1.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"economyReport_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 		<band height="36">
 			<subreport isUsingCache="false">
-				<reportElement isPrintRepeatedValues="false" x="14" y="10" width="521" height="20"/>
+				<reportElement isPrintRepeatedValues="false" x="14" y="10" width="521" height="20" uuid="04de14e0-0cb6-4d3f-a5f9-dae00b088026"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
 				<subreportParameter name="startDate">
 					<subreportParameterExpression><![CDATA[$P{startDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUB_REPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="EBI_LANG">
 					<subreportParameterExpression><![CDATA[$P{EBI_LANG}]]></subreportParameterExpression>
@@ -203,7 +223,7 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<returnValue subreportVariable="SUM_AMOUNT" toVariable="income"/>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "economyReport_subreport1.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"economyReport_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
@@ -211,38 +231,70 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="12" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="391" y="0" width="144" height="12"/>
+				<reportElement key="textField" x="391" y="0" width="144" height="12" uuid="771902a8-6a9b-442d-85a4-9a15bc03ff0a"/>
 				<textElement textAlignment="Right">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[""+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="50" width="191" height="20" uuid="74d42813-0821-46bc-8712-c02a7f3bc517"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_C_VAT_NR")+": "+$P{COMPANY_TAX_INFORMATION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="42" width="152" height="14" uuid="6115e246-8f16-4793-b561-a4414ae347ad"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{COMPANY_STR_NR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="56" width="183" height="14" uuid="10de2e31-4b6c-4839-ae16-2b7ed13dac24"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{COMPANY_ZIP}+" "+$P{COMPANY_LOCATION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="32" width="191" height="18" uuid="6bdb34a2-4b74-4bba-b6dd-c222e4430746"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TAXOFFICE}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>
 	<summary>
 		<band height="142">
 			<textField pattern="">
-				<reportElement x="422" y="31" width="108" height="20"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="422" y="31" width="108" height="20" uuid="ad38df83-4902-499e-9211-649ac3e74eba"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[NumberFormat.getCurrencyInstance().format($V{cost} == null ? 0.0 :$V{cost})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="422" y="61" width="108" height="20"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="422" y="61" width="108" height="20" uuid="aa9066ff-8335-4904-a4c1-4ca8c2d05de6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[NumberFormat.getCurrencyInstance().format($V{income} == null ? 0.0 : $V{income})]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="38" y="11" width="497" height="1" forecolor="#CCCCFF"/>
+				<reportElement x="38" y="11" width="497" height="1" forecolor="#CCCCCC" uuid="8b79bc10-4b6a-4a7a-8c48-36b5b705e040"/>
 			</line>
 			<line>
-				<reportElement x="183" y="91" width="347" height="1" forecolor="#CCCCFF"/>
+				<reportElement x="183" y="91" width="347" height="1" forecolor="#CCCCCC" uuid="67e46ba7-bcfd-4930-91bc-5262d30a05f6"/>
 			</line>
 			<textField pattern="">
-				<reportElement x="422" y="106" width="109" height="20"/>
+				<reportElement x="422" y="106" width="109" height="20" uuid="47521d4b-b603-453e-ba9c-c182bb165b0b"/>
 				<textElement textAlignment="Right">
-					<font isBold="true"/>
+					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{income} == null ?
     NumberFormat.getCurrencyInstance().format(($V{cost} == null ? 0.0 : $V{cost}))
@@ -250,18 +302,24 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
     NumberFormat.getCurrencyInstance().format(($V{income} - $V{cost}))]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="31" width="141" height="20"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="281" y="31" width="141" height="20" uuid="bb522e92-c9da-4929-bfcf-ad55a25176a0"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_COST")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="61" width="141" height="20"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="281" y="61" width="141" height="20" uuid="9d17b502-3c10-4378-82b5-ce99eabaa699"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{income} == null ? "" : $P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="106" width="141" height="20"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="281" y="106" width="141" height="20" uuid="28293682-fc7c-493b-9c18-f6fd4577bc34"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[((($V{income} == null ? 0.0 : $V{income}) - ($V{cost} == null ? 0.0 : $V{cost})) < 0) ? $P{EBI_LANG}.getProperty("EBI_LANG_DEFICIT") : $P{EBI_LANG}.getProperty("EBI_LANG_PROFIT")]]></textFieldExpression>
 			</textField>
 		</band>

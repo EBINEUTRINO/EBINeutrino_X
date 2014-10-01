@@ -46,10 +46,12 @@
 		<label name="ProductProperties" title="Product Properties" Location="11,81" Size="125,20"/>
 		<button name="taxAdminBnt" tabindex="20" title="Tax Administration" Location="180,80" Size="212,23"/>
 		<label name="tax" title="Tax" Location="191,23" Size="125,20"/>
-		<button name="productCatBnt" tabindex="16" Location="139,23" Size="27,22"/>
+		<button name="productCatBnt" tabindex="16" Location="139,23" Size="28,22"/>
 		<button name="productTypeBnt" tabindex="18" Location="140,51" Size="27,22"/>
 		<button name="productPropBnt" tabindex="19" Location="140,81" Size="27,22"/>
 		<button name="productTaxBnt" tabindex="17" Location="321,23" Size="27,22"/>
+		<label name="taxautority" title="taxautority" Location="190,52" Size="126,20"/>
+		<button name="taxautbutton" Location="320,52" Size="27,22"/>
 </panel>
 <panel name="campaignPanel" title="EBI_LANG_SETTINGS_FOR_CAMPAIGN_PANEL" Location="10,442" Size="323,58">
 		<label name="campStatus" title="Stauts" Location="11,27" Size="105,20"/>

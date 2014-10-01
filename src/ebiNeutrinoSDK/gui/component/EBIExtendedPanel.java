@@ -59,14 +59,14 @@ public class EBIExtendedPanel extends JPanel {
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D)g;
 		// Draw bg top
-        Color startColor = new Color(240,240,255);
+        Color startColor = new Color(175,175,175);
         Color endColor = EBIPGFactory.systemColor;
 
         // A non-cyclic gradient
-        GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, 40, endColor);
+        GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, 140, endColor);
         g2.setPaint(gradient);
         //3 8 -5
-		g2.fillRect(x, y, getWidth()-offsetW, 40);
+		g2.fillRect(x, y, getWidth()-offsetW, 140);
 
 	}
 

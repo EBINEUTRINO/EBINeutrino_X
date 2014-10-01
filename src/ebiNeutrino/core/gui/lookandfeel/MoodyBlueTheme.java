@@ -8,16 +8,16 @@ import java.awt.*;
 
 public class MoodyBlueTheme extends DefaultMetalTheme
 {
-	public String getName() { return "Moody Blues"; }
+	public String getName() { return "Moody Dark"; }
 	
 		// blue shades
-	private final ColorUIResource primary1 		= new ColorUIResource(100,100,250);
-	private final ColorUIResource primary2 		= new ColorUIResource(220,240,240);
-    private final ColorUIResource primary3 		= new ColorUIResource(235, 235, 235);
+	private final ColorUIResource primary1 		= new ColorUIResource(255,255,255);
+	private final ColorUIResource primary2 		= new ColorUIResource(120,120,120);
+    private final ColorUIResource primary3 		= new ColorUIResource(120,120,120);
 
-    private final ColorUIResource secondary1 	= new ColorUIResource(200, 200, 200);
-    private final ColorUIResource secondary2 	= new ColorUIResource(220, 220, 220);
-    private final ColorUIResource secondary3 	= new ColorUIResource(235, 235, 235);
+    private final ColorUIResource secondary1 	= new ColorUIResource(180,180,180);
+    private final ColorUIResource secondary2 	= new ColorUIResource(120,120,120);
+    private final ColorUIResource secondary3 	= new ColorUIResource(180,180,180);
 
     private final FontUIResource windowTitleFont = new FontUIResource("verdana", Font.PLAIN, 12);
     private final FontUIResource controlFont = new FontUIResource("verdana", Font.PLAIN, 10);

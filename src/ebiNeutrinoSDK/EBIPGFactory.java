@@ -81,7 +81,7 @@ public class EBIPGFactory {
     public JFileChooser fileDialog = new JFileChooser();
     public Calendar systemStartCal = null;
     public Calendar systemEndCal = null;
-    public static java.awt.Color systemColor = new Color(250,250,250);
+    public static java.awt.Color systemColor = new Color(180,180,180);
 
 
     public EBIPGFactory() {
@@ -373,9 +373,18 @@ public class EBIPGFactory {
 
             String pdf_path = properties.getValue("EBI_Neutrino_PDF");
 
-            if (System.getProperty("os.name").equals("Linux")) {
+            filename = System.getProperty("user.dir")+"/"+filename;
+
+            System.out.println(filename);
+            if (isUnix()) {
                 Runtime.getRuntime().exec(pdf_path + " " + filename);
-            } else {
+            } else if(isMac()) {
+                if("".equals(pdf_path)){
+                    Runtime.getRuntime().exec("open " + filename);
+                }else{
+                    Runtime.getRuntime().exec(pdf_path + " " + filename);
+                }
+            }else{
                 Runtime.getRuntime().exec("cmd /C start " + pdf_path + " " + filename);
             }
 
@@ -389,31 +398,34 @@ public class EBIPGFactory {
      *  
      * @param fileName
      */
-    public void openTextDocumentFile(String fileName) {
+    public void openTextDocumentFile(String filename) {
+
         try {
 
             EBIPropertiesRW properties = EBIPropertiesRW.getPropertiesInstance();
-
             String path_office = properties.getValue("EBI_Neutrino_TextEditor_Path");
 
-            if (!path_office.equals("System Registry")) {
+            filename = System.getProperty("user.dir")+"/"+filename;
 
-                if (path_office.indexOf(' ') != -1) {
-                    path_office = "\"" + path_office + "\"";
+            System.out.println(filename);
+            if (isUnix()) {
+                if("".equals(path_office)) {
+                    Runtime.getRuntime().exec("ooffice -writer " + filename);
+                }else{
+                    Runtime.getRuntime().exec(path_office + " " + filename);
                 }
-
-            } else {
-                if (System.getProperty("os.name").equals("Linux")) {
-                    path_office = "ooffice -writer";
-                } else {
-                    path_office = "ooffice.exe -writer";
+            } else if(isMac()) {
+                if("".equals(path_office)){
+                    Runtime.getRuntime().exec("open " + filename);
+                }else{
+                    Runtime.getRuntime().exec(path_office + " " + filename);
                 }
-            }
-
-            if (System.getProperty("os.name").equals("Linux")) {
-                Runtime.getRuntime().exec(path_office + " " + fileName);
-            } else {
-                Runtime.getRuntime().exec("cmd /C start " + path_office + " " + fileName);
+            }else{
+                if("".equals(path_office)) {
+                    Runtime.getRuntime().exec("ooffice -writer " + filename);
+                }else{
+                    Runtime.getRuntime().exec("cmd /C start ooffice.exe -writer " + filename);
+                }
             }
 
         } catch (Exception ex) {

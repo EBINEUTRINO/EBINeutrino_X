@@ -30,7 +30,7 @@ public class EBIDataControlBank {
 
     public boolean dataStore(boolean isEdit) {  
         try {
-             bankPane.ebiModule.ebiContainer.showInActionStatus("Bank",true);
+            bankPane.ebiModule.ebiContainer.showInActionStatus("Bank",true);
             bankPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
 
             if (isEdit == false) {
@@ -76,10 +76,10 @@ public class EBIDataControlBank {
     
     public void dataCopy(int id){
     	try {
-    	
-	    	 Query y = bankPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").createQuery("from Companybank where bankid=?").setInteger(0, id);
-	         
-	         if(y.list().size() > 0){
+
+            Query y = bankPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").createQuery("from Companybank where bankid=?").setInteger(0, id);
+
+            if(y.list().size() > 0){
 	         	 Iterator iter = y.iterate();
 	         	 bankPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
 	             		Companybank bank = (Companybank) iter.next();

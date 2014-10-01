@@ -12,35 +12,35 @@ import java.util.Set;
 public class Crminvoice  implements java.io.Serializable {
 
 
-     private Integer invoiceid;
-     private String assosiation;
-     private Integer invoicenr;
-     private String beginchar;
-     private String name;
-     private String status;
-     private String category;
-     private Date date;
-     private String taxtype;
-     private String gender;
-     private String position;
-     private String companyname;
-     private String contactname;
-     private String contactsurname;
-     private String contactstreet;
-     private String contactzip;
-     private String contactlocation;
-     private String contactpostcode;
-     private String contactcountry;
-     private String contacttelephone;
-     private String contactfax;
-     private String contactemail;
-     private String contactweb;
-     private String contactdescription;
-     private Date createddate;
-     private String createdfrom;
-     private Date changeddate;
-     private String changedfrom;
-     private Set<Crminvoiceposition> crminvoicepositions = new HashSet<Crminvoiceposition>(0);
+    private Integer invoiceid;
+    private String assosiation;
+    private Integer invoicenr;
+    private String beginchar;
+    private String name;
+    private String status;
+    private String category;
+    private Date date;
+    private String taxtype;
+    private String gender;
+    private String position;
+    private String companyname;
+    private String contactname;
+    private String contactsurname;
+    private String contactstreet;
+    private String contactzip;
+    private String contactlocation;
+    private String contactpostcode;
+    private String contactcountry;
+    private String contacttelephone;
+    private String contactfax;
+    private String contactemail;
+    private String contactweb;
+    private String contactdescription;
+    private Date createddate;
+    private String createdfrom;
+    private Date changeddate;
+    private String changedfrom;
+    private Set<Crminvoiceposition> crminvoicepositions = new HashSet<Crminvoiceposition>(0);
 
     public Crminvoice() {
     }

@@ -79,7 +79,6 @@ public class EBIDataControlAccountStack {
                 actStack.setChangedfrom(EBIPGFactory.ebiUser);
             }
 
-
             actStack.setAccountdate(acStackPanel.ebiModule.guiRenderer.getTimepicker("dateText","Account").getDate());
             actStack.setAccountnr(acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","Account").getText());
             actStack.setAccountname(acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","Account").getText());

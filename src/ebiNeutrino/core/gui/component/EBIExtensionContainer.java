@@ -84,6 +84,12 @@ public class EBIExtensionContainer implements IEBIContainer {
         treeView.setFont(new Font("Verdana", Font.PLAIN, 10));
         treeView.setRolloverEnabled(true);
         treeView.addHighlighter(new ColorHighlighter(HighlightPredicate.ROLLOVER_CELL, Color.gray, Color.RED));
+        treeView.setBackground(EBIPGFactory.systemColor);
+        treeView.setForeground(EBIPGFactory.systemColor);
+
+        //UIManager.setColor("","");
+        UIManager.put("Tree.textBackground",EBIPGFactory.systemColor);
+
 
         treeView.setCellRenderer(new DefaultTreeCellRenderer(){
             public Component getTreeCellRendererComponent(final JTree tree,Object value,

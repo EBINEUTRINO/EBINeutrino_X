@@ -188,7 +188,7 @@ public class EBIReportSystem implements IEBIReportSystem{
                             return;
                         }
 
-                        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("reports/"+report[0].toString()).getPath());
+                        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("reports/"+report[0].toString()));
                         addParametertoReport(map);
                         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, ebiPGFunction.getIEBIDatabase().getActiveConnection());
 
@@ -253,7 +253,7 @@ public class EBIReportSystem implements IEBIReportSystem{
                                     return;
                                 }
 
-                                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("reports/"+report[0].toString()).getPath());
+                                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File("reports/"+report[0].toString()));
                                 addParametertoReport(map);
                                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, ebiPGFunction.getIEBIDatabase().getActiveConnection());
                                 
@@ -335,7 +335,7 @@ public class EBIReportSystem implements IEBIReportSystem{
 
                     File reportFile = new File("reports/"+report[0].toString());
 
-                    JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile.getPath());
+                    JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile);
                     addParametertoReport(map);
                     JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, ebiPGFunction.getIEBIDatabase().getActiveConnection());
 
@@ -386,11 +386,28 @@ public class EBIReportSystem implements IEBIReportSystem{
         
         ResultSet set = null;
         ResultSet set1 = null;
+        ResultSet set2 = null;
 
         map.put("EBI_LANG",ebiPGFunction.getPropertiesLanguage());
         map.put("EBI_ISB2C", EBIPGFactory.USE_ASB2C);
 
+        if(EBIPGFactory.isWindows()){
+            map.put("SUBREPORT_DIR",".\\reports\\");
+        }else{
+            map.put("SUBREPORT_DIR","./reports/");
+        }
+
         try {
+
+            PreparedStatement ps0 = ebiPGFunction.getIEBIDatabase().initPreparedStatement("SELECT * FROM COMPANYTAXOFFICE order by ID desc ");
+            set2 = ebiPGFunction.getIEBIDatabase().executePreparedQuery(ps0);
+
+            set2.last();
+            if (set2.getRow() > 0) {
+                set2.beforeFirst();
+                set2.next();
+                map.put("TAXOFFICE",set2.getString("NAME"));
+            }
 
             PreparedStatement ps1 = ebiPGFunction.getIEBIDatabase().initPreparedStatement("SELECT * FROM COMPANY com " +
                     "LEFT JOIN COMPANYBANK bnk ON com.COMPANYID=bnk.COMPANYID WHERE com.ISACTUAL=? ");
@@ -451,6 +468,9 @@ public class EBIReportSystem implements IEBIReportSystem{
                 set.close();
                 if (set1 != null) {
                     set1.close();
+                }
+                if(set2 != null){
+                    set2.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

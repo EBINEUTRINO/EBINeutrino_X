@@ -13,13 +13,8 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
 import ebiNeutrino.core.gui.component.EBITreeFactory;
@@ -42,7 +37,6 @@ import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.interfaces.IEBIGUIRenderer;
 import ebiNeutrinoSDK.utils.EBIAbstractTableModel;
 import ebiNeutrinoSDK.utils.EBIConstant;
-import ebiNeutrinoSDK.utils.EBIPropertiesRW;
 import groovy.lang.Binding;
 import groovy.lang.Script;
 import groovy.util.GroovyScriptEngine;
@@ -126,6 +120,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             }
 
             ebiMain.container.getTreeViewInstance().expandPath(new TreePath(EBITreeFactory.getEBITreeFactory().getEBIROOTreeNode().getPath()));
+
         }else{
            canShow = false;
         }
@@ -554,7 +549,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 
             } else if ("list".equals(bean.getType())) {
                 JList jlist = new JList();
-                jlist.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                jlist.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 jlist.setEnabled(bean.isEnabled());
                 jlist.setName(bean.getName());
                 jlist.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -603,7 +598,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             } else if ("textfield".equals(bean.getType())) {
             	
                 JTextField textField = new JTextField();
-                textField.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                textField.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 textField.setFont(new Font("Verdana", Font.PLAIN, 10));
                 textField.setMargin(new Insets(0,5,0,0));
                 textField.setDoubleBuffered(true);
@@ -744,7 +739,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
                 JCheckBox box = new JCheckBox();
                 box.setFont(new Font("Verdana", Font.PLAIN, 10));
-                box.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                box.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
                     box.setText(EBIPGFactory.getLANG(bean.getTitle()));
                 }else{
@@ -791,7 +786,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             } else if ("radiobutton".equals(bean.getType())) {
 
                 JRadioButton radio = new JRadioButton();
-                radio.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                radio.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 radio.setFont(new Font("Verdana", Font.PLAIN, 10));
                 radio.setDoubleBuffered(true);
 
@@ -861,7 +856,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 }
 
                 JScrollPane scr = new JScrollPane();
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 scr.setViewportView(textArea);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
@@ -923,7 +918,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setViewportView(editPane);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     editPane.setBackground(bean.getColor());
@@ -1037,7 +1032,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 JScrollPane scr = new JScrollPane(jtable,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
 
                 scr.setBackground(EBIPGFactory.systemColor);
                 jtable.setBackground(EBIPGFactory.systemColor);
@@ -1123,7 +1118,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setName(bean.getName());
                 scr.setViewportView(jtable);
                 scr.setDoubleBuffered(true);
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     jtable.setBackground(bean.getColor());
@@ -1241,7 +1236,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 JProgressBar progressBar = new JProgressBar();
                 progressBar.setName(bean.getName());
                 progressBar.setEnabled(bean.isEnabled());
-                progressBar.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(220, 220, 220)));
+                progressBar.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 progressBar.setDoubleBuffered(true);
                 if(!"".equals(bean.getI18NToolTip())){
                     progressBar.setToolTipText(EBIPGFactory.getLANG(bean.getI18NToolTip()));
@@ -1286,8 +1281,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                         title= bean.getTitle();
                     }
 
-                    TitledBorder tltB = BorderFactory.createTitledBorder( BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(240, 240, 240)), title);
-                    tltB.setTitleColor(new Color(130,130,130));
+                    TitledBorder tltB = BorderFactory.createTitledBorder( BorderFactory.createMatteBorder( 0, 0, 0, 0, new Color(190, 190, 190)), title);
+                    tltB.setTitleColor(new Color(245,245,245));
                     tltB.setTitleFont(new Font("Verdana", Font.BOLD, 10));
                     p.setBorder(tltB);
                 }

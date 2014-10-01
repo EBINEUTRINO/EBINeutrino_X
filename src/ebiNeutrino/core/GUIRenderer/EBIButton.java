@@ -57,7 +57,7 @@ public class EBIButton extends JButton implements MouseListener, MouseMotionList
         }
         RescaleOp rop = null;
         if(!enabled){
-            float[] scales = { 1f, 1f, 1f, 0.4f };
+            float[] scales = { 0.5f, 0.5f, 0.5f, 0.6f };
             float[] offsets = new float[4];
             rop = new RescaleOp(scales, offsets, null);
         }
@@ -94,7 +94,7 @@ public class EBIButton extends JButton implements MouseListener, MouseMotionList
             if(enabled){
                 if(!isClicked){
                     if(drawBorder){
-                        startColor = new Color(225,225,225);
+                        startColor = new Color(125,125,125);
                         endColor = startColor.brighter();
                     }else{
                         startColor = EBIPGFactory.systemColor;
@@ -102,11 +102,11 @@ public class EBIButton extends JButton implements MouseListener, MouseMotionList
 
                     }
                 }else{
-                    startColor = new Color(240,240,240);
+                    startColor = EBIPGFactory.systemColor;
                     endColor = startColor.brighter();
                 }
             }else{
-                startColor = new Color(240,240,240);
+                startColor = EBIPGFactory.systemColor;
                 endColor = startColor.brighter();
 
             }
@@ -155,11 +155,11 @@ public class EBIButton extends JButton implements MouseListener, MouseMotionList
                 gbiHeader.setColor(Color.ORANGE);
                 gbiHeader.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, corner.x,corner.y);
             }else{
-                gbiHeader.setColor(new Color(200,200,200));
+                gbiHeader.setColor(new Color(100,100,100));
                 gbiHeader.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, corner.x,corner.y);
             }
         }else{
-            gbiHeader.setColor(new Color(200,200,200));
+            gbiHeader.setColor(new Color(100,100,100));
             gbiHeader.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, corner.x,corner.y);
         }
 

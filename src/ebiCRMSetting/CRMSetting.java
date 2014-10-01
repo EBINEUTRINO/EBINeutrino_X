@@ -50,6 +50,7 @@ public class CRMSetting {
         ebiModule.guiRenderer.getLabel("productCategory","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_CATEGORY"));
         ebiModule.guiRenderer.getLabel("productType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_TYPE"));
         ebiModule.guiRenderer.getLabel("ProductProperties","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_PROPERTIES"));
+        ebiModule.guiRenderer.getLabel("taxautority","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TAX_AUTORITY"));
         ebiModule.guiRenderer.getLabel("tax","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_CRM_TAX_TYP"));
         ebiModule.guiRenderer.getLabel("campStatus","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_STATUS"));
         ebiModule.guiRenderer.getLabel("CampType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PROPERTIES"));
@@ -203,6 +204,14 @@ public class CRMSetting {
 					tadmin.setVisible();
 				}
 		});
+
+        ebiModule.guiRenderer.getButton("taxautbutton","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
+        ebiModule.guiRenderer.getButton("taxautbutton","crmSettingDialog").addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"COMPANYTAXOFFICE", EBIPGFactory.getLANG("EBI_LANG_TAX_AUTORITY"));
+                setCategory.setVisible();
+            }
+        });
         
         ebiModule.guiRenderer.getButton("productCatBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
         ebiModule.guiRenderer.getButton("productCatBnt","crmSettingDialog").addActionListener(new ActionListener() {

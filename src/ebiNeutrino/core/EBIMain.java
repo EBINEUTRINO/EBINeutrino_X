@@ -127,7 +127,7 @@ public class EBIMain extends JFrame implements IEBIModule {
 
                 Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
                 application.setSize(d.width, d.height);
-                application.setExtendedState(EBIMain.MAXIMIZED_BOTH);
+                //application.setExtendedState(EBIMain.MAXIMIZED_BOTH);
 
                 // Try to read the update xml file from a server for checking if a new version is available
                 /*EBISocketDownloader fileLoader = new EBISocketDownloader();

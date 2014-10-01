@@ -51,32 +51,32 @@ public class EBIVisualPanel extends JDesktopPane {
 		changedFrom.setBounds(new Rectangle(827, 0, 63, 20));
 		changedFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		changedFrom.setFont(new Font("Dialog", Font.BOLD, 10));
-        changedFrom.setForeground(new Color(80,80,80));
+        changedFrom.setForeground(new Color(240,240,240));
 		changedFrom.setText("From:");
         changedFrom.setVisible(false);
 		changedDate = new JLabel();
 		changedDate.setBounds(new Rectangle(649, 0, 76, 20));
 		changedDate.setHorizontalAlignment(SwingConstants.RIGHT);
 		changedDate.setFont(new Font("Dialog", Font.BOLD, 10));
-        changedDate.setForeground(new Color(80,80,80));
+        changedDate.setForeground(new Color(240,240,240));
 		changedDate.setText("Changed:");
         changedDate.setVisible(false);
 		createdFrom = new JLabel();
 		createdFrom.setBounds(new Rectangle(484, 0, 63, 20));
 		createdFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		createdFrom.setFont(new Font("Dialog", Font.BOLD, 10));
-        createdFrom.setForeground(new Color(80,80,80));
+        createdFrom.setForeground(new Color(240,240,240));
 		createdFrom.setText("From:");
 		createdDate = new JLabel();
 		createdDate.setBounds(new Rectangle(306, 0, 74, 20));
 		createdDate.setHorizontalAlignment(SwingConstants.RIGHT);
 		createdDate.setFont(new Font("Dialog", Font.BOLD, 10));
-        createdDate.setForeground(new Color(80,80,80));
+        createdDate.setForeground(new Color(240,240,240));
 		createdDate.setText("Created:");
 		moduleTitle = new JLabel();
 		moduleTitle.setBounds(new Rectangle(30, 1, 222, 20));
 		moduleTitle.setFont(new Font("Dialog", Font.BOLD, 10));
-        moduleTitle.setForeground(new Color(80,80,80));
+        moduleTitle.setForeground(new Color(240,240,240));
 		moduleTitle.setText("Module Title");
 		iconPanel = new JLabel();
 		iconPanel.setBounds(new Rectangle(8, 3, 16, 16));
@@ -102,7 +102,7 @@ public class EBIVisualPanel extends JDesktopPane {
 
         Graphics2D g2 = (Graphics2D)g;
         // Draw bg top
-        Color startColor = new Color(60,120,255);
+        Color startColor = new Color(50,50,50);
         Color endColor = startColor.brighter();
 
         // A non-cyclic gradient
@@ -207,7 +207,7 @@ public class EBIVisualPanel extends JDesktopPane {
 		if (jTextFieldAddedFrom == null) {
 			jTextFieldAddedFrom = new JLabel();
 			jTextFieldAddedFrom.setBounds(new Rectangle(548, 0, 98, 20));
-			jTextFieldAddedFrom.setForeground(new Color(80,80,80));
+			jTextFieldAddedFrom.setForeground(new Color(240,240,240));
 			jTextFieldAddedFrom.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
 			jTextFieldAddedFrom.setOpaque(false);
 			jTextFieldAddedFrom.setFocusable(false);
@@ -242,7 +242,7 @@ public class EBIVisualPanel extends JDesktopPane {
 			jTextFieldChanged.setBounds(new Rectangle(727, 0, 98, 20));
 			jTextFieldChanged.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
 			jTextFieldChanged.setOpaque(false);
-			jTextFieldChanged.setForeground(new Color(80,80,80));
+			jTextFieldChanged.setForeground(new Color(240,240,240));
 			jTextFieldChanged.setFocusable(false);
 			jTextFieldChanged.setVisible(false);
 
@@ -256,7 +256,7 @@ public class EBIVisualPanel extends JDesktopPane {
 			jTextFieldChangedFrom.setBounds(new Rectangle(892, 0, 98, 20));
 			jTextFieldChangedFrom.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
 			jTextFieldChangedFrom.setOpaque(false);
-			jTextFieldChangedFrom.setForeground(new Color(80,80,80));
+			jTextFieldChangedFrom.setForeground(new Color(240,240,240));
 			jTextFieldChangedFrom.setFocusable(false);
             jTextFieldChangedFrom.setVisible(false);
 		}
