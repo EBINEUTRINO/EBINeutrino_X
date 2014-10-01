@@ -3,8 +3,8 @@ package ebiNeutrino.core;
 
 public class EBIVersion {
 
-    private final String majVersion = "5.";
-    private final String minVersion = "0";
+    private final String majVersion = "x";
+    private final String minVersion = "";
     private final String build      = "";
     public static EBIVersion version = null;
 

@@ -5,19 +5,13 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JToggleButton;
-
 import ebiCRM.EBICRMModule;
 import ebiCRM.gui.dialogs.EBICRMHistoryView;
-import ebiCRM.gui.dialogs.EBIDialogSearchCompany;
 import ebiCRM.gui.dialogs.EBIDialogSearchContact;
 import ebiCRM.gui.dialogs.EBIExportDialog;
 import ebiCRM.gui.dialogs.EBIImportDialog;
 import ebiCRMSetting.CRMSetting;
-import ebiNeutrinoSDK.EBIPGFactory;
-import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIImportSQLFiles;
-import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.interfaces.IEBISecurity;
 
 public class EBICRMActionListener {
@@ -31,80 +25,10 @@ public class EBICRMActionListener {
 
 	}
 
-	/**
-	 * ActionListener new Company CRM Reset form
-	 * @return
-	 */
-	protected ActionListener newListenerAction(){
-		 return	new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if(iSecurity.checkCanReleaseModules() == true){
-                        ebiModule.newRecord();
-					}
-				}
-		    };
-	}
-	/**
-	 * ActionListener save company
-	 * @return
-	 */
-	protected ActionListener saveListenerAction(){
-		  return new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					boolean pass;
-					if(ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanSave() ||
-							ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()){
-						pass = true;
-					}else{
-						pass = iSecurity.secureModule();
-					}
-					if(pass){
-                        ebiModule.saveRecord();
-					}
-				}
-			};
-	}
-
-
-    /**
-	 * ActionListener search company
-	 * @return
-	 */
-	protected ActionListener searchCompanyAction(){
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(iSecurity.checkCanReleaseModules() == true){
-				  new EBIDialogSearchCompany(ebiModule,false,false);
-				}
-			}
-		};
-	}
-
 	protected ActionListener searchCompanyHistoryAction(){
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new EBICRMHistoryView(ebiModule.hcreator.retrieveDBHistory(ebiModule.companyID, "Company"),ebiModule).setVisible();
-			}
-		};
-	}
-
-	/**
-	 * ActionListener CRM delete company
-	 * @return
-	 */
-	protected ActionListener deleteListenerAction(){
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean pass;
-				if(ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-						ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()){
-					pass = true;
-				}else{
-					pass = iSecurity.secureModule();
-				}
-				if(pass){
-                   ebiModule.deleteCRM();
-				}
 			}
 		};
 	}

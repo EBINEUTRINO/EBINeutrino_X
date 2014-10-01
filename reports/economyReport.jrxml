@@ -2,9 +2,9 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Account Business Assesstement" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="526eaa3e-6216-422e-85c4-5312361589a3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="4.0"/>
-	<property name="ireport.x" value="1638"/>
-	<property name="ireport.y" value="796"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -306,14 +306,14 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_COST")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_COST_PROPERTY")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="281" y="61" width="141" height="20" uuid="9d17b502-3c10-4378-82b5-ce99eabaa699"/>
 				<textElement textAlignment="Right">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{income} == null ? "" : $P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="281" y="106" width="141" height="20" uuid="28293682-fc7c-493b-9c18-f6fd4577bc34"/>

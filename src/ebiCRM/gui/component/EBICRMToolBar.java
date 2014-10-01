@@ -23,18 +23,6 @@ public class EBICRMToolBar extends EBICRMActionListener{
 	 */
 	public void setCRMToolBar(){
 
-        if(ebiModule.guiRenderer.getToolBarButton("toolbarItemNew","ebiToolBar") != null){
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemNew","ebiToolBar").setIcon(EBIConstant.ICON_NEW);
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemNew","ebiToolBar").addActionListener(newListenerAction());
-        }
-        if(ebiModule.guiRenderer.getToolBarButton("toolbarItemSave","ebiToolBar") != null){
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemSave","ebiToolBar").setIcon(EBIConstant.ICON_SAVE);
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemSave","ebiToolBar").addActionListener(saveListenerAction());
-        }
-        if(ebiModule.guiRenderer.getToolBarButton("toolbarItemSearchCompany","ebiToolBar") != null){
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemSearchCompany","ebiToolBar").setIcon(EBIConstant.ICON_SEARCH);
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemSearchCompany","ebiToolBar").addActionListener(searchCompanyAction());
-        }
         if(ebiModule.guiRenderer.getToolBarButton("toolbarItemHistory","ebiToolBar") != null){
             ebiModule.guiRenderer.getToolBarButton("toolbarItemHistory","ebiToolBar").setIcon(EBIConstant.ICON_HISTORY);
             ebiModule.guiRenderer.getToolBarButton("toolbarItemHistory","ebiToolBar").addActionListener(searchCompanyHistoryAction());
@@ -46,11 +34,6 @@ public class EBICRMToolBar extends EBICRMActionListener{
         if( ebiModule.guiRenderer.getToolBarButton("toolbarItemCompanyReport","ebiToolBar") != null){
             ebiModule.guiRenderer.getToolBarButton("toolbarItemCompanyReport","ebiToolBar").setIcon(EBIConstant.ICON_REPORT);
             ebiModule.guiRenderer.getToolBarButton("toolbarItemCompanyReport","ebiToolBar").addActionListener(printReportAction());
-        }
-        if(ebiModule.guiRenderer.getToolBarButton("toolbarItemDelete","ebiToolBar") != null){
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemDelete","ebiToolBar").setEnabled(false);
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemDelete","ebiToolBar").setIcon(EBIConstant.ICON_DELETE);
-            ebiModule.guiRenderer.getToolBarButton("toolbarItemDelete","ebiToolBar").addActionListener(deleteListenerAction());
         }
         if(ebiModule.guiRenderer.getToolBarButton("toolbarItemCRMSetting","ebiToolBar") != null){
             ebiModule.guiRenderer.getToolBarButton("toolbarItemCRMSetting","ebiToolBar").setIcon(EBIConstant.ICON_CRM_SETTING);

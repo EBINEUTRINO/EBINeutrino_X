@@ -3,15 +3,11 @@ package ebiNeutrino.core;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTheme;
 
 import ebiNeutrino.core.gui.lookandfeel.MoodyBlueTheme;
 import org.apache.log4j.Logger;
@@ -22,12 +18,10 @@ import ebiCRM.EBICRMModule;
 import ebiNeutrino.core.GUIRenderer.EBIGUIRenderer;
 import ebiNeutrino.core.gui.Dialogs.EBISplashScreen;
 import ebiNeutrino.core.gui.component.EBIExtensionContainer;
-import ebiNeutrino.core.gui.component.EBILogin;
 import ebiNeutrino.core.gui.component.EBIToolbar;
 import ebiNeutrino.core.module.management.EBIModuleManagement;
 import ebiNeutrino.core.settings.EBISystemSetting;
 import ebiNeutrino.core.settings.EBISystemSettingPanel;
-import ebiNeutrino.core.user.management.EBIUserManagement;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
@@ -59,11 +53,9 @@ import ebiNeutrinoSDK.utils.EBIPropertiesRW;
 
 public class EBIMain extends JFrame implements IEBIModule {
 
-    public EBILogin login = null;
     public EBIPGFactory _ebifunction = null;
-    public EBIUserManagement user_management = null;
     public static boolean canReleaseUser = false;
-    public String appTitle = "EBI Neutrino R1 CRM / ERP Framework";
+    public String appTitle = "EBI Neutrino CRM / ERP";
     public EBISystemSetting systemSetting = null;
     public static Logger logger = Logger.getLogger(EBIMain.class.getName());
     public EBIToolbar ebiBar = null;
@@ -82,12 +74,6 @@ public class EBIMain extends JFrame implements IEBIModule {
     public int USER_DELETE_ID =-1;
     public EBIToolbar userSysBar=null;
 
-    public void disposeComponent() {
-        user_management = null;
-        login = null;
-        RepaintManager.currentManager(this).setDoubleBufferingEnabled(true);
-    }
-
 
     public static void main(String[] args) throws Exception {
            System.setProperty("file.encoding", "utf-8");
@@ -95,8 +81,9 @@ public class EBIMain extends JFrame implements IEBIModule {
            ToolTipManager.sharedInstance().setInitialDelay(0);
 
            try{
-
-               UIManager.put("SplitPaneDivider.border", BorderFactory.createLineBorder(new Color(220,220,220)) );
+               //UIManager.put("SplitPaneDivider.border", BorderFactory.createLineBorder(new Color(220,220,220)) );
+               UIManager.put("ToolTip.foregroundInactive", Color.black);
+               UIManager.put("ToolTip.borderInactive", BorderFactory.createLineBorder(Color.black,1));
 
                if(!"".equals(properties.getValue("EBI_Neutrino_LookandFeel"))){
                 	if(properties.getValue("EBI_Neutrino_LookandFeel").indexOf("WindowsLookAndFeel") >-1 
@@ -270,7 +257,7 @@ public class EBIMain extends JFrame implements IEBIModule {
            
             // CREATE TASKBAR
             statusBar = new JXStatusBar();
-            stName = new JLabel("EBI Neutrino R1 "+EBIVersion.getInstance().getVersion());
+            stName = new JLabel("EBI Neutrino "+EBIVersion.getInstance().getVersion());
             statusBar.add(stName);
 
             JLabel stHost = new JLabel("Host: " + EBIPGFactory.host);
@@ -329,16 +316,20 @@ public class EBIMain extends JFrame implements IEBIModule {
 
     public void addLoginModul() {
 
-        login = new EBILogin(this);
-        login.addWindowListener(this.getWindowListeners()[0]);
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        login.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        login.setName("EBILoginDialog");
-        login.setResizable(false);
-        login.setSize(500, 217);
-        login.setLocation(((int)d.getWidth() -login.getWidth())  / 2, ((int) d.getHeight() -login.getHeight()) / 2);
-        if(splash != null){splash.setVisible(false);}
-        login.setVisible(true);
+        boolean ret = _ebifunction.checkIsValidUser("root", "ebineutrino");
+
+        if (ret != false) {
+
+            splash.setVisible(true);
+            showBusinessModule();
+            EBIPropertiesRW properties = EBIPropertiesRW.getPropertiesInstance();
+            properties.setValue("EBI_Neutrino_Last_Logged_User", "root");
+            properties.saveProperties();
+            splash.setVisible(false);
+
+        } else {
+            EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_USER_NOT_FOUND")).Show(EBIMessage.ERROR_MESSAGE);
+        }
 
     }
 
@@ -385,11 +376,7 @@ public class EBIMain extends JFrame implements IEBIModule {
                     addSystemSetting(1);
                     frameSetting.requestFocus();
                     
-                } else if (EBISystemSetting.selectedModule == 3) {
-
-                    systemSetting.listName.lnf.saveTheme();
-
-                } else if (EBISystemSetting.selectedModule == 4) {
+                }else if (EBISystemSetting.selectedModule == 4) {
 
                     systemSetting.listName.report.saveReport();
 
@@ -446,75 +433,6 @@ public class EBIMain extends JFrame implements IEBIModule {
           frameSetting.setVisible(true);
         }
 
-    }
-
-    public void addUsermanagement() {
-
-        user_management = new EBIUserManagement(this);
-        userSysBar = new EBIToolbar(this);
-        int NEW_ID = userSysBar.addToolButton(EBIConstant.ICON_NEW, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                user_management.resetFields();
-                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-        });
-
-        ((JButton)userSysBar.getToolbarComponent(NEW_ID)).setMnemonic(KeyEvent.VK_N);
-        userSysBar.setComponentToolTipp(NEW_ID, EBIPGFactory.getLANG("EBI_LANG_T_NEW_USER"));
-
-        int SAVE_ID = userSysBar.addToolButton(EBIConstant.ICON_SAVE, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                if (user_management.isSaveOrUpdate == false) {
-                    user_management.saveUser();
-                    canReleaseUser = true;
-                } else if (user_management.isSaveOrUpdate == true) {
-                    user_management.updateUser();
-                    canReleaseUser = true;
-                }
-                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-        });
-
-        ((JButton)userSysBar.getToolbarComponent(SAVE_ID)).setMnemonic(KeyEvent.VK_S);
-        userSysBar.setComponentToolTipp(SAVE_ID, EBIPGFactory.getLANG("EBI_LANG_T_SAVE_USER"));
-
-        USER_DELETE_ID = userSysBar.addToolButton(EBIConstant.ICON_DELETE, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                user_management.userDelete();
-                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-        });
-
-        ((JButton)userSysBar.getToolbarComponent(USER_DELETE_ID)).setMnemonic(KeyEvent.VK_D);
-        userSysBar.setComponentToolTipp(USER_DELETE_ID, EBIPGFactory.getLANG("EBI_LANG_T_DELETE_USER"));
-        userSysBar.setComponentToolBarEnabled(USER_DELETE_ID, false);
-        userSysBar.showToolBar(false);
-
-        user_management.DELETE_BUTTON_ID = USER_DELETE_ID;
-        user_management.bar = userSysBar;
-
-        user_management.getPanel().add(userSysBar,BorderLayout.NORTH);
-        user_management.setChangePropertiesVisible(false);
-        frameSetting = new EBIDialogExt(this);
-        user_management.setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_USER_SETTING"));
-        user_management.setModuleIcon(EBIConstant.ICON_APP);
-        frameSetting.setName("Usermanagement");
-        frameSetting.setModal(true);
-        frameSetting.storeLocation(true);
-        frameSetting.storeSize(true);
-        frameSetting.setSize(new Dimension(800,600));
-        frameSetting.setResizable(true);
-
-        frameSetting.setContentPane(user_management);
-        if(frameSetting != null && !frameSetting.isVisible()){
-          frameSetting.setVisible(true);
-        }
     }
       
     public Object getActiveModule() {

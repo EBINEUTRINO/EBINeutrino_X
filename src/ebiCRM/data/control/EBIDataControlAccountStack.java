@@ -287,20 +287,21 @@ public class EBIDataControlAccountStack {
 
                         Iterator iter =  query.iterate();
 
-                        acStackPanel.tabModAccount.data = new Object[query.list().size()][7];
-
+                        acStackPanel.tabModAccount.data = new Object[query.list().size()][8];
+                        String D = EBIPGFactory.getLANG("EBI_LANG_DEBIT").substring(0,3).toUpperCase();
+                        String C = EBIPGFactory.getLANG("EBI_LANG_CREDIT").substring(0,3).toUpperCase();
                         int i = 0;
                         while (iter.hasNext()) {
-
                             Accountstack act = (Accountstack) iter.next();
                             acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
-                            acStackPanel.tabModAccount.data[i][0] = acStackPanel.ebiModule.ebiPGFactory.getDateToString(act.getAccountdate());
-                            acStackPanel.tabModAccount.data[i][1] = act.getAccountnr() == null ? "" : act.getAccountnr();
-                            acStackPanel.tabModAccount.data[i][2] = act.getAccountname() == null ? "" : act.getAccountname();
-                            acStackPanel.tabModAccount.data[i][3] = currency.format(act.getAccountvalue()) == null ? "" : currency.format(act.getAccountvalue());
-                            acStackPanel.tabModAccount.data[i][4] = act.getAccountDebit() == null ? "" :  act.getAccountDebit();
-                            acStackPanel.tabModAccount.data[i][5] = act.getAccountCredit() == null ? "" : act.getAccountCredit();
-                            acStackPanel.tabModAccount.data[i][6] = act.getAcstackid();
+                            acStackPanel.tabModAccount.data[i][0] = act.getAccountType() == 1 ? D : C;
+                            acStackPanel.tabModAccount.data[i][1] = acStackPanel.ebiModule.ebiPGFactory.getDateToString(act.getAccountdate());
+                            acStackPanel.tabModAccount.data[i][2] = act.getAccountnr() == null ? "" : act.getAccountnr();
+                            acStackPanel.tabModAccount.data[i][3] = act.getAccountname() == null ? "" : act.getAccountname();
+                            acStackPanel.tabModAccount.data[i][4] = currency.format(act.getAccountvalue()) == null ? "" : currency.format(act.getAccountvalue());
+                            acStackPanel.tabModAccount.data[i][5] = act.getAccountDebit() == null ? "" :  act.getAccountDebit();
+                            acStackPanel.tabModAccount.data[i][6] = act.getAccountCredit() == null ? "" : act.getAccountCredit();
+                            acStackPanel.tabModAccount.data[i][7] = act.getAcstackid();
                             i++;
                         }
                   }else{

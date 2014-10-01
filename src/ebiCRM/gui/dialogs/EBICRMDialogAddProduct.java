@@ -35,68 +35,14 @@ public class EBICRMDialogAddProduct {
 
     private Set<Companyofferpositions> poList = null;
     private Set<Companyorderpositions> porList = null;
-    private Set<Crmcampaignposition> campProList = null;
-    private Set<Companyservicepositions> serviceProList = null;
-    private Set<Crmproblemsolposition> prosolProList = null;
-    private Companyoffer offer = null;
-    private Companyorder order = null;
-    private Crmcampaign campaign = null;
     private Crminvoice invoice = null;
-    private Companyservice service = null;
-    private Crmproblemsolutions prosol = null;
-    private boolean isOrder = false;
-    private boolean isOffer = false;
-    private boolean isCampaign = false;
-    private boolean isService = false;
     private boolean isProsol = false;
     private boolean isInvoice = false;
     private EBICRMModule ebiModule = null;
-    private Companyorderpositions orderPosition = null;
-    private Companyofferpositions offerPosition = null;
-    private Crmcampaignposition campaignPosition = null;
     private Crminvoiceposition invoicePosition = null;
-    private Companyservicepositions servicePosition = null;
-    private Crmproblemsolposition prosolPosition = null;
     private NumberFormat currency = null;
     public int productID =0;
 
-   
-    public EBICRMDialogAddProduct(Set<Companyofferpositions> polist, Companyoffer offer, EBICRMModule module) {
-        ebiModule = module;
-        offerPosition = new Companyofferpositions();
-
-        ebiModule.guiRenderer.loadGUI("CRMDialog/productInsertDialog.xml");
-
-        this.poList = polist;
-        this.offer = offer;
-
-        isOffer = true;
-
-    }
-
-    public EBICRMDialogAddProduct(Set<Companyorderpositions> polist, Companyorder order, EBICRMModule module) {
-        orderPosition = new Companyorderpositions();
-        ebiModule = module;
-
-        ebiModule.guiRenderer.loadGUI("CRMDialog/productInsertDialog.xml");
-
-        this.porList = polist;
-        this.order = order;
-
-        isOrder = true;
-    }
-
-    public EBICRMDialogAddProduct(Set<Crmcampaignposition> cpolist, Crmcampaign campaign, EBICRMModule module) {
-        campaignPosition = new Crmcampaignposition();
-        ebiModule = module;
-
-        ebiModule.guiRenderer.loadGUI("CRMDialog/productInsertDialog.xml");
-
-        this.campProList = cpolist;
-        this.campaign = campaign;
-
-        isCampaign = true;
-    }
 
     public EBICRMDialogAddProduct(Crminvoice invoice, EBICRMModule module) {
             invoicePosition = new Crminvoiceposition();
@@ -108,32 +54,6 @@ public class EBICRMDialogAddProduct {
 
             isInvoice = true;
     }
-
-
-    public EBICRMDialogAddProduct(Set<Companyservicepositions> cpolist, Companyservice service, EBICRMModule module) {
-        servicePosition = new Companyservicepositions();
-        ebiModule = module;
-
-        ebiModule.guiRenderer.loadGUI("CRMDialog/productInsertDialog.xml");
-
-        this.serviceProList = cpolist;
-        this.service = service;
-
-        isService = true;
-    }
-
-    public EBICRMDialogAddProduct(Set<Crmproblemsolposition> cpolist, Crmproblemsolutions prosol, EBICRMModule module) {
-        prosolPosition = new Crmproblemsolposition();
-        ebiModule = module;
-
-        ebiModule.guiRenderer.loadGUI("CRMDialog/productInsertDialog.xml");
-
-        this.prosolProList = cpolist;
-        this.prosol = prosol;
-
-        isProsol = true;
-    }
-
 
     public void setVisible(){
 
@@ -187,26 +107,6 @@ public class EBICRMDialogAddProduct {
 
                 text = ebiModule.guiRenderer.getTextfield("nameText","productInsertDialog").getText();
 
-                if (isOffer) {
-                    offerPosition.setProductname(text);
-                }
-
-                if (isOrder) {
-                    orderPosition.setProductname(text);
-                }
-
-                if(isService){
-                    servicePosition.setProductname(text);
-                }
-
-                if (isCampaign) {
-                    campaignPosition.setProductname(text);
-                }
-
-                if(isProsol){
-                    prosolPosition.setProductname(text);
-                }
-
                 if(isInvoice){
                     invoicePosition.setProductname(text);
                 }
@@ -229,25 +129,6 @@ public class EBICRMDialogAddProduct {
                 }
 
                 text = ebiModule.guiRenderer.getTextarea("descriptionText","productInsertDialog").getText();
-                if (isOffer) {
-                    offerPosition.setDescription(text);
-                }
-
-                if (isOrder) {
-                    orderPosition.setDescription(text);
-                }
-
-                if(isService){
-                    servicePosition.setDescription(text);
-                }
-
-                if (isCampaign) {
-                    campaignPosition.setDescription(text);
-                }
-
-                if(isProsol){
-                    prosolPosition.setDescription(text);
-                }
 
                 if(isInvoice){
                     invoicePosition.setDescription(text);
@@ -267,24 +148,6 @@ public class EBICRMDialogAddProduct {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
 
                     EBICRMDialogSearchProduct prod = null;
-                    if (isOffer) {
-                        prod = new EBICRMDialogSearchProduct(ebiModule, offerPosition,EBICRMDialogAddProduct.this);
-                    }
-                    if (isOrder) {
-                        prod = new EBICRMDialogSearchProduct(ebiModule, orderPosition,EBICRMDialogAddProduct.this);
-                    }
-                    if(isService){
-                       prod = new EBICRMDialogSearchProduct(ebiModule, servicePosition,EBICRMDialogAddProduct.this);
-                    }
-
-                    if (isCampaign) {
-                        prod = new EBICRMDialogSearchProduct(ebiModule, campaignPosition,EBICRMDialogAddProduct.this);
-                    }
-
-                    if(isProsol){
-                       prod = new EBICRMDialogSearchProduct(ebiModule, prosolPosition,EBICRMDialogAddProduct.this);
-                    }
-
                     if(isInvoice){
                       prod = new EBICRMDialogSearchProduct(ebiModule, invoicePosition,EBICRMDialogAddProduct.this);  
                     }
@@ -300,26 +163,6 @@ public class EBICRMDialogAddProduct {
          ebiModule.guiRenderer.getTextfield("productNrText","productInsertDialog").registerKeyboardAction(new ActionListener(){
                 public void actionPerformed(ActionEvent ev) {
                     EBICRMDialogSearchProduct prod = null;
-                    if (isOffer) {
-                        prod = new EBICRMDialogSearchProduct(ebiModule, offerPosition,EBICRMDialogAddProduct.this);
-                    }
-
-                    if (isOrder) {
-                        prod = new EBICRMDialogSearchProduct(ebiModule, orderPosition,EBICRMDialogAddProduct.this);
-                    }
-
-                    if(isService){
-                        prod = new EBICRMDialogSearchProduct(ebiModule, servicePosition,EBICRMDialogAddProduct.this);
-                    }
-
-                    if (isCampaign) {
-                        prod = new EBICRMDialogSearchProduct(ebiModule, campaignPosition,EBICRMDialogAddProduct.this);
-                    }
-
-                    if(isProsol){
-                        prod = new EBICRMDialogSearchProduct(ebiModule, prosolPosition,EBICRMDialogAddProduct.this);
-                    }
-
                     if(isInvoice){
                         prod = new EBICRMDialogSearchProduct(ebiModule, invoicePosition,EBICRMDialogAddProduct.this);
                     }
@@ -408,66 +251,7 @@ public class EBICRMDialogAddProduct {
         **/
 
     public void savePosistion(){
-         if (isOffer) {
-            saveOfferPosition();
-         }
-         if(isOrder){
-            saveOrderPosition();
-         }
-         if (isCampaign) {
-            saveCampaignPosition();
-         }
-         if(isService){
-            saveServicePosition();
-         }
-         if(isProsol){
-            saveProsolPosition();
-         }
-         if(isInvoice){
-            saveInvoicePosition();
-         }
-    }
-
-
-
-    private void saveOfferPosition() {
-        if (!validateInput()) {
-            return;
-        }
-        offerPosition.setCompanyoffer(this.offer);
-        offerPosition.setQuantity(Long.parseLong(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText()));
-        offerPosition.setDeduction(ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText());
-
-        try{
-            if(!"".equals(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText())){
-              offerPosition.setNetamount(offerPosition.getNetamount());
-            }
-        }catch(NumberFormatException ex){}
-
-        this.poList.add(offerPosition);
-        this.offer.getCompanyofferpositionses().add(offerPosition);
-        ebiModule.getOfferPane().showProduct();
-        resetFields();
-    }
-
-    private void saveCampaignPosition() {
-        if (!validateInput()) {
-            return;
-        }
-        campaignPosition.setCrmcampaign(this.campaign);
-        campaignPosition.setQuantity(Long.parseLong(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText()));
-        campaignPosition.setDeduction(ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText());
-
-        try{
-            if(!"".equals(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText())){
-              campaignPosition.setNetamount(campaignPosition.getNetamount());
-            }
-        }catch(NumberFormatException ex){}
-
-        this.campProList.add(campaignPosition);
-        this.campaign.getCrmcampaignpositions().add(campaignPosition);
-        ebiModule.getEBICRMCampaign().showProduct();
-        resetFields();
+        saveInvoicePosition();
     }
 
     private void saveInvoicePosition() {
@@ -489,54 +273,6 @@ public class EBICRMDialogAddProduct {
         resetFields();
     }
 
-    private void saveServicePosition() {
-        if (!validateInput()) {
-            return;
-        }
-        servicePosition.setCompanyservice(this.service);
-        servicePosition.setQuantity(Long.parseLong(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText()));
-        servicePosition.setDeduction(ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText());
-
-         try{
-            if(!"".equals(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText())){
-              servicePosition.setNetamount(servicePosition.getNetamount());
-            }
-        }catch(NumberFormatException ex){}
-
-        this.serviceProList.add(servicePosition);
-        this.service.getCompanyservicepositionses().add(servicePosition);
-        ebiModule.getServicePane().showProduct();
-        resetFields();
-    }
-
-    private void saveProsolPosition() {
-
-        prosolPosition.setCrmproblemsolutions(this.prosol);
-        prosolPosition.setNetamount(prosolPosition.getNetamount());
-        this.prosolProList.add(prosolPosition);
-        this.prosol.getCrmproblemsolpositions().add(prosolPosition);
-        ebiModule.getProsolPane().showProduct();
-        resetFields();
-    }
-
-    private void saveOrderPosition() {
-        if (!validateInput()) {
-            return;
-        }
-        orderPosition.setCompanyorder(this.order);
-        orderPosition.setQuantity(Long.parseLong(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText()));
-        orderPosition.setDeduction(ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText());
-         try{
-            if(!"".equals(ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText())){
-              orderPosition.setNetamount(orderPosition.getNetamount());
-            }
-        }catch(NumberFormatException ex){}
-
-        this.porList.add(orderPosition);
-        this.order.getCompanyorderpositionses().add(orderPosition);
-        ebiModule.getOrderPane().showProduct();
-        resetFields();
-    }
 
     private boolean validateInput() {
 
@@ -554,26 +290,6 @@ public class EBICRMDialogAddProduct {
     private void resetFields() {
         ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").setText("");
         ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").setText("");
-
-        if (!isOrder) {
-            offerPosition = new Companyofferpositions();
-        }
-
-        if (isOrder) {
-            orderPosition = new Companyorderpositions();
-        }
-
-        if (isCampaign) {
-            campaignPosition = new Crmcampaignposition();
-        }
-
-        if(isService){
-            servicePosition = new Companyservicepositions(); 
-        }
-
-        if(isProsol){
-            prosolPosition = new Crmproblemsolposition();
-        }
 
         if(isInvoice){
             invoicePosition = new Crminvoiceposition();
@@ -601,79 +317,7 @@ public class EBICRMDialogAddProduct {
         setQuantityScale();
 
         buffer.append("<table style=\"font-family: Verdana, serif;color:#000;font-size: 10px; border: solid 1px #a0f0ff;\" border=0 width=100%><tr><td bgcolor=#a0f0ff style=\"border: solid 1px #a0f0ff;\" colspan=2><b>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT") + "</b></td></tr>");
-        if (isOrder && orderPosition.getProductnr() != null) {
-        	
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NR") + "</td><td bgcolor='#ebebeb' >" + orderPosition.getProductnr() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_NAME") + "</td><td bgcolor='#eeeeee'>" + orderPosition.getProductname() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + "</td><td bgcolor='#ebebeb'>" + orderPosition.getCategory() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_TYPE") + "</td><td bgcolor='#eeeeee'>" + ("null".equals(orderPosition.getType()) ? "" : orderPosition.getType()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE") + "</td><td bgcolor='#ebebeb'>" + ("null".equals(orderPosition.getTaxtype()) ? "" : orderPosition.getTaxtype()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_SALE_PRICE") + "</td><td bgcolor='#eeeeee'>" + currency.format(ebiModule.dynMethod.calculatePreTaxPrice(orderPosition.getNetamount(),ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText(),ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText())) + "</td></tr>");
-            buffer.append("<tr><td  bgcolor=#a0f0ff colspan='2'><b>" + EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + "</b></td></tr>");
-            buffer.append("<tr><td  bgcolor=#eeeeee colspan='2'>" + orderPosition.getDescription() + "</td></tr>");
-
-            productNr = orderPosition.getProductnr();
-            name = orderPosition.getProductname();
-            description = orderPosition.getDescription();
-
-
-        } else if (isOffer && offerPosition.getProductnr() != null) {
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NR") + "</td><td bgcolor='#ebebeb' >" + offerPosition.getProductnr() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_NAME") + "</td><td bgcolor='#eeeeee'>" + offerPosition.getProductname() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + "</td><td bgcolor='#ebebeb'>" + offerPosition.getCategory() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_TYPE") + "</td><td bgcolor='#eeeeee'>" + ("null".equals(offerPosition.getType()) ? "" : offerPosition.getType()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE") + "</td><td bgcolor='#ebebeb'>" + ("null".equals(offerPosition.getTaxtype()) ? "" : offerPosition.getTaxtype()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_SALE_PRICE") + "</td><td bgcolor='#eeeeee'>" + currency.format(ebiModule.dynMethod.calculatePreTaxPrice(offerPosition.getNetamount(),ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText(),ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText())) + "</td></tr>");
-            buffer.append("<tr><td  bgcolor=#a0f0ff colspan='2'><b>" + EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + "</b></td></tr>");
-            buffer.append("<tr><td  bgcolor=#eeeeee colspan='2'>" + offerPosition.getDescription() + "</td></tr>");
-
-            productNr = offerPosition.getProductnr();
-            name = offerPosition.getProductname();
-            description = offerPosition.getDescription();
-            
-        } else if (isCampaign && campaignPosition.getProductnr() != null) {
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NR") + "</td><td bgcolor='#ebebeb' >" + campaignPosition.getProductnr() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_NAME") + "</td><td bgcolor='#eeeeee'>" + campaignPosition.getProductname() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + "</td><td bgcolor='#ebebeb'>" + campaignPosition.getCategory() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_TYPE") + "</td><td bgcolor='#eeeeee'>" + ("null".equals(campaignPosition.getType()) ? "" : campaignPosition.getType()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE") + "</td><td bgcolor='#ebebeb'>" + ("null".equals(campaignPosition.getTaxtype()) ? "" : campaignPosition.getTaxtype()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_SALE_PRICE") + "</td><td bgcolor='#eeeeee'>" + currency.format(ebiModule.dynMethod.calculatePreTaxPrice(campaignPosition.getNetamount(),ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText(),ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText())) + "</td></tr>");
-            buffer.append("<tr><td  bgcolor=#a0f0ff colspan='2'><b>" + EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + "</b></td></tr>");
-            buffer.append("<tr><td  bgcolor=#eeeeee colspan='2'>" + campaignPosition.getDescription() + "</td></tr>");
-
-            productNr = campaignPosition.getProductnr();
-            name = campaignPosition.getProductname();
-            description = campaignPosition.getDescription();
-
-        } else if (isService && servicePosition.getProductnr() != null) {
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NR") + "</td><td bgcolor='#ebebeb' >" + servicePosition.getProductnr() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_NAME") + "</td><td bgcolor='#eeeeee'>" + servicePosition.getProductname() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + "</td><td bgcolor='#ebebeb'>" + servicePosition.getCategory() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_TYPE") + "</td><td bgcolor='#eeeeee'>" + ("null".equals(servicePosition.getType()) ? "" : servicePosition.getType()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE") + "</td><td bgcolor='#ebebeb'>" + ("null".equals(servicePosition.getTaxtype()) ? "" : servicePosition.getTaxtype()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_SALE_PRICE") + "</td><td bgcolor='#eeeeee'>" + currency.format(ebiModule.dynMethod.calculatePreTaxPrice(servicePosition.getNetamount(),ebiModule.guiRenderer.getTextfield("quantityText","productInsertDialog").getText(),ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText())) + "</td></tr>");
-            buffer.append("<tr><td  bgcolor=#a0f0ff colspan='2'><b>" + EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + "</b></td></tr>");
-            buffer.append("<tr><td  bgcolor=#eeeeee colspan='2'>" + servicePosition.getDescription() + "</td></tr>");
-
-            productNr = servicePosition.getProductnr();
-            name = servicePosition.getProductname();
-            description = servicePosition.getDescription();
-
-        } else if (isProsol && prosolPosition.getProductnr() != null) {
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NR") + "</td><td bgcolor='#ebebeb' >" + prosolPosition.getProductnr() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_NAME") + "</td><td bgcolor='#eeeeee'>" + prosolPosition.getProductname() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + "</td><td bgcolor='#ebebeb'>" + prosolPosition.getCategory() + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_TYPE") + "</td><td bgcolor='#eeeeee'>" + ("null".equals(prosolPosition.getType()) ? "" : prosolPosition.getType()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE") + "</td><td bgcolor='#ebebeb'>" + ("null".equals(prosolPosition.getTaxtype()) ? "" : prosolPosition.getTaxtype()) + "</td></tr>");
-            buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_SALE_PRICE") + "</td><td bgcolor='#eeeeee'>" + currency.format(ebiModule.dynMethod.calculatePreTaxPrice(prosolPosition.getNetamount(),"1",ebiModule.guiRenderer.getTextfield("deductionText","productInsertDialog").getText())) + "</td></tr>");
-            buffer.append("<tr><td  bgcolor=#a0f0ff colspan='2'><b>" + EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + "</b></td></tr>");
-            buffer.append("<tr><td  bgcolor=#eeeeee colspan='2'>" + prosolPosition.getDescription() + "</td></tr>");
-
-            productNr = prosolPosition.getProductnr();
-            name = prosolPosition.getProductname();
-            description = prosolPosition.getDescription();
-
-        } else if (isInvoice && invoicePosition.getProductnr() != null) {
+        if (isInvoice && invoicePosition.getProductnr() != null) {
             buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NR") + "</td><td bgcolor='#ebebeb' >" + invoicePosition.getProductnr() + "</td></tr>");
             buffer.append("<tr><td width=5% bgcolor=#eeeeee>" + EBIPGFactory.getLANG("EBI_LANG_NAME") + "</td><td bgcolor='#eeeeee'>" + invoicePosition.getProductname() + "</td></tr>");
             buffer.append("<tr><td width=5% bgcolor=#ebebeb>" + EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + "</td><td bgcolor='#ebebeb'>" + invoicePosition.getCategory() + "</td></tr>");

@@ -1,22 +1,7 @@
 <BusinessModule Name="EBICRM">
- <includeGUI Name="Summary" title="EBI_LANG_C_SUMMARY" Path="Summary/summaryGUI.xml"/>
  <includeGUI Name="Leads" title="EBI_LANG_C_LEADS" Path="Leads/leadsGUI.xml"/>
- <includeGUI Name="Company" title="EBI_LANG_C_COMPANY" Path="Company/companyGUI.xml" />
- <includeGUI Name="Address" title="EBI_LANG_C_ADRESS" Path="Address/addressGUI.xml"/>
- <includeGUI Name="Contact" title="EBI_LANG_C_CONTACT" Path="Contact/contactGUI.xml"/>
- <includeGUI Name="Bank" title="EBI_LANG_C_BANK_DATA" Path="Bank/bankGUI.xml"/>
- <includeGUI Name="MeetingCall" title="EBI_LANG_C_MEETING_PROTOCOL" Path="MeetingsCallManagement/meetingcallGUI.xml"/>
- <includeGUI Name="Activity" title="EBI_LANG_C_ACTIVITIES" Path="Activity/activityGUI.xml"/>
- <includeGUI Name="Opportunity" title="EBI_LANG_C_OPPORTUNITY" Path="Opportunity/opportunityGUI.xml"/>
- <includeGUI Name="Offer" title="EBI_LANG_C_OFFER" Path="Offer/offerGUI.xml"/>
- <includeGUI Name="Order" title="EBI_LANG_C_ORDER" Path="Order/orderGUI.xml"/>
- <includeGUI Name="Service" title="EBI_LANG_C_SERVICE" Path="CRMService/serviceGUI.xml"/>
  <includeGUI Name="Invoice" title="EBI_LANG_C_TAB_INVOICE" Path="Invoice/invoiceGUI.xml"/>
  <includeGUI Name="Product" title="EBI_LANG_C_TAB_PRODUCT" Path="Product/productGUI.xml"/>
- <includeGUI Name="Project" title="EBI_LANG_C_TAB_PROJECT" Path="Project/projectGUI.xml"/>
- <includeGUI Name="Prosol" title="EBI_LANG_C_TAB_PROSOL" Path="CRMProblemSolution/problemSolutionGUI.xml"/>
- <includeGUI Name="CashRegister"  title="EBI_LANG_C_TAB_CASH_REGISTER" Path="cashRegister/cashRegisterGUI.xml"/>
- <includeGUI Name="Campaign" title="EBI_LANG_C_TAB_CAMPAIGN"  Path="Campaign/campaignGUI.xml"/>
  <includeGUI Name="Account" title="EBI_LANG_C_TAB_ACCOUNT" Path="AccountStack/accountGUI.xml"/>
  <includeToolbar Name="ebiToolBar" Path="CRMToolbar/crmToolbar.xml"/>
 </BusinessModule>

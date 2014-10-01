@@ -707,9 +707,6 @@ public class EBIDataControlInvoice {
                 if (iter.hasNext()) {
                     Companyorder order = (Companyorder) iter.next();
                     invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(order);
-                    if(order.getCompany() != null){
-                        invoicePane.ebiModule.createUI(order.getCompany().getCompanyid(),false);
-                    }
                     ret = true;
                 }
            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit(); 
@@ -733,9 +730,7 @@ public class EBIDataControlInvoice {
                 if (iter.hasNext()) {
                     Companyservice service = (Companyservice) iter.next();
                     invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(service);
-                    if(service.getCompany() != null){
-                        invoicePane.ebiModule.createUI(service.getCompany().getCompanyid(),false);
-                    }
+
                     ret = true;
                 }
            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();

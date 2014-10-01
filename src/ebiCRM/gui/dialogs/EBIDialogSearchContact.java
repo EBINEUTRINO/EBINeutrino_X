@@ -230,15 +230,8 @@ public class EBIDialogSearchContact {
     				wait.setVisible(true);
     			    
     				Thread.sleep(500);
-    			    
-	                if (loadCompleteCompany) {
-	                    ebiModule.createUI(Integer.parseInt(tabModel.data[selRowContact][8].toString()),false);
-                        if(ebiModule.guiRenderer.existPackage("Contact")){
-                            ebiModule.getContactPane().editContact(Integer.parseInt(tabModel.data[selRowContact][9].toString()));
-                        }
-	                } else {
-	                   setContactData(tabModel.data[selRowContact][9].toString(), jSetterFieldName, jSetterComponent);
-	                }
+	                setContactData(tabModel.data[selRowContact][9].toString(), jSetterFieldName, jSetterComponent);
+
     			}catch(Exception ex){
     				ex.printStackTrace();
     			}finally{

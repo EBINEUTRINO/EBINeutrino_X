@@ -32,7 +32,7 @@
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{type} == 1 ? $P{EBI_LANG}.getProperty("EBI_LANG_COST") : $P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{type} == 1 ? $P{EBI_LANG}.getProperty("EBI_LANG_COST_PROPERTY") : $P{EBI_LANG}.getProperty("EBI_LANG_INCOME")]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>

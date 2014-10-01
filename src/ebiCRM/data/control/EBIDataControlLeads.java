@@ -21,25 +21,26 @@ import ebiNeutrinoSDK.model.hibernate.Companycontacts;
 
 public class EBIDataControlLeads {
 
-     private EBICRMLead ebiLeadsPanel = null;
-     private Company company =  null;
-     private Companycontacts contact = null;
-     private Companyaddress address = null;
-     public boolean isEdit = false;
-     private String searchText = "";
+    private EBICRMLead ebiLeadsPanel = null;
+    private Company company =  null;
+    private Companycontacts contact = null;
+    private Companyaddress address = null;
+    private Companycontactaddress contactAddrs=null;
+    public boolean isEdit = false;
+    private String searchText = "";
 
 
-     public EBIDataControlLeads(EBICRMLead leads){
-         this.ebiLeadsPanel = leads;
-
-     }
+    public EBIDataControlLeads(EBICRMLead leads){
+        this.ebiLeadsPanel = leads;
+        contact = new Companycontacts();
+        address = new Companyaddress();
+        contactAddrs = new Companycontactaddress();
+    }
 
 
     public boolean dataStore() {
       try{
-          //ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
           ebiLeadsPanel.ebiModule.ebiContainer.showInActionStatus("Leads", true);
-          //ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
 
           if (isEdit == true) {
             company.setChangeddate(new Date());
@@ -49,6 +50,7 @@ public class EBIDataControlLeads {
             company.setChangedfrom(EBIPGFactory.ebiUser);
             contact.setChangedfrom(EBIPGFactory.ebiUser);
             address.setChangedfrom(EBIPGFactory.ebiUser);
+            contactAddrs.setChangedfrom(EBIPGFactory.ebiUser);
 
           } else {
             
@@ -63,6 +65,10 @@ public class EBIDataControlLeads {
             address = new Companyaddress();
             address.setCreateddate(new Date());
             address.setCreatedfrom(EBIPGFactory.ebiUser);
+
+            contactAddrs = new Companycontactaddress();
+            contactAddrs.setCreateddate(new Date());
+            contactAddrs.setCreatedfrom(EBIPGFactory.ebiUser);
 
           }
 
@@ -102,8 +108,6 @@ public class EBIDataControlLeads {
           contact.setFax(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("faxText","Leads").getText());
           contact.setEmail(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("emailText","Leads").getText());
 
-
-
           address.setCompany(company);
           address.setAddresstype(address.getAddresstype() == null ? "" : address.getAddresstype());
           address.setZip(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressZipText","Leads").getText());
@@ -111,13 +115,20 @@ public class EBIDataControlLeads {
           address.setStreet(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressStrNrText","Leads").getText());
           address.setCountry(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressCountryText","Leads").getText());
 
-          contact.setCompanycontactaddresses(null);
+          contactAddrs.setCompanycontacts(contact);
+          contactAddrs.setAddresstype(contactAddrs.getAddresstype() == null ? "" : contactAddrs.getAddresstype());
+          contactAddrs.setZip(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressZipText","Leads").getText());
+          contactAddrs.setLocation(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressCityText","Leads").getText());
+          contactAddrs.setStreet(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressStrNrText","Leads").getText());
+          contactAddrs.setCountry(ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("addressCountryText","Leads").getText());
+
+          contact.getCompanycontactaddresses().add(contactAddrs);
           company.getCompanyaddresses().add(address);
           company.getCompanycontactses().add(contact);
           ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").saveOrUpdate(company);
           ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").saveOrUpdate(address);
           ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").saveOrUpdate(contact);
-
+          ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").saveOrUpdate(contactAddrs);
           //Fill Visitcard
           ebiLeadsPanel.ebiModule.guiRenderer.getLabel("compNameLabel","Leads").setText(company.getName() == null ? "" : company.getName());
           
@@ -337,7 +348,6 @@ public class EBIDataControlLeads {
 
             ebiLeadsPanel.ebiModule.ebiPGFactory.getDataStore("Leads","ebiEdit",true);
 
-            ebiLeadsPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").commit();
             ebiLeadsPanel.ebiModule.guiRenderer.getPanel("businessCard","Leads").updateUI();
         }catch(Exception ex){
             ex.printStackTrace();

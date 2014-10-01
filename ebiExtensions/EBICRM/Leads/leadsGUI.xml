@@ -54,7 +54,6 @@
 		<button name="deleteLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="113,18" Size="31,27"/>
 		<textfield name="searchLeadsText" Location="328,22" Size="430,20"/>
 		<label name="searchLead" title="EBI_LANG_SEARCH_LEADS" Location="248,22" Size="77,20"/>
-		<button name="openComp" i18ntooltip="EBI_LANG_C_TOOL_TIP_LOAD_TO_COMPANY" Location="148,18" Size="31,27"/>
 </panel>
 <panel name="businessCard" background="#fffdff" Location="615,62" Size="403,192">
 		<label name="cName" Location="11,46" Size="285,24"/>

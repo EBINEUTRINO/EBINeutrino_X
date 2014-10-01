@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<dialog name="searchCRMCompany" title="Search Company" icon="..\images\search.png" Location="100,100" Size="900,450" visualproperties="false" assignable="false" modal="true" resizable="true" >
- 		<label name="InternalNr" title="EBI_LANG_FILTER" Location="9,9" Size="84,20"/>
-		<textfield name="filterTableText" tabindex="1" Location="99,9" Size="314,20"/>
-		<button name="compSearchsearchButton" tabindex="8" title="Search" Location="427,5" Size="114,25"/>
-		<button name="compSearchcancelButton" title="cancel" fitonresize="true" Location="773,393" Size="107,29"/>
-		<button name="compSearchapplyButton" title="apply" fitonresize="true" Location="632,393" Size="130,29"/>
-		<table name="searchCompanyTable" Location="9,35" Size="100%,90%"/>
-</dialog>

@@ -11,10 +11,6 @@
 		<timepicker name="offerReceiverText" tabindex="4" Location="115,93" Size="245,20"/>
 		<label name="offerValidTo" title="EBI_LANG_VALID_TO" Location="9,118" Size="113,20"/>
 		<timepicker name="validToText" tabindex="5" Location="115,118" Size="245,20"/>
-		<label name="offerOpportunity" title="EBI_LANG_C_OPPORTUNITY" Location="9,143" Size="113,20"/>
-		<textfield name="offerOpportunityText" tabindex="6" Location="115,143" Size="120,20"/>
-		<button name="searchOpportunity" tabindex="7" Location="240,143" Size="25,20"/>
-		<button name="showOpportunity" tabindex="8" title="EBI_LANG_SHOW" Location="270,143" Size="90,20"/>
 		<label name="offerDescription" title="EBI_LANG_DESCRIPTION" Location="9,168" Size="113,20"/>
 		<textarea name="offerDescriptionText" tabindex="10" Location="9,193" Size="100%,93"/>
 		<button name="saveOffer" tabindex="11" title="EBI_LANG_SAVE" Location="220,293" Size="150,25"/>

@@ -48,7 +48,7 @@ public class EBIMoveRecord {
             public void actionPerformed(ActionEvent actionEvent) {
 
                 final HashMap <String,Object> map = new HashMap<String, Object>();
-                new EBIDialogSearchCompany(ebiModule,map);
+
                 if(map.get("Name") != null && map.get("ID") != null ){
                     ebiModule.guiRenderer.getTextfield("companyName","moveRecordDialog").setText(map.get("Name").toString());
                     companyID = Integer.valueOf(map.get("ID").toString());

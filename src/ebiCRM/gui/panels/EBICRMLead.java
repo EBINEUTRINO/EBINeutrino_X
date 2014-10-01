@@ -52,9 +52,9 @@ public class EBICRMLead {
         ebiModule.guiRenderer.getVisualPanel("Leads").setCreatedFrom(EBIPGFactory.ebiUser);
         ebiModule.guiRenderer.getVisualPanel("Leads").setChangedDate("");
         ebiModule.guiRenderer.getVisualPanel("Leads").setChangedFrom("");
-        ebiModule.guiRenderer.getComboBox("genderText","Leads").setModel(new DefaultComboBoxModel(EBICRMContactPane.gendersList));
+        ebiModule.guiRenderer.getComboBox("genderText","Leads").setModel(new DefaultComboBoxModel(EBICRMModule.gendersList));
         ebiModule.guiRenderer.getComboBox("genderText","Leads").setEditable(true);
-        ebiModule.guiRenderer.getComboBox("classificationText","Leads").setModel(new DefaultComboBoxModel(EBICRMCompanyPane.classification));
+        ebiModule.guiRenderer.getComboBox("classificationText","Leads").setModel(new DefaultComboBoxModel(EBICRMModule.classification));
         EBIExtendedPanel businessCard = new EBIExtendedPanel("","images/user.png");
         businessCard.setSize(ebiModule.guiRenderer.getPanel("businessCard","Leads").getSize());
         businessCard.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -119,20 +119,6 @@ public class EBICRMLead {
               controlLeads.dataCopy(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
            }
        });
-       
-
-       ebiModule.guiRenderer.getButton("openComp", "Leads").setIcon(EBIConstant.ICON_EXPORT);
-       ebiModule.guiRenderer.getButton("openComp", "Leads").setEnabled(false);
-       ebiModule.guiRenderer.getButton("openComp", "Leads").addActionListener(new ActionListener() {
-           public void actionPerformed(ActionEvent e) {
-               if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                       equals(tabModel.data[selectedRow][0].toString())) {
-                   return;
-               }
-               ebiModule.ebiPGFactory.getIEBIContainerInstance().setSelectedExtension("Company");
-               ebiModule.createUI(Integer.parseInt(tabModel.data[selectedRow][11].toString()), true);
-           }
-       });
 
        ebiModule.guiRenderer.getButton("deleteLeads","Leads").setIcon(EBIConstant.ICON_DELETE);
        ebiModule.guiRenderer.getButton("deleteLeads","Leads").setEnabled(false);
@@ -167,14 +153,11 @@ public class EBICRMLead {
 	                        if (lsm.isSelectionEmpty()) {
 	                            ebiModule.guiRenderer.getButton("editLeads","Leads").setEnabled(false);
 	                            ebiModule.guiRenderer.getButton("deleteLeads","Leads").setEnabled(false);
-	                            ebiModule.guiRenderer.getButton("openComp","Leads").setEnabled(false);
 	                            ebiModule.guiRenderer.getButton("copyLeads","Leads").setEnabled(false);
 	                        } else if (!tabModel.data[selectedRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
 	                            ebiModule.guiRenderer.getButton("editLeads","Leads").setEnabled(true);
 	                            ebiModule.guiRenderer.getButton("deleteLeads","Leads").setEnabled(true);
-	                            ebiModule.guiRenderer.getButton("openComp","Leads").setEnabled(true);
 	                            ebiModule.guiRenderer.getButton("copyLeads","Leads").setEnabled(true);
-	
 	                        }
                         }
                     }

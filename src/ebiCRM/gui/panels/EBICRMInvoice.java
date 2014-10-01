@@ -101,34 +101,6 @@ public class EBICRMInvoice {
                 }
         });
 
-        ebiModule.guiRenderer.getButton("selectOrder","Invoice").setIcon(EBIConstant.ICON_EDIT);
-        ebiModule.guiRenderer.getButton("selectOrder","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getButton("selectOrder","Invoice").addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent event){
-               String[] spl = ebiModule.guiRenderer.getTextfield("orderText","Invoice").getText().split(":");
-
-               if(spl[0].equals(EBIPGFactory.getLANG("EBI_LANG_C_SERVICE"))){
-                   if(!"".equals(spl[1])){
-                       if(dataControlInvoice.loadCompanyService(Integer.parseInt(spl[1].trim()))){
-                           ebiModule.ebiPGFactory.getIEBIContainerInstance().setSelectedExtension("Service");
-                           ebiModule.getServicePane().editService(Integer.parseInt(spl[1].trim()));
-                       }else{
-                           EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_RECORD_NOT_FOUND")).Show(EBIMessage.ERROR_MESSAGE);
-                       }
-                   }
-               }else{
-                   if(!"".equals(spl[1])){
-                       if(dataControlInvoice.loadCompanyOrder(Integer.parseInt(spl[1].trim()))){
-                           ebiModule.ebiPGFactory.getIEBIContainerInstance().setSelectedExtension("Order");
-                           ebiModule.getOrderPane().editOrder(Integer.parseInt(spl[1].trim()));
-                       }else{
-                           EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_RECORD_NOT_FOUND")).Show(EBIMessage.ERROR_MESSAGE);
-                       }
-                   }
-               }
-            }
-        });
-
         ebiModule.guiRenderer.getButton("saveInvoice","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 ebiSave();
@@ -451,7 +423,7 @@ public class EBICRMInvoice {
         ebiModule.guiRenderer.getTextfield("orderText","Invoice").setEnabled(false);
         ebiModule.guiRenderer.getTextfield("orderText","Invoice").setText("");
 
-        ebiModule.guiRenderer.getComboBox("genderText","Invoice").setModel(new DefaultComboBoxModel(EBICRMContactPane.gendersList));
+        ebiModule.guiRenderer.getComboBox("genderText","Invoice").setModel(new DefaultComboBoxModel(EBICRMModule.gendersList));
         ebiModule.guiRenderer.getComboBox("genderText","Invoice").setSelectedIndex(0);
 
         ebiModule.guiRenderer.getTextfield("titleText","Invoice").setText("");

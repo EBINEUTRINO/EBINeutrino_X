@@ -8,13 +8,13 @@ import ebiNeutrinoSDK.EBIPGFactory;
 public class MyTableModelCRMAccount extends AbstractTableModel {
 
     public String[] columnNames = {
-
+        EBIPGFactory.getLANG("EBI_LANG_TYPE"),
         EBIPGFactory.getLANG("EBI_LANG_DATE"),
         EBIPGFactory.getLANG("EBI_LANG_NUMBER"),
         EBIPGFactory.getLANG("EBI_LANG_NAME"),
         EBIPGFactory.getLANG("EBI_LANG_TOTAL_AMOUNT"),
-        EBIPGFactory.getLANG("EBI_LANG_DEBIT"),
-        EBIPGFactory.getLANG("EBI_LANG_CREDIT"),
+        EBIPGFactory.getLANG("EBI_LANG_DEBIT")+" / "+EBIPGFactory.getLANG("EBI_LANG_CREDIT"),
+        EBIPGFactory.getLANG("EBI_LANG_DEPOSIT"),
 
     };
 

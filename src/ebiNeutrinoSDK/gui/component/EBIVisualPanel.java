@@ -7,18 +7,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.*;
-import ebiNeutrino.core.GUIRenderer.EBIButton;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.utils.EBIConstant;
-
+import org.jdesktop.swingx.JXPanel;
 
 
 /**
  * The EBIVisualPanel
  */
 
-public class EBIVisualPanel extends JDesktopPane {
+public class EBIVisualPanel extends JXPanel {
 
     protected JLabel jTextFieldAdded = null;
 	protected JLabel jTextFieldAddedFrom = null;
@@ -96,14 +95,15 @@ public class EBIVisualPanel extends JDesktopPane {
 		this.add(changedFrom, null);
         this.setDoubleBuffered(true);
         RepaintManager.currentManager(this).setDoubleBufferingEnabled(true);
+        this.setBorder(BorderFactory.createLineBorder(EBIPGFactory.systemColor, 1, true));
 	}
 	
 	public void paintComponent(Graphics g){
 
         Graphics2D g2 = (Graphics2D)g;
         // Draw bg top
-        Color startColor = new Color(50,50,50);
-        Color endColor = startColor.brighter();
+        Color startColor = new Color(150,150,150);
+        Color endColor = startColor.darker();
 
         // A non-cyclic gradient
         GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, 10, endColor);
@@ -196,7 +196,7 @@ public class EBIVisualPanel extends JDesktopPane {
 			jTextFieldAdded = new JLabel();
 			jTextFieldAdded.setBounds(new Rectangle(382, 0, 98, 20));
 			jTextFieldAdded.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
-			jTextFieldAdded.setForeground(new Color(80, 80, 80));
+			jTextFieldAdded.setForeground(new Color(240, 240, 240));
 			jTextFieldAdded.setOpaque(false);
             jTextFieldAdded.setFocusable(false);
 		}

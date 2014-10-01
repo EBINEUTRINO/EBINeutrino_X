@@ -45,34 +45,6 @@ public class EBIToolbar extends JToolBar implements IEBIToolBar {
 	}
 
 
-     public void paintComponent(Graphics g) {
-
-
-         Graphics2D g2 = (Graphics2D)g;
-         // Draw bg top
-         Color startColor = new Color(39,37,27);
-         Color endColor = startColor.brighter();
-
-         // A non-cyclic gradient
-         GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, 20, endColor);
-         g2.setPaint(gradient);
-         g2.fillRect(0, 0, getWidth(), 20);
-
-         Color sColor = startColor;
-         Color eColor = endColor;
-
-         // A non-cyclic gradient
-         GradientPaint gradient1 = new GradientPaint(0, 0, sColor, getWidth(), 40, eColor);
-         g2.setPaint(gradient1);
-         g.setColor(startColor);
-         g.fillRect(0, 21, getWidth(), getHeight());
-         g.setColor(endColor);
-         g.drawLine(0, 20, getWidth(), 20);
-
-         setOpaque(true);
-    }
-
-
 	/**
 	 * Show the addToolBarToEBIMain
 	 * @param pane
@@ -82,46 +54,6 @@ public class EBIToolbar extends JToolBar implements IEBIToolBar {
         super.setOrientation(JToolBar.HORIZONTAL);
         ebiMain.getContentPane().add(this,BorderLayout.NORTH);
 
-    }
-    /**
-     * Add the system home button to the toolBar
-     */
-
-    public JButton addLogoutButton(){
-
-      JButton logout = new JButton(EBIConstant.ICON_LOGOUT);
-      logout.setBorderPainted(false);
-      logout.setOpaque(false);
-      logout.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-              if (iSecurity.checkCanReleaseModules()) {
-                  ebiMain.addLoginModul();
-              }
-          }
-      });
-
-      logout.setToolTipText("<html><body><br><b>EBI Neutrino Logout</b><br><br></body></html>");
-      return logout;
-    }
-
-    public JButton addUserSettingButton(){
-
-      JButton usetting = new JButton(EBIConstant.ICON_USER);
-      usetting.setBorderPainted(false);
-      usetting.setFocusable(false);
-      usetting.setOpaque(false);
-      usetting.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-              if (iSecurity.checkCanReleaseModules()) {
-                  if (iSecurity.secureModule()) {
-                      ebiMain.addUsermanagement();
-                  }
-              }
-          }
-      });
-
-       usetting.setToolTipText("<html><body><br><b>" + EBIPGFactory.getLANG("EBI_LANG_USER_SETTING") + "</b><br><br></body></html>");
-       return usetting;
     }
 
      public JButton addSystemSettingButton(){
@@ -295,7 +227,7 @@ public class EBIToolbar extends JToolBar implements IEBIToolBar {
                 addButtonSeparator();
                 addloadDesignerButton();
            }
-            getJToolBar().add(addLogoutButton());
+
            // getJToolBar().addSeparator();
         }
 		for(int i=0; i<buttonList.size(); i++){
@@ -312,7 +244,6 @@ public class EBIToolbar extends JToolBar implements IEBIToolBar {
             //Add User and System Setting
             //getJToolBar().addSeparator();
            if(ebiMain._ebifunction.iuserRights.isAdministrator()){
-            getJToolBar().add(addUserSettingButton());
             getJToolBar().add(addSystemSettingButton());
            }
         }

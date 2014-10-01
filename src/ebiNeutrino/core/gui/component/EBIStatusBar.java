@@ -49,7 +49,7 @@ public class EBIStatusBar extends JPanel {
 		jLabel1.setText("");
 		jLabel1.setIcon(new ImageIcon("images/agt_runit.png"));
 		JLabel jLabel=new JLabel();
-		jLabel.setText("EBI Neutrino R1");
+		jLabel.setText("EBI Neutrino");
 		jLabel.setFont(new java.awt.Font("Dialog", java.awt.Font.BOLD, 12));
 		jLabel.setBounds(new java.awt.Rectangle(4,-2,122,22));
 		this.setLayout(null);

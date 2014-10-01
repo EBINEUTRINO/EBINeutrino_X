@@ -36,13 +36,6 @@ public class CRMSetting {
         ebiModule.guiRenderer.getLabel("category","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_CATEGORY"));
         ebiModule.guiRenderer.getLabel("cooperation","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_COOPERATION"));
         ebiModule.guiRenderer.getLabel("classification","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_KLASSIFICATION"));
-        ebiModule.guiRenderer.getLabel("addressType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_ADRESS_TYPE"));
-        ebiModule.guiRenderer.getLabel("reportType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_MEMO_TYPE"));
-        ebiModule.guiRenderer.getLabel("busType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_BUSINESS_TYP"));
-        ebiModule.guiRenderer.getLabel("saleStage","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_SALE_STAGE"));
-        ebiModule.guiRenderer.getLabel("budgetType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_BUDGET_TYPE"));
-        ebiModule.guiRenderer.getLabel("evalType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_EVALUATING_TYPE"));
-        ebiModule.guiRenderer.getLabel("oppStatus","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_OPPORTUNITY_STATUS"));
         ebiModule.guiRenderer.getLabel("activityStatus","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_ACTIVITY_STATUS"));
         ebiModule.guiRenderer.getLabel("activityType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_ACTIVITY_TYPE"));
         ebiModule.guiRenderer.getLabel("offerStatus","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_OFFER_STATUS"));
@@ -52,8 +45,6 @@ public class CRMSetting {
         ebiModule.guiRenderer.getLabel("ProductProperties","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_PROPERTIES"));
         ebiModule.guiRenderer.getLabel("taxautority","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TAX_AUTORITY"));
         ebiModule.guiRenderer.getLabel("tax","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_CRM_TAX_TYP"));
-        ebiModule.guiRenderer.getLabel("campStatus","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_STATUS"));
-        ebiModule.guiRenderer.getLabel("CampType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PROPERTIES"));
         ebiModule.guiRenderer.getLabel("serviceStatus","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_STATUS"));
         ebiModule.guiRenderer.getLabel("serviceType","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TYPE"));
         ebiModule.guiRenderer.getLabel("serviceCategory","crmSettingDialog").setText(EBIPGFactory.getLANG("EBI_LANG_CATEGORY"));
@@ -103,64 +94,6 @@ public class CRMSetting {
 					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyClassification", EBIPGFactory.getLANG("EBI_LANG_C_CRM_CLASSIFICATION_TYPE"));
 				    setCategory.setVisible();
 			}
-		});
-
-
-        ebiModule.guiRenderer.getButton("addressTypeBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("addressTypeBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CRMAddressType", EBIPGFactory.getLANG("EBI_LANG_C_CRM_ADRESS_TYP"));
-				    setCategory.setVisible();
-				}
-		});
-
-        ebiModule.guiRenderer.getButton("reportTypeBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("reportTypeBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyMeetingType", EBIPGFactory.getLANG("EBI_LANG_C_CRM_MEMO_TYP"));
-				    setCategory.setVisible();
-				}
-		});
-
-        ebiModule.guiRenderer.getButton("bussTypeBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("bussTypeBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyOpportunityBusTyp", EBIPGFactory.getLANG("EBI_LANG_C_CRM_BUSINESS_TYP"));
-				    setCategory.setVisible();
-				}
-		});
-
-
-        ebiModule.guiRenderer.getButton("saleStgBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("saleStgBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyOpportunitySStage", EBIPGFactory.getLANG("EBI_LANG_C_CRM_SALE_TYPE"));
-				    setCategory.setVisible();
-				}
-		});
-
-        ebiModule.guiRenderer.getButton("budTypeBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("budTypeBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyOpportunityBgStatus", EBIPGFactory.getLANG("EBI_LANG_C_CRM_BUDGET_TYP"));
-				    setCategory.setVisible();
-				}
-			});
-
-        ebiModule.guiRenderer.getButton("evalTypeBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("evalTypeBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyOpportunityEvStatus", EBIPGFactory.getLANG("EBI_LANG_C_CRM_EVALUATING_TYP"));
-				    setCategory.setVisible();
-				}
-		});
-
-        ebiModule.guiRenderer.getButton("oppstatusBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("oppstatusBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setCategory = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CompanyOpportunityStatus", EBIPGFactory.getLANG("EBI_LANG_C_CRM_OPPORTUNITY_TYPE"));
-				    setCategory.setVisible();
-				}
 		});
 
 
@@ -246,21 +179,6 @@ public class CRMSetting {
 				}
 		});
 
-        ebiModule.guiRenderer.getButton("campaignStatusBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("campaignStatusBnt","crmSettingDialog").addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					EBIDialogValueSetter setValueSetter = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CRMCAMPAIGNSTATUS", EBIPGFactory.getLANG("EBI_LANG_C_CRM_CAMPAIGN_STATUS"));
-					setValueSetter.setVisible();
-				}
-		});
-
-        ebiModule.guiRenderer.getButton("campaignTypeBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
-        ebiModule.guiRenderer.getButton("campaignTypeBnt","crmSettingDialog").addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    EBIDialogValueSetter setValueSetter = new EBIDialogValueSetter(ebiModule.ebiPGFactory,"CRMCAMPAIGNPROPS", EBIPGFactory.getLANG("EBI_LANG_C_CRM_CAMPAIGN_PROPERTIES"));
-                    setValueSetter.setVisible();
-                }
-		});
 
         ebiModule.guiRenderer.getButton("serviceStatusBnt","crmSettingDialog").setIcon(EBIConstant.ICON_EDIT_DIALOG);
         ebiModule.guiRenderer.getButton("serviceStatusBnt","crmSettingDialog").addActionListener(new ActionListener() {

@@ -70,7 +70,7 @@ public class EBISplashScreen extends JWindow {
 			jProgressBar.setBounds(new Rectangle(17, 255, 251, 19));
 			jProgressBar.setIndeterminate(true);
 			jProgressBar.setStringPainted(true);
-			jProgressBar.setString("EBI Neutrino R1 Loading...");
+			jProgressBar.setString("EBI Neutrino Loading...");
 		}
 		return jProgressBar;
 	}

@@ -17,8 +17,7 @@ public class EBIListSettingName extends JPanel {
 	public DefaultListModel myListmodel = null;
     public JPanel cpanel = null;
     public EBIMain ebiMain = null;
-    public EBISystemSettingPanel einstp = null; 
-    public EBISettingLookAndFeel lnf = null;
+    public EBISystemSettingPanel einstp = null;
     public EBIReportSetting report =null;
     
 	/**
@@ -31,17 +30,14 @@ public class EBIListSettingName extends JPanel {
       
 		myListmodel = new DefaultListModel();
 
-       
         EBIListItem item0 = new EBIListItem(EBIConstant.ICON_NEW_BLANK, EBIPGFactory.getLANG("EBI_LANG_START")),
         			item1 = new EBIListItem(EBIConstant.ICON_SETTING, EBIPGFactory.getLANG("EBI_LANG_SYSTEM_SETTING")),
-                    item2 = new EBIListItem(EBIConstant.ICON_DESIGNER, EBIPGFactory.getLANG("EBI_LANG_LOOK_AND_FEEL")),
-                    item3 = new EBIListItem(EBIConstant.ICON_REPORT, EBIPGFactory.getLANG("EBI_LANG_REPORT_SETTING"));
+                    item2 = new EBIListItem(EBIConstant.ICON_REPORT, EBIPGFactory.getLANG("EBI_LANG_REPORT_SETTING"));
 
                   
         myListmodel.addElement(item0);  
         myListmodel.addElement(item1);
         myListmodel.addElement(item2);
-        myListmodel.addElement(item3);
         
 		initialize();
 		jListnames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -87,15 +83,6 @@ public class EBIListSettingName extends JPanel {
 						  
 						  break;
 					  case 2:
-						  
-						  	cpanel.removeAll();
-						  	cpanel.updateUI();
-	                    	lnf = new EBISettingLookAndFeel(ebiMain);
-	                    	cpanel.add(lnf, java.awt.BorderLayout.CENTER);
-	                    	lnf.updateUI();
-						  
-						  break;
-					  case 3:
 						    cpanel.removeAll();
 	                    	cpanel.updateUI();
 	                    	report = new EBIReportSetting(ebiMain); 

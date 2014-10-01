@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ebibar name="EBICRMToolBar" title="" Location="0,0" Size="0,0" visualproperties="false" assignable="false" >
  	<toolbar name="ebiToolBar" Location="0,0" Size="0,0">
-         <toolbaritem name="toolbarItemNew" title="New" keystroke="N" i18ntooltip="EBI_LANG_C_TOOL_TIP_CREATE_NEW_COMPANY"/>
-         <toolbaritem name="toolbarItemSave" title="Save" keystroke="S" i18ntooltip="EBI_LANG_C_TOOL_TIP_SAVE_COMPANY"/>
-         <toolbaritem name="toolbarItemSearchCompany" keyStroke="F8"   title="Search Company" i18ntooltip="EBI_LANG_C_TOOL_TIP_SEARCH_COMPANY"/>
-         <toolbaritem name="toolbarItemHistory" keyStroke="F9" title="History" i18ntooltip="EBI_LANG_C_TOOL_TIP_SEARCH_COMPANY_HISTORY"/>
-         <toolbaritem name="toolbarItemSearchContact" keyStroke="F10" title="Search contact" i18ntooltip="EBI_LANG_C_TOOL_TIP_SEARCH_CONTACT"/>
          <toolbaritem name="toolbarItemCompanyReport" keyStroke="P" title="Company report" i18ntooltip="EBI_LANG_C_TOOL_TIP_COMPANY_REPORT"/>
-         <toolbaritem name="toolbarItemDelete" keyStroke="D" title="Delete company" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_COMPANY"/>
          <toolbaritem name="toolbarItemCRMSetting" keyStroke="K" title="CRM Settings" i18ntooltip="EBI_LANG_C_TOOL_TIP_CRM_SETTING"/>
          <toolbaritem name="toolbarItemExport" keyStroke="R" title="Import" i18ntooltip="EBI_LANG_C_TOOL_TIP_CRM_EXPORT_CSV"/>
          <toolbaritem name="toolbarItemImport" keyStroke="Y" title="Export" i18ntooltip="EBI_LANG_C_TOOL_TIP_CRM_IMPORT_CSV"/>
