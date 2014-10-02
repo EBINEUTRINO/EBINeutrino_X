@@ -28,8 +28,6 @@ import org.hibernate.Query;
 import ebiCRM.gui.dialogs.EBICRMDialogSearchProduct;
 import ebiCRM.gui.dialogs.EBIDialogProperties;
 import ebiCRM.gui.panels.EBICRMProduct;
-import ebiCRM.utils.EBICRMHistoryCreator;
-import ebiCRM.utils.EBICRMHistoryDataUtil;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
@@ -58,19 +56,12 @@ public class EBIDataControlProduct {
 
         try {
             productPane.ebiModule.ebiContainer.showInActionStatus("Product",true);
-            if(id != -1){
-                if(checkIslocked(id,true)){
-                 return false;
-                }
-            }
-
             productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
             if (!isEdit) {
                 this.product.setCreateddate(new Date());
                 this.product.setCreatedfrom(EBIPGFactory.ebiUser);
                 productPane.isEdit = true;
             } else {
-            	createHistory(this.product);
                 this.product.setChangeddate(new Date());
                 this.product.setChangedfrom(EBIPGFactory.ebiUser);
             }
@@ -239,10 +230,6 @@ public class EBIDataControlProduct {
 
             if (iter.hasNext()) {
                 this.id = id;
-               
-                // Set properties for pessimistic dialog
-                productPane.ebiModule.pessimisticStruct.setLockId(id);
-                productPane.ebiModule.pessimisticStruct.setModuleName("CRMProduct");
 
                 this.product = (Crmproduct) iter.next();
                 productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(product);
@@ -283,8 +270,6 @@ public class EBIDataControlProduct {
                 dataShowDimension();
                 dataShowDoc();
 
-                checkIslocked(id,false);
-
                 productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").
 					changeSelection(productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").
 							convertRowIndexToView(productPane.ebiModule.dynMethod.
@@ -305,10 +290,6 @@ public class EBIDataControlProduct {
 
     public void dataDelete(int id) {
         try {
-
-            if(checkIslocked(id,true)){
-                 return;
-            }
 
             Query query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
                     "from Crmproduct where productid=? ").setInteger(0, id);
@@ -398,7 +379,6 @@ public class EBIDataControlProduct {
     public void dataNew() {
       try{
         // Remove lock
-        productPane.ebiModule.unlockCompanyRecord(id,lockUser,"CRMProduct");
         lockId = -1;
         lockModuleName = "";
         lockUser = "";
@@ -436,92 +416,9 @@ public class EBIDataControlProduct {
 
     }
 
-	private void createHistory(Crmproduct pr) throws Exception{
-
-        EBICRMHistoryCreator hcreator = new EBICRMHistoryCreator(productPane.ebiModule);
-        List<String> list = new ArrayList<String>();
-
-        list.add(productPane.ebiModule.ebiPGFactory.getDateToString(pr.getCreateddate()));
-        list.add(pr.getCreatedfrom());
-
-        if (pr.getChangeddate() != null) {
-            list.add(productPane.ebiModule.ebiPGFactory.getDateToString(pr.getChangeddate()));
-            list.add(pr.getChangedfrom());
-        }
-        if(pr.getProductnr() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NUMBER")+": "+(pr.getProductnr().equals(productPane.ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").getText()) == true ? pr.getProductnr() : pr.getProductnr()+"$") );
-        }
-        if(pr.getProductname() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_NAME")+": "+(pr.getProductname().equals(productPane.ebiModule.guiRenderer.getTextfield("ProductNameText","Product").getText()) == true ? pr.getProductname() : pr.getProductname()+"$") );
-        }
-        if(pr.getCategory() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_CATEGORY")+": "+(pr.getCategory().equals(productPane.ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").getSelectedItem().toString()) == true ? pr.getCategory() : pr.getCategory()+"$")  );
-        }
-        if(pr.getType() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_TYPE")+": "+(pr.getType().equals(productPane.ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").getSelectedItem().toString()) == true ? pr.getType() : pr.getType()+"$") );
-        }
-        if(pr.getTaxtype() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE")+": "+(pr.getTaxtype().equals(productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString()) == true ? pr.getTaxtype() : pr.getTaxtype()+"$") );
-        }
-        if(pr.getPretax() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_PRE_TAX_PRICE")+": "+(String.valueOf(pr.getPretax()).equals(productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").getValue().toString()) == true ? String.valueOf(pr.getPretax()) : String.valueOf(pr.getPretax())+"$") );
-        }
-        if(pr.getNetamount() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_CLEAR_PRICE")+": "+(String.valueOf(pr.getNetamount()).equals(productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").getValue().toString()) == true ? String.valueOf(pr.getNetamount()) : String.valueOf(pr.getNetamount())+"$") );
-        }
-        if(pr.getDescription() != null){
-        	list.add(EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION")+": "+(pr.getDescription().equals(productPane.ebiModule.guiRenderer.getTextarea("productDescription","Product").getText()) == true ? pr.getDescription() : pr.getDescription()+"$") );
-        }
-        list.add("*EOR*"); // END OF RECORD
-
-        if(!pr.getCrmproductdependencies().isEmpty()){
-            Iterator iter = pr.getCrmproductdependencies().iterator();
-
-            while(iter.hasNext()){
-                Crmproductdependency dep = (Crmproductdependency) iter.next();
-                if(dep.getDependencyid() > -1){
-                	if(dep.getProductnr() != null){
-                		list.add(dep.getProductnr());
-                	}
-                	if(dep.getProductname() != null){
-                		list.add(dep.getProductname());
-                	}
-	                list.add("*EOR*"); // END OF RECORD
-                }
-            }
-        }
-
-        if(!pr.getCrmproductdimensions().isEmpty()){
-            Iterator iter = pr.getCrmproductdimensions().iterator();
-
-            while(iter.hasNext()){
-                Crmproductdimension dim = (Crmproductdimension)iter.next();
-                if(dim.getDimensionid() > -1) {
-                	if(dim.getName() != null){
-                		list.add(dim.getName());
-                	}
-                	if(dim.getValue() != null){
-                		list.add(dim.getValue());
-                	}
-	                list.add("*EOR*"); // END OF RECORD
-                }
-            }
-        }
-
-        try {
-            hcreator.setDataToCreate(new EBICRMHistoryDataUtil(pr.getProductid(),"Product",list));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void dataNewDoc() {
 
         try {
-            if(checkIslocked(id, true)){
-                return;
-            }
 
             File fs = productPane.ebiModule.ebiPGFactory.getOpenDialog(JFileChooser.FILES_ONLY);
             if (fs != null) {
@@ -615,9 +512,6 @@ public class EBIDataControlProduct {
     public void dataDeleteDoc(int id) {
 
         try {
-            if(checkIslocked(id, true)){
-                return;
-            }
 
             Iterator iter = product.getCrmproductdocs().iterator();
             while (iter.hasNext()) {
@@ -649,11 +543,6 @@ public class EBIDataControlProduct {
     public void dataNewDependency() {
         
         try {
-            if(checkIslocked(id,true)){
-                 return;
-            }
-
-
             EBICRMDialogSearchProduct prod = new EBICRMDialogSearchProduct(productPane.ebiModule, product.getCrmproductdependencies());
             prod.setVisible();
         } catch (Exception e) {
@@ -664,10 +553,6 @@ public class EBIDataControlProduct {
     public void dataDeleteDependency(int id) {
         
         try {
-            if(checkIslocked(id,true)){
-                 return;
-            }
-
             Iterator iter = product.getCrmproductdependencies().iterator();
 
             while (iter.hasNext()) {
@@ -720,10 +605,6 @@ public class EBIDataControlProduct {
         
         try {
 
-            if(checkIslocked(id,true)){
-                 return;
-            }
-
             EBIDialogProperties dim = new EBIDialogProperties(productPane, product.getCrmproductdimensions(), null);
             dim.setVisible();
 
@@ -735,9 +616,6 @@ public class EBIDataControlProduct {
     public void dataEditDimension(int id) {
         
         try {
-            if(checkIslocked(id,true)){
-                 return;
-            }
 
             Iterator iter = product.getCrmproductdimensions().iterator();
             while (iter.hasNext()) {
@@ -761,9 +639,6 @@ public class EBIDataControlProduct {
     public void dataDeleteDimension(int id) {
 
         try {
-            if(checkIslocked(id,true)){
-                 return;
-            }
             Iterator iter = product.getCrmproductdimensions().iterator();
             while (iter.hasNext()) {
 
@@ -948,77 +823,5 @@ public class EBIDataControlProduct {
      * @param showMessage
      * @throws Exception
      */
-
-    public boolean checkIslocked(int compNr, boolean showMessage) throws Exception{
-            boolean ret = false;
-            try{
-            PreparedStatement ps =  productPane.ebiModule.ebiPGFactory.database.initPreparedStatement("SELECT * FROM EBIPESSIMISTIC WHERE RECORDID=? AND MODULENAME=?  ");
-            ps.setInt(1,compNr);
-            ps.setString(2,"CRMProduct");
-            ResultSet rs = productPane.ebiModule.ebiPGFactory.database.executePreparedQuery(ps);
-
-            rs.last();
-
-            if (rs.getRow() <= 0) {
-                if(compNr != -1){
-                    lockId = compNr;
-                    lockModuleName = "CRMProduct";
-                    lockUser = EBIPGFactory.ebiUser;
-                    lockStatus = 1;
-                    lockTime =  new Timestamp(new Date().getTime());
-                    productPane.ebiModule.lockCompanyRecord(compNr,"CRMProduct",lockTime);
-                }
-                activateLockedInfo(false);
-            }else{
-                rs.beforeFirst();
-                rs.next();
-                lockId = rs.getInt("RECORDID");
-                lockModuleName = rs.getString("MODULENAME");
-                lockUser = rs.getString("USER");
-                lockStatus = rs.getInt("STATUS");
-                lockTime =  rs.getTimestamp("LOCKDATE");
-
-                if(!lockUser.equals(EBIPGFactory.ebiUser)){
-                    activateLockedInfo(true);
-                }
-
-                if(showMessage && !lockUser.equals(EBIPGFactory.ebiUser)){
-                    ret = true;
-                }
-            }
-
-             // Pessimistic Dialog view info
-             productPane.ebiModule.guiRenderer.getLabel("userx","pessimisticViewDialog").setText(lockUser);
-             productPane.ebiModule.guiRenderer.getLabel("statusx","pessimisticViewDialog").setText(EBIPGFactory.getLANG("EBI_LANG_LOCKED"));
-             if(lockTime != null){
-                productPane.ebiModule.guiRenderer.getLabel("timex","pessimisticViewDialog").setText(lockTime.toString());
-             }
-            }catch (Exception ex){}
-        return ret;
-    }
-
-    /**
-     * Activate Pessimistic Lock for the GUI
-     * @param enabled
-     */
-
-    public void activateLockedInfo(boolean enabled){
-        try {
-            //show red icon to a visual panel
-            productPane.ebiModule.guiRenderer.getVisualPanel("Product").showLockIcon(enabled);
-
-            //hide the delete buttons from crm panel
-            productPane.ebiModule.guiRenderer.getButton("saveProduct","Product").setEnabled(enabled ? false : true);
-
-            productPane.ebiModule.guiRenderer.getButton("newProperties","Product").setVisible(enabled ? false : true);
-            productPane.ebiModule.guiRenderer.getButton("editProperties","Product").setVisible(enabled ? false : true);
-            productPane.ebiModule.guiRenderer.getButton("deleteProperties","Product").setVisible(enabled ? false : true);
-
-            productPane.ebiModule.guiRenderer.getButton("newRelation","Product").setVisible(enabled ? false : true);
-            productPane.ebiModule.guiRenderer.getButton("deleteRelation","Product").setVisible(enabled ? false : true);
-
-            productPane.ebiModule.guiRenderer.getButton("deleteProduct","Product").setVisible(enabled ? false : true);
-        }catch (Exception ex){}
-    }
 
 }

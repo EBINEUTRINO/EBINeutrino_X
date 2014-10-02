@@ -67,7 +67,7 @@ public class EBICRMDialogAddProduct {
         ebiModule.guiRenderer.getLabel("productNr","productInsertDialog").setText(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NUMBER"));
 
         ebiModule.guiRenderer.getEditor("productText","productInsertDialog").setEditable(false);
-        ebiModule.guiRenderer.getEditor("productText","productInsertDialog").setBackground(EBIPGFactory.systemColor);
+
 
         if(isProsol){
            ebiModule.guiRenderer.getLabel("deduction","productInsertDialog").setVisible(false);

@@ -56,7 +56,7 @@ public class EBILoaderPanel extends JPanel {
 		content.add(getJProgressBar(), null);
 		content.add(jLabel, null);
 		content.add(jLabel1, null);
-        content.setBackground(EBIPGFactory.systemColor);
+
 
 	  }
 	}

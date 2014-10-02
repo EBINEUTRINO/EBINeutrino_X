@@ -98,7 +98,7 @@ public class EBISchemaImport extends EBIDialogExt {
 			jContentPane.add(jLabel1, null);
 			jContentPane.add(getJProgressBar(), null);
             jContentPane.setClosable(true);
-            jContentPane.setBackgroundColor(EBIPGFactory.systemColor);
+
             jContentPane.setModuleIcon(EBIConstant.ICON_APP);
             jContentPane.setModuleTitle("EBI Neutrino Database Schema Import");
 		}

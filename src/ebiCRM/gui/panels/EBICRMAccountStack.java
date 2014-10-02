@@ -21,7 +21,6 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import ebiCRM.EBICRMModule;
 import ebiCRM.data.control.EBIDataControlAccountStack;
-import ebiCRM.gui.dialogs.EBICRMHistoryView;
 import ebiCRM.table.models.MyTableModelCRMAccount;
 import ebiCRM.table.models.MyTableModelCreditDebit;
 import ebiCRM.table.models.MyTableModelDoc;
@@ -285,14 +284,6 @@ public class EBICRMAccountStack {
                         return;
                 }
                 ebiDelete();
-            }
-        });
-
-        ebiModule.guiRenderer.getButton("historyAccount","Account").setIcon(EBIConstant.ICON_HISTORY);
-        ebiModule.guiRenderer.getButton("historyAccount","Account").setEnabled(false);
-        ebiModule.guiRenderer.getButton("historyAccount","Account").addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent event){
-               new EBICRMHistoryView(ebiModule.hcreator.retrieveDBHistory(Integer.parseInt(tabModAccount.data[selectedInvoiceRow][7].toString()), "Account"), ebiModule).setVisible();
             }
         });
 
@@ -618,16 +609,7 @@ public class EBICRMAccountStack {
     }
 
     private void deleteAccount(int i) {
-      boolean pass;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlAccount.dataDelete(i);
-        }
+        dataControlAccount.dataDelete(i);
     }
 
     public void editAccount(int i) {
@@ -639,16 +621,7 @@ public class EBICRMAccountStack {
     }
 
     private void deleteDocs(int i) {
-      boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            this.dataControlAccount.dataDeleteDoc(i);
-        }
+        this.dataControlAccount.dataDeleteDoc(i);
     }
 
     private void saveAndShowDocs(int i) {
@@ -661,16 +634,7 @@ public class EBICRMAccountStack {
 
 
     private void deleteCreditDebit(int i) {
-        boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlAccount.dataDeleteCreditDebit(i);
-        }
+        dataControlAccount.dataDeleteCreditDebit(i);
     }
 
     private void editCreditDebit(int i) {

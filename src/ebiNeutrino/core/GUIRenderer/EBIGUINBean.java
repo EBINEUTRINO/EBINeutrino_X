@@ -2,8 +2,6 @@ package ebiNeutrino.core.GUIRenderer;
 
 import javax.swing.JComponent;
 
-import ebiNeutrino.core.GUIDesigner.EBIGUIWidgetsBean;
-
 public class EBIGUINBean {
 
     private JComponent component  = null;

@@ -9,7 +9,6 @@ import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.JXTreeTable;
 
-import ebiNeutrino.core.GUIRenderer.EBIButton;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
 import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 
@@ -28,9 +27,7 @@ public interface IEBIGUIRenderer {
 
     public void initScripts();
 
-    public void showToolBar(String name, boolean toVisualPanel);
-
-    public EBIButton getButton(String name,String packages);
+    public JButton getButton(String name,String packages);
 
     public JTextField getTextfield(String name,String packages);
 
@@ -52,12 +49,6 @@ public interface IEBIGUIRenderer {
 
     public JPanel getPanel(String name,String packages);
 
-    public JToolBar getToolBar(String name);
-
-    public JComponent getToolBarComponent(String name, String packages);
-
-    public JButton getToolBarButton(String name, String packages);
-
     public JComboBox getComboBox(String name,String packages);
 
     public JCheckBox getCheckBox(String name,String packages);
@@ -78,6 +69,5 @@ public interface IEBIGUIRenderer {
 
     public int getProjectModuleEnabled();
 
-    public boolean isToolBarEmpty();
 
 }

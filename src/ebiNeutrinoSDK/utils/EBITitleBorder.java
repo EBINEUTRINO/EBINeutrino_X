@@ -17,7 +17,7 @@ public class EBITitleBorder implements Border {
   protected int ovalWidth = 8;
   protected int ovalHeight = 8;
   protected final Color lightColor = new Color(10,10,174);
-  protected final Color darkColor = EBIPGFactory.systemColor;
+  protected final Color darkColor = new Color(200,200,200);
   private boolean isClosable = true;
 
   public EBITitleBorder(boolean isClosable) {

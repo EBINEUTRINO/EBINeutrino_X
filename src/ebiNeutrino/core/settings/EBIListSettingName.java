@@ -34,8 +34,8 @@ public class EBIListSettingName extends JPanel {
         			item1 = new EBIListItem(EBIConstant.ICON_SETTING, EBIPGFactory.getLANG("EBI_LANG_SYSTEM_SETTING")),
                     item2 = new EBIListItem(EBIConstant.ICON_REPORT, EBIPGFactory.getLANG("EBI_LANG_REPORT_SETTING"));
 
-                  
-        myListmodel.addElement(item0);  
+
+        myListmodel.addElement(item0);
         myListmodel.addElement(item1);
         myListmodel.addElement(item2);
         

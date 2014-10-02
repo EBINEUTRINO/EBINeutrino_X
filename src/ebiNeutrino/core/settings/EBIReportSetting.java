@@ -74,11 +74,10 @@ public class EBIReportSetting extends JPanel {
         ebiMain = main;
 
         try {
-            ebiMain._ebifunction.hibernate.openHibernateSession("REPORT_SESSION");
+            ebiMain.system.hibernate.openHibernateSession("REPORT_SESSION");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        setBackground(EBIPGFactory.systemColor);
         report = new SetReportformodule();
         tabMod = new MyTableModelSysSetReportParam();
         tabModel = new MyTableModelReportSetting();
@@ -111,8 +110,8 @@ public class EBIReportSetting extends JPanel {
 
         Graphics2D g2 = (Graphics2D)g;
         // Draw bg top
-        Color startColor = EBIPGFactory.systemColor;
-        Color endColor = new Color(230,230,230);
+        Color startColor = new Color(230,230,230);
+        Color endColor = startColor.darker();
 
         // A non-cyclic gradient
         GradientPaint gradient = new GradientPaint(255, 255, endColor, 38, 255, startColor);
@@ -125,10 +124,10 @@ public class EBIReportSetting extends JPanel {
         // A non-cyclic gradient
         GradientPaint gradient1 = new GradientPaint(0,0, sColor, getWidth(), 38, eColor);
         g2.setPaint(gradient1);
-        g2.setColor(EBIPGFactory.systemColor);
+        g2.setColor(startColor);
         g.fillRect(0, 46, getWidth(), getHeight());
 
-        g2.setColor(EBIPGFactory.systemColor);
+        g2.setColor(startColor);
 
         g.setColor(new Color(220,220,220));
         g.drawLine(0, 45, getWidth(), 45);
@@ -184,7 +183,6 @@ public class EBIReportSetting extends JPanel {
             jLabel.setBounds(new java.awt.Rectangle(16, 64, 67, 20));
             jLabel.setText(EBIPGFactory.getLANG("EBI_LANG_CATEGORY"));
             jPanelAllgemein = new JPanel();
-            jPanelAllgemein.setBackground(EBIPGFactory.systemColor);
             jPanelAllgemein.setLayout(null);
             jPanelAllgemein.setBounds(new Rectangle(14, 70, 600, 149));
             jPanelAllgemein.setBorder(javax.swing.BorderFactory.createTitledBorder(null, EBIPGFactory.getLANG("EBI_LANG_GENERAL_REPORT_SETTING"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
@@ -216,7 +214,6 @@ public class EBIReportSetting extends JPanel {
         if (jPanelAvailableReports == null) {
             jPanelAvailableReports = new JPanel();
             jPanelAvailableReports.setLayout(null);
-            jPanelAvailableReports.setBackground(EBIPGFactory.systemColor);
             jPanelAvailableReports.setBounds(new Rectangle(16, 330, 823, 273));
             jPanelAvailableReports.setBorder(javax.swing.BorderFactory.createTitledBorder(null, EBIPGFactory.getLANG("EBI_LANG_AVAILABLE_REPORT"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
             jPanelAvailableReports.add(getJScrollPaneAvailableReport(), null);
@@ -283,9 +280,9 @@ public class EBIReportSetting extends JPanel {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     EBIReportFilter filter = new EBIReportFilter();
-                    ebiMain._ebifunction.fileDialog.setFileFilter(filter);
+                    ebiMain.system.fileDialog.setFileFilter(filter);
 
-                    File file = ebiMain._ebifunction.getOpenDialog(JFileChooser.FILES_ONLY);
+                    File file = ebiMain.system.getOpenDialog(JFileChooser.FILES_ONLY);
                     if (file != null) {
                         actualReportPath = file;
                         jTextReportPath.setText(actualReportPath.getName());
@@ -387,7 +384,7 @@ public class EBIReportSetting extends JPanel {
         }
 
         try {
-            ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
+            ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
 
             report.setIsactive(this.jCheckIsAktive.isSelected());
             report.setReportname(this.jTextReportName.getText());
@@ -408,11 +405,11 @@ public class EBIReportSetting extends JPanel {
                 if(param.getParamid() < 0){
                     param.setParamid(null);
                 }
-                ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").saveOrUpdate(param);
+                ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").saveOrUpdate(param);
             }
             
-            ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").saveOrUpdate(report);
-            ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
+            ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").saveOrUpdate(report);
+            ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
 
         } catch (HibernateException ex) {
             EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE);
@@ -437,8 +434,8 @@ public class EBIReportSetting extends JPanel {
         }
 
         try {
-            ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
-            Query query = ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").createQuery("from SetReportformodule where idReportForModule=? ").setInteger(0, this.reportID);
+            ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
+            Query query = ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").createQuery("from SetReportformodule where idReportForModule=? ").setInteger(0, this.reportID);
 
             Iterator it = query.iterate();
 
@@ -446,8 +443,8 @@ public class EBIReportSetting extends JPanel {
                 report = (SetReportformodule) it.next();
             }
 
-            ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").delete(report);
-            ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
+            ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").delete(report);
+            ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
 
             showReports();
             newReport();
@@ -472,14 +469,14 @@ public class EBIReportSetting extends JPanel {
                 return;
             }
 
-            ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
-            Query query = ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").createQuery("from SetReportformodule where idReportForModule=? ").setInteger(0, this.reportID);
+            ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
+            Query query = ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").createQuery("from SetReportformodule where idReportForModule=? ").setInteger(0, this.reportID);
 
             Iterator it = query.iterate();
 
             if (it.hasNext()) {
                 report = (SetReportformodule) it.next();
-                ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").refresh(report);
+                ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").refresh(report);
                 this.reportID = report.getIdreportformodule();
                 this.jCheckIsAktive.setSelected(report.getIsactive());
                 this.jTextReportName.setText(report.getReportname());
@@ -489,7 +486,7 @@ public class EBIReportSetting extends JPanel {
                 this.jRadioShowAsNormal.setSelected(report.getShowaswindow());
                 
                 this.showParam();
-                ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
+                ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -501,8 +498,8 @@ public class EBIReportSetting extends JPanel {
         int i = 0;
         ResultSet set = null;
         try {
-            PreparedStatement ps1 = ebiMain._ebifunction.getIEBIDatabase().initPreparedStatement("SELECT * FROM SET_REPORTFORMODULE");
-            set = ebiMain._ebifunction.getIEBIDatabase().executePreparedQuery(ps1);
+            PreparedStatement ps1 = ebiMain.system.getIEBIDatabase().initPreparedStatement("SELECT * FROM SET_REPORTFORMODULE");
+            set = ebiMain.system.getIEBIDatabase().executePreparedQuery(ps1);
             set.last();
             if (set.getRow() > 0) {
 
@@ -523,7 +520,7 @@ public class EBIReportSetting extends JPanel {
                     }catch(NumberFormatException ex){
                        tabModel.data[i][2] = set.getString("REPORTCATEGORY") == null ? "" : this.jComboReportCat.getItemAt(0); 
                     }
-                    tabModel.data[i][3] = ebiMain._ebifunction.getDateToString(set.getDate("REPORTDATE")) == null ? "" : ebiMain._ebifunction.getDateToString(set.getDate("REPORTDATE"));
+                    tabModel.data[i][3] = ebiMain.system.getDateToString(set.getDate("REPORTDATE")) == null ? "" : ebiMain.system.getDateToString(set.getDate("REPORTDATE"));
 
                     if (set.getInt("SHOWASPDF") == 1) {
                         tabModel.data[i][4] = EBIPGFactory.getLANG("EBI_LANG_YES");
@@ -565,7 +562,6 @@ public class EBIReportSetting extends JPanel {
             jLabel5.setBounds(new Rectangle(11, 16, 116, 20));
             jLabel5.setText(EBIPGFactory.getLANG("EBI_LANG_PARAM_NAME"));
             jPanelReportParam = new JPanel();
-            jPanelReportParam.setBackground(EBIPGFactory.systemColor);
             jPanelReportParam.setLayout(null);
             jPanelReportParam.setBounds(new Rectangle(14, 222, 823, 130));
             jPanelReportParam.add(jLabel5, null);
@@ -707,9 +703,9 @@ public class EBIReportSetting extends JPanel {
 
                   if(param.getParamid() > 0){
                     try {
-                        ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
-                        ebiMain._ebifunction.hibernate.getHibernateSession("REPORT_SESSION").delete(param);
-                        ebiMain._ebifunction.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
+                        ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").begin();
+                        ebiMain.system.hibernate.getHibernateSession("REPORT_SESSION").delete(param);
+                        ebiMain.system.hibernate.getHibernateTransaction("REPORT_SESSION").commit();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

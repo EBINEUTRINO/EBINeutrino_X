@@ -1,8 +1,7 @@
 package ebiNeutrinoSDK.gui.dialogs;
 
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 
 import javax.swing.*;
 
@@ -63,11 +62,11 @@ public class EBIExceptionDialog extends JDialog {
 		if (jContentPane == null) {
 			JLabel jLabel=new JLabel(image);
 			jLabel.setBounds(new java.awt.Rectangle(1, 0, 125, 248));
-			jLabel.setBackground(EBIPGFactory.systemColor);
+			jLabel.setBackground(new Color(200,200,200));
 			jLabel.setText("");
 			jContentPane = new JPanel();
 			jContentPane.setLayout(null);
-			jContentPane.setBackground(EBIPGFactory.systemColor);
+			jContentPane.setBackground(new Color(200,200,200));
 			jContentPane.add(jLabel, null);
 			jContentPane.add(getJScrollPane(), null);
 		}
@@ -88,7 +87,7 @@ public class EBIExceptionDialog extends JDialog {
 	}
 	/**
 	 * Show EBIMessageBox dialog
-	 * @param i
+	 * @param  msg
 	 * @return
 	 */
 

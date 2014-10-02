@@ -18,7 +18,6 @@ import org.hibernate.Query;
 import ebiNeutrino.core.EBIDBConnection;
 import ebiNeutrino.core.EBIMain;
 import ebiNeutrino.core.gui.component.EBIExtensionContainer;
-import ebiNeutrino.core.gui.component.EBIToolbar;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.interfaces.IEBIContainer;
@@ -26,16 +25,10 @@ import ebiNeutrinoSDK.interfaces.IEBIDatabase;
 import ebiNeutrinoSDK.interfaces.IEBIGUIRenderer;
 import ebiNeutrinoSDK.interfaces.IEBIModule;
 import ebiNeutrinoSDK.interfaces.IEBIReportSystem;
-import ebiNeutrinoSDK.interfaces.IEBISecurity;
-import ebiNeutrinoSDK.interfaces.IEBISystemUserRights;
-import ebiNeutrinoSDK.interfaces.IEBIToolBar;
 import ebiNeutrinoSDK.model.hibernate.Company;
 import ebiNeutrinoSDK.model.hibernate.Ebiuser;
-import ebiNeutrinoSDK.utils.EBIPessimisticLocking;
 import ebiNeutrinoSDK.utils.EBIPropertiesRW;
 import ebiNeutrinoSDK.utils.Encrypter;
-import ebiNeutrinoSDK.workflow.security.EBISecurityManagement;
-import ebiNeutrinoSDK.workflow.security.EBISystemUserRights;
 import groovy.lang.Script;
 
 import javax.swing.*;
@@ -62,17 +55,12 @@ public class EBIPGFactory {
     private static EBIPropertiesRW Language = null;
     public static boolean canRelease = true;
     public static boolean isSaveOrUpdate = false;
-    public EBISecurityManagement security = null;
-    public IEBIToolBar toolbar = null;
     public IEBIContainer container = null;
     public IEBIDatabase database = null;
     public IEBIReportSystem report = null;
     public IEBIGUIRenderer gui = null;
     public IEBIModule ebiModule = null;
-    private EBISystemUserRights userRights = null;
-    public IEBISystemUserRights iuserRights = null;
     public EBIExceptionDialog message = null;
-    public EBIPessimisticLocking plock = null;
     private Hashtable<String,Object> storableFactory = null;
     public Hashtable<String,Object> globalVariable = null;
     public static List moduleToView = new ArrayList<String>();
@@ -81,12 +69,10 @@ public class EBIPGFactory {
     public JFileChooser fileDialog = new JFileChooser();
     public Calendar systemStartCal = null;
     public Calendar systemEndCal = null;
-    public static java.awt.Color systemColor = new Color(180,180,180);
 
 
     public EBIPGFactory() {
         calendar = new GregorianCalendar();
-        plock = new EBIPessimisticLocking(this);
         storableFactory = new Hashtable<String,Object>();
         message = EBIExceptionDialog.getInstance();
         globalVariable = new Hashtable<String, Object>();
@@ -252,33 +238,10 @@ public class EBIPGFactory {
                 }
 
                 ebiUser = User.getEbiuser();
-                userRights = new EBISystemUserRights();
-                userRights.setUserName(ebiUser);
-                userRights.setCanDelete(User.getCandelete());
-                userRights.setCanSave(User.getCansave());
-                userRights.setCanPrint(User.getCanprint());
-                userRights.setAdministrator(User.getIsAdmin());
-                iuserRights = userRights;
-                String [] path = new String[]{  "Summary/summaryGUI.xml",
-                                        "Leads/leadsGUI.xml",
-                                        "Company/companyGUI.xml",
-                                        "Contact/contactGUI.xml",
-                                        "Address/addressGUI.xml",
-                                        "Bank/bankGUI.xml",
-                                        "MeetingsCallManagement/meetingcallGUI.xml",
-                                        "Activity/activityGUI.xml",
-                                        "Opportunity/opportunityGUI.xml",
-                                        "Offer/offerGUI.xml",
-                                        "Order/orderGUI.xml",
-                                        "CRMService/serviceGUI.xml",
+                String [] path = new String[]{ "Leads/leadsGUI.xml",
                                         "Product/productGUI.xml",
-                                        "Calendar",
-                                        "Campaign/campaignGUI.xml",
-                                        "CRMProblemSolution/problemSolutionGUI.xml",
                                         "Invoice/invoiceGUI.xml",
-                                        "AccountStack/accountGUI.xml",
-                                        "cashRegister/cashRegisterGUI.xml",
-                                        "Project/projectGUI.xml"
+                                        "AccountStack/accountGUI.xml"
                                         };
 
                 if(User.getModuleid() != null){
@@ -288,22 +251,18 @@ public class EBIPGFactory {
                     }
                 }
                 moduleToView.add("CRMToolbar/crmToolbar.xml");
-                moduleToView.add("Calendar");
                 moduleToView.add("CRMDialog/exportDataDialog.xml");
-                moduleToView.add("CRMDialog/crmCompanySearch.xml");
                 moduleToView.add("CRMDialog/accountShowPTAX.xml");
                 moduleToView.add("CRMDialog/addNewContactDialog.xml");
                 moduleToView.add("CRMDialog/addnewReceiverDialogCampaign.xml");
                 moduleToView.add("CRMDialog/autoIncNrDialog.xml");
                 moduleToView.add("CRMDialog/costValueDialog.xml");
                 moduleToView.add("CRMDialog/creditDebitDialog.xml");
-                moduleToView.add("CRMDialog/crmCalendarGoogleSync.xml");
                 moduleToView.add("CRMDialog/crmContactSearch.xml");
                 moduleToView.add("CRMDialog/crmHistoryDialog.xml");
                 moduleToView.add("CRMDialog/crmSelectionDialog.xml");
                 moduleToView.add("CRMDialog/crmSettingDialog.xml");
                 moduleToView.add("CRMDialog/importDataDialog.xml");
-                moduleToView.add("CRMDialog/newProjectTaskDialog.xml");
                 moduleToView.add("CRMDialog/productInsertDialog.xml");
                 moduleToView.add("CRMDialog/productSearchDialog.xml");
                 moduleToView.add("CRMDialog/propertiesDialog.xml");
@@ -312,8 +271,6 @@ public class EBIPGFactory {
                 moduleToView.add("CRMDialog/valueSetDialog.xml");
                 moduleToView.add("CRMDialog/csvSetImport.xml");
                 moduleToView.add("CRMDialog/insertCSVDataDialog.xml");
-                moduleToView.add("CRMDialog/timerDialog.xml");
-                moduleToView.add("CRMDialog/crmPessimisticView.xml");
                 moduleToView.add("CRMDialog/printSetup.xml");
                
             } else {
@@ -393,11 +350,6 @@ public class EBIPGFactory {
         }
     }
 
-    /**
-     * Open a Text reader program specified in the ebiNeutrino.properties  
-     *  
-     * @param fileName
-     */
     public void openTextDocumentFile(String filename) {
 
         try {
@@ -434,18 +386,6 @@ public class EBIPGFactory {
 
     }
 
-
-    /**
-     * return the IEBISystemUserRights Interface
-     */
-    public IEBISystemUserRights getIEBISystemUserRights() {
-        return iuserRights == null ? userRights : iuserRights;
-    }
-
-    public void setIEBISystemUserRights(EBISystemUserRights right){
-         this.userRights =right;
-    }
-
     /**
      * return the IEBIDatabase Interface
      */
@@ -459,33 +399,6 @@ public class EBIPGFactory {
      */
     public void setIEBIDatabase(Object obj) {
         this.database = (EBIDBConnection) obj;
-    }
-
-    /**
-     * return the IEBISecurity interface
-     * @return Initialize the Interface IEBISecurity
-     */
-    public IEBISecurity getIEBISecurityInstance() {
-        if (security == null) {
-            security = new EBISecurityManagement(this);
-        }
-        return security;
-    }
-
-    /**
-     * return the default IEBIToolBar instance
-     * @return IEBIToolBar Interface instance
-     */
-    public IEBIToolBar getIEBIToolBarInstance() {
-        return this.toolbar;
-    }
-
-    /**
-     * Set the system default EBIToolbar 
-     * @param obj
-     */
-    public void setIEBIToolBarInstance(Object obj) {
-        this.toolbar = (EBIToolbar) obj;
     }
 
     /**

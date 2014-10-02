@@ -13,7 +13,7 @@ import org.jdesktop.swingx.JXPanel;
 
 public class EBIVisualPanelTemplate extends EBIVisualPanel implements ComponentListener {
 
-    private EBIContentPanel panel = new EBIContentPanel();
+    private JPanel panel = new JPanel();
     private JPanel tPanel = new JXPanel();
     private EBIPGFactory ebiPGFactory = null;
 

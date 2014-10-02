@@ -22,7 +22,7 @@ public class EBISystemSettingStart extends JPanel {
         super();
         this.ebiMain = ebiMain;
         initialize();
-        setBackground(EBIPGFactory.systemColor);
+        setBackground(new Color(200,200,200));
         setInfo();
     }
 
@@ -45,7 +45,7 @@ public class EBISystemSettingStart extends JPanel {
         jLabel.setText(EBIPGFactory.getLANG("EBI_LANG_SYSTEM_SETTING"));
         infoArea = new JTextArea();
         infoArea.setEditable(false);
-        infoArea.setBackground(EBIPGFactory.systemColor);
+        infoArea.setBackground(new Color(200,200,200));
         infoArea.setBounds(new java.awt.Rectangle(20, 60, 600, 500));
         this.setLayout(null);
         this.setSize(842, 549);
@@ -76,7 +76,7 @@ public class EBISystemSettingStart extends JPanel {
 
         buf.append("##### MySQL Database INFO #####\n\n");
         try {
-            set = ebiMain._ebifunction.getIEBIDatabase().execute("SHOW VARIABLES LIKE 'version%'");
+            set = ebiMain.system.getIEBIDatabase().execute("SHOW VARIABLES LIKE 'version%'");
 
             while(set.next()){
                buf.append(set.getString("Variable_name")+": "+set.getString("Value")+"\n");

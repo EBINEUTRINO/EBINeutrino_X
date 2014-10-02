@@ -2,32 +2,37 @@ package ebiNeutrino.core.settings;
 
 import javax.swing.ImageIcon;
 
-public class EBIListItem
-{
-    // Das anzuzeigende Icon
+public class EBIListItem{
+
     private ImageIcon icon = null;
-
-    // Der Text
     private String text;
+    private String path = "";
+    private String modName = "";
+    private boolean isApp=false;
 
-    public EBIListItem(ImageIcon iconpath, String text)
-    {
-        // Erzeugung des ImageIcons durch Angabe des Bild-Quellpfads
+    public EBIListItem(ImageIcon iconpath, String text, String pt, String mName, boolean iapp){
         icon = iconpath;
-
-        // Zuweisung des Textes
         this.text = text;
-    }      
+        this.path = pt;
+        this.modName = mName;
+        this.isApp = iapp;
+    }
 
-    // Liefert das Icon
+    public EBIListItem(ImageIcon iconpath, String text){
+        icon = iconpath;
+        this.text = text;
+    }
+
+
     public ImageIcon getIcon()
     {
     return icon;
     }
-    
-    // Liefert den Text
     public String getText()
     {
         return text;
     }
+    public String getPath() { return path; }
+    public String getModname() { return modName; }
+    public boolean isApp() { return isApp; }
 }

@@ -1,6 +1,0 @@
-
-<AppModule Name="EBICRM">
-
-<codecontrol name="groovy" path="EBICRM/test.groovy" />
-
-</AppModule>

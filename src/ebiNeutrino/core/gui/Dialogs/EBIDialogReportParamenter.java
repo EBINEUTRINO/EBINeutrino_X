@@ -11,8 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 
 import javax.swing.*;
-
-import ebiNeutrino.core.GUIRenderer.EBIButton;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import org.jdesktop.swingx.JXDatePicker;
@@ -27,8 +25,8 @@ public class EBIDialogReportParamenter extends EBIDialogExt {
 
 	private static final long serialVersionUID = 1L;
 	private EBIVisualPanelTemplate jContentPane = null;
-	private EBIButton jButtonOk = null;
-	private EBIButton jButtonCancel = null;
+	private JButton jButtonOk = null;
+	private JButton jButtonCancel = null;
 	private Map<String,Object> param = null;
 	private int repoID = -1; 
 	public boolean aborted= false;
@@ -65,7 +63,7 @@ public class EBIDialogReportParamenter extends EBIDialogExt {
         param = selection.repsys.map;
         isDateTime = false;
 		initialize();
-        jContentPane.setBackgroundColor(EBIPGFactory.systemColor);
+        jContentPane.setBackgroundColor(new Color(200,200,200));
 	}
 	
 	public boolean checkForParam(){
@@ -300,9 +298,9 @@ public class EBIDialogReportParamenter extends EBIDialogExt {
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private EBIButton getJButtonOk() {
+	private JButton getJButtonOk() {
 		if (jButtonOk == null) {
-			jButtonOk = new EBIButton();
+			jButtonOk = new JButton();
 			jButtonOk.setBounds(new Rectangle(167, 132, 126, 29));
 			jButtonOk.setText(EBIPGFactory.getLANG("EBI_LANG_OK"));
 			jButtonOk.addActionListener(new java.awt.event.ActionListener() {
@@ -337,9 +335,9 @@ public class EBIDialogReportParamenter extends EBIDialogExt {
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private EBIButton getJButtonCancel() {
+	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new EBIButton();
+			jButtonCancel = new JButton();
 			jButtonCancel.setBounds(new Rectangle(296, 132, 126, 29));
 			jButtonCancel.setText(EBIPGFactory.getLANG("EBI_LANG_CANCEL"));
 			jButtonCancel.addActionListener(new java.awt.event.ActionListener() {

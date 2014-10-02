@@ -48,7 +48,7 @@ public class EBIWinWaiting extends EBIDialogExt {
 				jPanel.setLayout(null);
 				jPanel.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.black,1));
 				jPanel.add(getJProgressBar(), null);
-                jPanel.setBackground(EBIPGFactory.systemColor);
+
 			}
 			return jPanel;
 		}

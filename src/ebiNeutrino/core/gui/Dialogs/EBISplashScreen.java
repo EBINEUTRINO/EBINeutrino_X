@@ -36,7 +36,7 @@ public class EBISplashScreen extends JWindow {
 	private void initialize() {
 		this.setSize(485, 330);
 		this.setContentPane(getJContentPane());
-        this.getContentPane().setBackground(EBIPGFactory.systemColor);
+        this.getContentPane().setBackground(new Color(200,200,200));
 	}
 
 	/**

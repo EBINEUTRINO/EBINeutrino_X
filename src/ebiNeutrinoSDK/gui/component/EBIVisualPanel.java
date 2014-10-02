@@ -95,7 +95,7 @@ public class EBIVisualPanel extends JXPanel {
 		this.add(changedFrom, null);
         this.setDoubleBuffered(true);
         RepaintManager.currentManager(this).setDoubleBufferingEnabled(true);
-        this.setBorder(BorderFactory.createLineBorder(EBIPGFactory.systemColor, 1, true));
+        this.setBorder(BorderFactory.createLineBorder(new Color(200,200,200), 1, true));
 	}
 	
 	public void paintComponent(Graphics g){

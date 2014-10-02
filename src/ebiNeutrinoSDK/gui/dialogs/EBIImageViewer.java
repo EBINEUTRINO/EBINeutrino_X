@@ -42,7 +42,7 @@ public class EBIImageViewer extends EBIDialogExt {
         jContentPane.setEnableChangeComponent(false);
         jContentPane.setClosable(true);
         jContentPane.setModuleIcon(EBIConstant.ICON_NEW);
-        jContentPane.setBackgroundColor(EBIPGFactory.systemColor);
+
 		this.imageConstainer.setIcon(image);
 	}
 

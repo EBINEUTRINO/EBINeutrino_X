@@ -24,7 +24,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
 import ebiCRM.gui.panels.EBICRMAccountStack;
-import ebiCRM.utils.EBICRMHistoryDataUtil;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIImageViewer;
@@ -73,8 +72,6 @@ public class EBIDataControlAccountStack {
                 actStack.setCreateddate(new Date());
                 actStack.setCreatedfrom(acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").getCreatedFrom());
             } else {
-
-                createHistory(actStack.getAcstackid());
                 actStack.setChangeddate(new Date());
                 actStack.setChangedfrom(EBIPGFactory.ebiUser);
             }
@@ -130,10 +127,6 @@ public class EBIDataControlAccountStack {
             
             if (iter.hasNext()) {
                 this.accountID = id;
-                
-                // Set properties for pessimistic dialog
-                acStackPanel.ebiModule.pessimisticStruct.setLockId(id);
-                acStackPanel.ebiModule.pessimisticStruct.setModuleName("CRMAccount");
 
                 actStack = (Accountstack) iter.next();
                 acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setID(id);
@@ -232,7 +225,6 @@ public class EBIDataControlAccountStack {
 
     public void dataNew(boolean load){
         // Remove lock
-        acStackPanel.ebiModule.unlockCompanyRecord(accountID,lockUser,"CRMAccount");
         lockId = -1;
         lockModuleName = "";
         lockUser = "";
@@ -331,43 +323,6 @@ public class EBIDataControlAccountStack {
        }catch(Exception ex){}
     }
 
-    private void createHistory(int id) throws Exception{
-        List<String> list = new ArrayList<String>();
-
-        list.add(EBIPGFactory.getLANG("EBI_LANG_ADDED") + ": " + acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getCreateddate()));
-        list.add(EBIPGFactory.getLANG("EBI_LANG_ADDED_FROM") + ": " + actStack.getCreatedfrom());
-
-        if (actStack.getChangeddate() != null) {
-            list.add(EBIPGFactory.getLANG("EBI_LANG_CHANGED") + ": " + acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getChangeddate()));
-            list.add(EBIPGFactory.getLANG("EBI_LANG_CHANGED_FROM") + ": " + actStack.getChangedfrom());
-        }
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_NUMBER") + ": " + (actStack.getAccountnr().equals(acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","Account").getText()) == true ? actStack.getAccountnr() : actStack.getAccountnr()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_NAME") + ": " + (actStack.getAccountname().equals(acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","Account").getText()) == true ? actStack.getAccountname() : actStack.getAccountname()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_TOTAL_AMOUNT") + ": " + (actStack.getAccountvalue() == Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").getValue().toString()) ? actStack.getAccountvalue() : actStack.getAccountvalue()+"$") );
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_DEBIT") + "1: " + (actStack.getAccountDebit().equals(acStackPanel.ebiModule.guiRenderer.getTextfield("debitText","Account").getText()) ? actStack.getAccountDebit() : actStack.getAccountDebit()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_DEBIT") + "2: " + (actStack.getAccountDName().equals(acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionDebit","Account").getText()) ? actStack.getAccountDName() : actStack.getAccountDName()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_DEBIT") + "3: " + (actStack.getAccountDValue() == Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").getValue().toString()) ? actStack.getAccountDValue() : actStack.getAccountDValue()+"$") );
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_CREDIT") + "1: " + (actStack.getAccountCredit().equals(acStackPanel.ebiModule.guiRenderer.getTextfield("creditText","Account").getText()) ? actStack.getAccountCredit() : actStack.getAccountCredit()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_CREDIT") + "2: " + (actStack.getAccountCName().equals(acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionCredit","Account").getText()) ? actStack.getAccountCName() : actStack.getAccountCName()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_CREDIT") + "3: " + (actStack.getAccountCValue() == Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("creditCal","Account").getValue().toString()) ? actStack.getAccountCValue() : actStack.getAccountCValue()+"$") );
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + ": " + (actStack.getDescription().equals(acStackPanel.ebiModule.guiRenderer.getTextarea("descriptionText","Account").getText()) ? actStack.getDescription() : actStack.getDescription()+"$") );
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_CREATED_DATE") + ": " + (acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getAccountdate()).equals(
-                                                                                                            acStackPanel.ebiModule.guiRenderer.getTimepicker("dateText","Account").getEditor().getText())
-                                                                                                             == true ? acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getAccountdate()) :
-                                                                                                                acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getAccountdate())+"$") );
-        list.add("*EOR*"); // END OF RECORD
-
-        try {
-            acStackPanel.ebiModule.hcreator.setDataToCreate(new EBICRMHistoryDataUtil(id, "Account", list));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void dataDeleteDoc(int id) {
        try{
@@ -1018,7 +973,6 @@ public class EBIDataControlAccountStack {
                 lockUser = EBIPGFactory.ebiUser;
                 lockStatus = 1;
                 lockTime =  new Timestamp(new Date().getTime());
-                acStackPanel.ebiModule.lockCompanyRecord(compNr,"CRMAccount",lockTime);
                 activateLockedInfo(false);
             }else{
                 rs.beforeFirst();

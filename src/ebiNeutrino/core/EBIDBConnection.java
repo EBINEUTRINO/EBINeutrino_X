@@ -319,9 +319,9 @@ public class EBIDBConnection implements IEBIDatabase {
                               SwingUtilities.invokeAndWait( new Runnable() {
                                         public void run() {
                                             reconnect();    // Try to fix host database problem with wait_timeout
-                                            //ebiPGFunction.mng.closeOpenedDialogs();
+                                            //ebiPGFunction.mod_management.closeOpenedDialogs();
                                             //ebiPGFunction.addLoginModul();
-                                            //ebiPGFunction.mng.releaseModule();
+                                            //ebiPGFunction.mod_management.releaseModule();
                                         }
                                       });
                           } catch (InterruptedException e) {
@@ -342,9 +342,9 @@ public class EBIDBConnection implements IEBIDatabase {
                          SwingUtilities.invokeAndWait( new Runnable() {
                                         public void run() {
                                             reconnect();    // Try to fix host database problem with wait_timeout
-                                            //ebiMain.mng.closeOpenedDialogs();
+                                            //ebiMain.mod_management.closeOpenedDialogs();
                                             //ebiMain.addLoginModul();
-                                            //ebiMain.mng.releaseModule();
+                                            //ebiMain.mod_management.releaseModule();
                                         }
                                       });
                           } catch (InterruptedException e) {

@@ -3,8 +3,8 @@ package ebiNeutrino.core.module.management;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -12,17 +12,11 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeModel;
 
 import ebiCRM.EBICRMModule;
 import ebiNeutrino.core.EBIMain;
-import ebiNeutrino.core.GUIDesigner.EBIGUIWidgetsBean;
-import ebiNeutrino.core.GUIRenderer.EBIMutableTreeNode;
-import ebiNeutrino.core.gui.component.EBITreeFactory;
+import ebiNeutrino.core.GUIRenderer.EBIGUIScripts;
 import ebiNeutrinoSDK.EBIPGFactory;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.interfaces.IEBIExtension;
@@ -62,7 +56,7 @@ public class EBIModuleManagement {
         //ebiExtension = null;
 		this.module = null;
         ebiMain.guiRenderer.init();
-        ebiMain._ebifunction.hibernate.removeAllHibernateSessions();
+        ebiMain.system.hibernate.removeAllHibernateSessions();
 		System.gc();
        }
        removeF5Action();
@@ -105,41 +99,32 @@ public class EBIModuleManagement {
 	 */
 	public boolean showModule(){
          try{
-         
-              //ebiMain._ebifunction.getIEBIToolBarInstance().resetToolBar();
+
               if(!ebiExtension.ebiMain(null)){
                   return false;
               }
              addF5Action();
-             addAltShowToolbar();
          }catch(Exception ex){
              ex.printStackTrace();
              EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.NEUTRINO_DEBUG_MESSAGE);
          }
-         ebiMain.container.getTreeViewInstance().updateUI();
          ebiMain.setVisible(true);
         return true;
 	}
 
-    public boolean showModule(Object module,Object o,boolean resetToolBar){
+    public boolean showModule(Object module,Object o){
          try{
 		  ebiMain.container.removeAllFromContainer();
-          if(resetToolBar){
-		    ebiMain._ebifunction.getIEBIToolBarInstance().resetToolBar();
-          }
 
  		  if(!((IEBIExtension)module).ebiMain(o)){
 			  return false;
 		  }
 
           this.module = module;
-          ebiMain.container.getTreeViewInstance().updateUI();
           ebiExtension =(IEBIExtension)module;
-          loadCRM(selectedModName,selectedModXMLPath);
-          ebiMain.container.setSelectedExtension(selectedModName);
-          addF5Action();
-          addAltShowToolbar();
+          loadCRM(selectedModName, selectedModXMLPath);
 
+          addF5Action();
          }catch(Exception ex){
              ex.printStackTrace();
              EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE);
@@ -152,28 +137,6 @@ public class EBIModuleManagement {
 		return this.module;
 	}
 
-    public void addAltShowToolbar(){
-         Action showToolBarAction = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    if(!ebiMain._ebifunction.getIEBIToolBarInstance().getJToolBar().isVisible()){
-                        ebiMain._ebifunction.getIEBIToolBarInstance().getJToolBar().setVisible(true);
-                        ebiMain.statusBar.setVisible(true);
-                        ebiMain.container.hideSplit(true);
-                    }else{
-                        ebiMain._ebifunction.getIEBIToolBarInstance().getJToolBar().setVisible(false);
-                        ebiMain.statusBar.setVisible(false);
-                        ebiMain.container.hideSplit(false);
-                    }
-                }catch(Exception ex){}
-            }
-        };
-        try{
-            InputMap inputMap = ((JPanel)ebiMain.getContentPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-            inputMap.put(KeyStroke.getKeyStroke("F1"), "SHOWTOOLBAR");
-            ((JPanel)ebiMain.getContentPane()).getActionMap().put("SHOWTOOLBAR", showToolBarAction);
-        }catch(Exception ex){}
-    }
 
     public void addF5Action(){
         Action refreshAction = new AbstractAction() {
@@ -196,7 +159,7 @@ public class EBIModuleManagement {
         //Return object to restore
         Object restore = releaseModule(obj);
 
-        showModule(obj,restore,false);
+        showModule(obj,restore);
 
         ebiMain.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
@@ -270,6 +233,21 @@ public class EBIModuleManagement {
         selectedModXMLPath = xmlPath;
       }catch(Exception ex){}
     }
+
+
+    public void loadScript(String name,String path){
+        List<Object> toScript = new ArrayList<Object>();
+        if ("groovy".equals(name)) {
+            EBIGUIScripts script = new EBIGUIScripts();
+            script.setType("groovy");
+            script.setPath(path);
+            script.setName(name);
+            toScript.add(script);
+        }
+        ebiMain.guiRenderer.getScriptContainer().put("app",toScript);
+        ebiMain.guiRenderer.excScript("app");
+    }
+
 
     public String getSelectedModName() {
         return selectedModName;

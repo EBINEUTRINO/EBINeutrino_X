@@ -5,9 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -18,7 +16,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
 import ebiCRM.gui.panels.EBICRMInvoice;
-import ebiCRM.utils.EBICRMHistoryDataUtil;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
@@ -61,7 +58,6 @@ public class EBIDataControlInvoice {
             if (isEdit == false) {
                 invoice.setCreateddate(new Date());
             } else {
-                createHistory(invoice.getInvoiceid());
                 invoice.setChangeddate(new Date());
                 invoice.setChangedfrom(EBIPGFactory.ebiUser);
             }
@@ -159,9 +155,6 @@ public class EBIDataControlInvoice {
 
             if (iter.hasNext()) {
                 this.id = id;
-                // Set properties for pessimistic dialog
-                invoicePane.ebiModule.pessimisticStruct.setLockId(id);
-                invoicePane.ebiModule.pessimisticStruct.setModuleName("CRMInvoice");
 
                 invoice = (Crminvoice) iter.next();
                 invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setID(invoice.getInvoiceid());
@@ -487,7 +480,6 @@ public class EBIDataControlInvoice {
     public void dataNew(boolean reload) {
        try{
             // Remove lock
-            invoicePane.ebiModule.unlockCompanyRecord(id,lockUser,"CRMInvoice");
             lockId = -1;
             lockModuleName = "";
             lockUser = "";
@@ -504,101 +496,6 @@ public class EBIDataControlInvoice {
                 this.dataShowProduct();
             }
        }catch (Exception ex){}
-    }
-
-    private void createHistory(int id) throws Exception{
-
-        List<String> list = new ArrayList<String>();
-
-        list.add(EBIPGFactory.getLANG("EBI_LANG_ADDED") + ": " + invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getCreateddate()));
-        list.add(EBIPGFactory.getLANG("EBI_LANG_ADDED_FROM") + ": " + invoice.getCreatedfrom());
-
-        if (invoice.getChangeddate() != null) {
-            list.add(EBIPGFactory.getLANG("EBI_LANG_CHANGED") + ": " + invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getChangeddate()));
-            list.add(EBIPGFactory.getLANG("EBI_LANG_CHANGED_FROM") + ": " + invoice.getChangedfrom());
-        }
-
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_INVOICE_NR") + ": " + ((""+invoice.getInvoicenr()).equals(String.valueOf(invoicePane.invoiceNr)) == true ? invoice.getInvoicenr() : invoice.getInvoicenr()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_NAME") + ": " + (invoice.getName().equals(invoicePane.ebiModule.guiRenderer.getTextfield("invoiceNameText","Invoice").getText()) == true ? invoice.getName() : invoice.getName()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_STATUS") + ": " + (invoice.getStatus().equals(invoicePane.ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").getSelectedItem().toString()) == true ? invoice.getStatus() : invoice.getStatus()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + ": " + (invoice.getCategory().equals(invoicePane.ebiModule.guiRenderer.getComboBox("categoryText","Invoice").getSelectedItem().toString()) == true ? invoice.getCategory() : invoice.getCategory()+"$") );
-       list.add(EBIPGFactory.getLANG("EBI_LANG_C_ORDER") + ": " + (String.valueOf(invoice.getAssosiation() == null ? "" : invoice.getAssosiation()).equals(invoicePane.ebiModule.guiRenderer.getTextfield("orderText","Invoice").getText()) == true ? invoice.getAssosiation() : invoice.getAssosiation()+"$") );
-
-       if(invoice.getPosition() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_POSITION") + ": " + (invoice.getPosition().equals(invoicePane.ebiModule.guiRenderer.getTextfield("titleText","Invoice").getText()) == true ? invoice.getPosition() : invoice.getPosition()+"$") );
-       }
-       if(invoice.getCompanyname() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_COMPANY_NAME") + ": " + (invoice.getCompanyname().equals(invoicePane.ebiModule.guiRenderer.getTextfield("companyNameText","Invoice").getText()) == true ? invoice.getCompanyname() : invoice.getCompanyname()+"$") );
-       }
-       if(invoice.getContactname() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_CNAME") + ": " + (invoice.getContactname().equals(invoicePane.ebiModule.guiRenderer.getTextfield("nameText","Invoice").getText()) == true ? invoice.getContactname() : invoice.getContactname()+"$") );
-       }
-       if(invoice.getContactsurname() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_SURNAME") + ": " + (invoice.getContactsurname().equals(invoicePane.ebiModule.guiRenderer.getTextfield("surnameText","Invoice").getText()) == true ? invoice.getContactsurname() : invoice.getContactsurname()+"$") );
-       }
-       if(invoice.getContactstreet() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_STREET_NR") + ": " + (invoice.getContactstreet().equals(invoicePane.ebiModule.guiRenderer.getTextfield("streetNrText","Invoice").getText()) == true ? invoice.getContactstreet() : invoice.getContactstreet()+"$") );
-       }
-       if(invoice.getContactzip() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_ZIP_LOCATION") + ": " + (invoice.getContactzip().equals(invoicePane.ebiModule.guiRenderer.getTextfield("zipText","Invoice").getText()) == true ? invoice.getContactzip() : invoice.getContactzip()+"$") );
-       }
-       if(invoice.getContactlocation() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_ZIP_LOCATION") + ": " + (invoice.getContactlocation().equals(invoicePane.ebiModule.guiRenderer.getTextfield("locationText","Invoice").getText()) == true ? invoice.getContactlocation() : invoice.getContactlocation()+"$") );
-       }
-       if(invoice.getContactpostcode() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_POST_CODE") + ": " + (invoice.getContactpostcode().equals(invoicePane.ebiModule.guiRenderer.getTextfield("postCodeText","Invoice").getText()) == true ? invoice.getContactpostcode() : invoice.getContactpostcode()+"$") );
-       }
-       if(invoice.getContactcountry() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_COUNTRY") + ": " + (invoice.getContactcountry().equals(invoicePane.ebiModule.guiRenderer.getTextfield("countryText","Invoice").getText()) == true ? invoice.getContactcountry() : invoice.getContactcountry()+"$") );
-       }
-       if(invoice.getContacttelephone() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_TELEPHONE") + ": " + (invoice.getContacttelephone().equals(invoicePane.ebiModule.guiRenderer.getTextfield("telefonText","Invoice").getText()) == true ? invoice.getContacttelephone() : invoice.getContacttelephone()+"$") );
-       }
-       if(invoice.getContactfax() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_FAX") + ": " + (invoice.getContactfax().equals(invoicePane.ebiModule.guiRenderer.getTextfield("faxText","Invoice").getText()) == true ? invoice.getContactfax() : invoice.getContactfax()+"$") );
-       }
-       if(invoice.getContactemail() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_C_EMAIL") + ": " + (invoice.getContactemail().equals(invoicePane.ebiModule.guiRenderer.getTextfield("emailText","Invoice").getText()) == true ? invoice.getContactemail() : invoice.getContactemail()+"$") );
-       }
-       if(invoice.getContactweb() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_INTERNET") + ": " + (invoice.getContactweb().equals(invoicePane.ebiModule.guiRenderer.getTextfield("internetText","Invoice").getText()) == true ? invoice.getContactweb() : invoice.getContactweb()+"$") );
-       }
-       if(invoice.getContactdescription() != null){
-           list.add(EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + ": " + (invoice.getContactdescription().equals(invoicePane.ebiModule.guiRenderer.getTextarea("recDescription","Invoice").getText()) == true ? invoice.getContactdescription() : invoice.getContactdescription()+"$") );
-       }
-
-       list.add(EBIPGFactory.getLANG("EBI_LANG_CREATED_DATE") + ": " + (invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getDate()).equals(
-                                                                                                            invoicePane.ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").getEditor().getText())
-                                                                                                             == true ? invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getDate()) :
-                                                                                                                invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getDate())+"$") );
-        list.add("*EOR*"); // END OF RECORD
-
-
-        if (!invoice.getCrminvoicepositions().isEmpty()) {
-
-            Iterator iter = invoice.getCrminvoicepositions().iterator();
-
-            while (iter.hasNext()) {
-                Crminvoiceposition obj = (Crminvoiceposition) iter.next();
-                list.add(EBIPGFactory.getLANG("EBI_LANG_QUANTITY") + ": " + String.valueOf(obj.getQuantity()));
-                list.add(EBIPGFactory.getLANG("EBI_LANG_PRODUCT_NUMBER") + ": " + obj.getProductnr());
-                list.add(obj.getProductname() == null ? EBIPGFactory.getLANG("EBI_LANG_NAME") + ":" : EBIPGFactory.getLANG("EBI_LANG_NAME") + ": " + obj.getProductname());
-                list.add(obj.getCategory() == null ? EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + ":" : EBIPGFactory.getLANG("EBI_LANG_CATEGORY") + ": " + obj.getCategory());
-                list.add(obj.getTaxtype() == null ? EBIPGFactory.getLANG("EBI_LANG_TAX") + ":" : EBIPGFactory.getLANG("EBI_LANG_TAX") + ": " + obj.getTaxtype());
-                list.add(String.valueOf(obj.getPretax()) == null ? EBIPGFactory.getLANG("EBI_LANG_PRICE") + ":" : EBIPGFactory.getLANG("EBI_LANG_PRICE") + ": " + String.valueOf(obj.getPretax()));
-                list.add(String.valueOf(obj.getDeduction()) == null ? EBIPGFactory.getLANG("EBI_LANG_DEDUCTION") + ":" : EBIPGFactory.getLANG("EBI_LANG_DEDUCTION") + ": " + String.valueOf(obj.getDeduction()));
-                list.add(obj.getDescription() == null ? EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + ":" : EBIPGFactory.getLANG("EBI_LANG_DESCRIPTION") + ": " + obj.getDescription());
-                list.add("*EOR*");
-
-            }
-        }
-
-        try {
-            invoicePane.ebiModule.hcreator.setDataToCreate(new EBICRMHistoryDataUtil(id, "Invoice", list));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void dataShowProduct() {
@@ -820,7 +717,6 @@ public class EBIDataControlInvoice {
                 lockUser = EBIPGFactory.ebiUser;
                 lockStatus = 1;
                 lockTime =  new Timestamp(new Date().getTime());
-                invoicePane.ebiModule.lockCompanyRecord(compNr,"CRMInvoice",lockTime);
                 activateLockedInfo(false);
             }else{
                 rs.beforeFirst();

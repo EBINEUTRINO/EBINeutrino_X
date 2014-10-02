@@ -25,7 +25,7 @@ public class EBIMoveRecord {
         ebiModule.guiRenderer.loadGUI("CRMDialog/moveRecordDialog.xml");
 
         ebiModule.guiRenderer.getTextfield("companyName","moveRecordDialog").setEditable(false);
-        ebiModule.guiRenderer.getTextfield("companyName","moveRecordDialog").setBackground(EBIPGFactory.systemColor);
+
         ebiModule.guiRenderer.getButton("closeDialog","moveRecordDialog").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

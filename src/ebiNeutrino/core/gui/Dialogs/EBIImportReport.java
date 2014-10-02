@@ -68,9 +68,9 @@ public class EBIImportReport extends EBIDialogExt {
                 try {
                     Thread.sleep(500);
 
-                    ebiMain._ebifunction.getIEBIDatabase().setAutoCommit(true);
-                    ebiMain._ebifunction.getIEBIDatabase().exec("DELETE FROM SET_REPORTFORMODULE ");
-                    ebiMain._ebifunction.getIEBIDatabase().exec("DELETE FROM SET_REPORTPARAMETER ");
+                    ebiMain.system.getIEBIDatabase().setAutoCommit(true);
+                    ebiMain.system.getIEBIDatabase().exec("DELETE FROM SET_REPORTFORMODULE ");
+                    ebiMain.system.getIEBIDatabase().exec("DELETE FROM SET_REPORTPARAMETER ");
 
                     BufferedReader myBufferedReader = new BufferedReader(new FileReader("./reports/Reports.sql"));
                     String str="";
@@ -78,7 +78,7 @@ public class EBIImportReport extends EBIDialogExt {
                     while(myBufferedReader.ready()){
                         line = myBufferedReader.readLine();
                         if("/".equals(line)){
-                          ebiMain._ebifunction.getIEBIDatabase().exec(str);
+                          ebiMain.system.getIEBIDatabase().exec(str);
                           str = "";
                         }else{
                           str+= line;
@@ -92,7 +92,7 @@ public class EBIImportReport extends EBIDialogExt {
 
                     }
                     myBufferedReader.close();
-                    ebiMain._ebifunction.getIEBIDatabase().exec(str);
+                    ebiMain.system.getIEBIDatabase().exec(str);
                     ebiMain.systemSetting.listName.report.showReports();
                     EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_IMPORT_WAS_SUCCESSFULLY")).Show(EBIMessage.INFO_MESSAGE);
 
@@ -106,7 +106,7 @@ public class EBIImportReport extends EBIDialogExt {
                 	ex.printStackTrace();
                 }finally{
                    setVisible(false);
-                   ebiMain._ebifunction.getIEBIDatabase().setAutoCommit(false);
+                   ebiMain.system.getIEBIDatabase().setAutoCommit(false);
                 }
             }
         };

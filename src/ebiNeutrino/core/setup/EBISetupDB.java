@@ -27,7 +27,6 @@ import javax.swing.SwingConstants;
 
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
-import ebiNeutrinoSDK.gui.dialogs.EBIImportSQLFiles;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import ebiNeutrinoSDK.utils.EBIPropertiesRW;
@@ -279,22 +278,6 @@ public class EBISetupDB extends JPanel {
 	}
 
 
-     public void importSQLDemo(){
-         EBIImportSQLFiles impSQL = new EBIImportSQLFiles(setup._ebifunction);
-         if(EBIPGFactory.selectedLanguage.toLowerCase().equals("italiano")){
-            impSQL.startSQLImport(new String[]{"./reports/ReportsIT.sql","./sql/demoData_ITALIANO.sql","./reports/reportParameter.sql"});
-         }else if(EBIPGFactory.selectedLanguage.toLowerCase().equals("deutsch")){
-            impSQL.startSQLImport(new String[]{"./reports/ReportsDE.sql","./sql/demoData_DEUTSCH.sql","./reports/reportParameter.sql"});
-         }else if(EBIPGFactory.selectedLanguage.toLowerCase().equals("espanol")){
-            impSQL.startSQLImport(new String[]{"./reports/ReportsES.sql","./sql/demoData_SPANISH.sql","./reports/reportParameter.sql"});
-         }else if(EBIPGFactory.selectedLanguage.toLowerCase().equals("portuguesbrasil")){
-            impSQL.startSQLImport(new String[]{"./reports/ReportsPG.sql","./sql/demoData_PORTUGUESE.sql","./reports/reportParameter.sql"});
-         }else{
-            impSQL.startSQLImport(new String[]{"./reports/ReportsEN.sql","./sql/demoData_ENGLISH.sql","./reports/reportParameter.sql"});
-         }
-     }
-
-
      public void configureHibernateFiles(){
 
         File dir = new File("hibernate/");
@@ -351,12 +334,10 @@ public class EBISetupDB extends JPanel {
 
 	private void checkIfSchemaExist() throws Exception {
 
-        if(EBIExceptionDialog.getInstance("Would you like to import the EBI Neutrino R1 database schema?").Show(EBIMessage.INFO_MESSAGE_YESNO)){
+        if(EBIExceptionDialog.getInstance("Would you like to import the EBI Neutrino database schema?").Show(EBIMessage.INFO_MESSAGE_YESNO)){
              setup._ebifunction.getIEBIDatabase().setActiveConnection(conn);
              new EBISchemaImport(setup._ebifunction,databaseType,this.jTextSIDCatalog.getText(),true).setVisible(true);
              setup._ebifunction.getIEBIDatabase().getActiveConnection().setCatalog(jTextSIDCatalog.getText().trim());
-             importSQLDemo();
-
         }
 	}
 	

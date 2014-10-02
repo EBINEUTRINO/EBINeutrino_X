@@ -248,22 +248,12 @@ public class EBICRMLead {
             return;
         }
 
-        boolean pass;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanSave() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
+        int row = 0;
+        if(controlLeads.isEdit){
+            row = ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow();
         }
-        if (pass) {
-            int row = 0;
-            if(controlLeads.isEdit){
-                row = ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow();
-            }
-            controlLeads.dataStore();
-            ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(row,0,false,false);
-        }
-        
+        controlLeads.dataStore();
+        ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(row,0,false,false);
     }
 
     private boolean validateInput(){
@@ -289,18 +279,8 @@ public class EBICRMLead {
 
     public void ebiDelete(){
         if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
-            boolean pass;
-            if(ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                    ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()){
-                pass = true;
-            }else{
-                pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-            }
-
-            if(pass){
-                if(controlLeads.dataDelete(Integer.parseInt(tabModel.data[selectedRow][11].toString())) == true){
-                    EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_RECORD_DELETED")).Show(EBIMessage.INFO_MESSAGE);
-                }
+            if(controlLeads.dataDelete(Integer.parseInt(tabModel.data[selectedRow][11].toString())) == true){
+                EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_RECORD_DELETED")).Show(EBIMessage.INFO_MESSAGE);
             }
         }
     }

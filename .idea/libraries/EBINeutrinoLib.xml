@@ -1,76 +1,33 @@
 <component name="libraryTable">
   <library name="EBINeutrinoLib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/activation.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/asm-attrs.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/asm.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/barcode4j-2.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-beanutils.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-el.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-javaflow.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-lang.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/concurrent.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/connector.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/core-3.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/core.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/dom4j-1.6.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/ecs-1.4.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/freemarker.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-analytics-2.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-base-1.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-calendar-2.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-client-1.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-contacts-3.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-core-1.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-finance-2.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-maps-2.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/gdata-spreadsheet-3.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/google-collect-1.0-rc1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/groovy-all-2.0.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate-jpa-2.0-api-1.0.1.Final.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate-tools.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate-validator.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/iText-2.1.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jacc-1_0-fr.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javassist-3.12.0.GA.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/javassist.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jdbc2_0-stdext.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jdom.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jsr305.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jsyntaxpane-0.9.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jta-1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jtidy-r8-20060801.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/junit-4.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/mysql-connector.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/ojdbc14.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/poi-ooxml-3.7-20101029.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/poi-ooxml-schemas-3.7-20101029.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/pop3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/proxool-0.8.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.5.8.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-log4j12-1.5.8.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/smtp.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/spring.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/swingx.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/TableLayout.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/tinylaf.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/xml-apis.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.14.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jcommon-1.0.17.jar!/" />
       <root url="file://$PROJECT_DIR$/hibernate" />
       <root url="jar://$PROJECT_DIR$/lib/jasperreports-5.6.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jasperreports-applet-5.6.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jasperreports-javaflow-5.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jta-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/jsr305.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

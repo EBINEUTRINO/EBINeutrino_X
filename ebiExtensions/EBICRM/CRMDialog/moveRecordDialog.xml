@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<dialog name="moveRecordDialog" title="EBI_LANG_MOVE_RECORD" Location="100,100" Size="370,120" visualproperties="false" assignable="false" modal="true" >
- 		<button name="closeDialog" tabindex="3" title="EBI_LANG_CLOSE" Location="220,78" Size="93,25"/>
-		<label name="company" title="EBI_LANG_COMPANY" Location="19,45" Size="75,20"/>
-		<textfield name="companyName" Location="94,45" Size="220,20"/>
-		<button name="searchCompany" Location="318,41" Size="36,29"/>
-		<button name="apply" title="EBI_LANG_APPLY" Location="110,78" Size="100,25"/>
-		<label name="infoText" title="EBI_LANG_MOVE_SELECT_RECORD_TO" Location="11,10" Size="354,26"/>
-</dialog>

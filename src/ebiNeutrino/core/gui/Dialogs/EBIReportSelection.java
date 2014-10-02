@@ -21,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import ebiNeutrino.core.EBIReportSystem;
-import ebiNeutrino.core.GUIRenderer.EBIButton;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
 import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
@@ -34,8 +33,8 @@ public class EBIReportSelection extends EBIDialogExt {
 
 	private EBIVisualPanelTemplate jContentPane = null;
 	private JList jListReports = null;
-	private EBIButton jButtonAbbrechen = null;
-	private EBIButton jButtonOk = null;
+	private JButton jButtonAbbrechen = null;
+	private JButton jButtonOk = null;
 	private IEBIDatabase data = null;
 	public String nameReport = "-1";
 	public boolean showAttribute = true;
@@ -65,7 +64,7 @@ public class EBIReportSelection extends EBIDialogExt {
 		data = ebiPGFactory.getIEBIDatabase();
 		initialize();
 		fillCategoryComboBox();
-        jContentPane.setBackgroundColor(EBIPGFactory.systemColor);
+        jContentPane.setBackgroundColor(new Color(200,200,200));
         jComboBoxCategory.setSelectedIndex(1);
 	}
 	
@@ -84,7 +83,7 @@ public class EBIReportSelection extends EBIDialogExt {
         this.jComboBoxCategory.addItem(ebiPGFactory.convertReportIndexToCategory(Integer.parseInt(reportCategory)));
 		listAReports(reportCategory);
 		jListReports.setSelectedIndex(0);
-        jContentPane.setBackgroundColor(EBIPGFactory.systemColor);
+        jContentPane.setBackgroundColor(new Color(200,200,200));
 		getReport(id[jListReports.getSelectedIndex()]);
 
 	}
@@ -251,9 +250,9 @@ public class EBIReportSelection extends EBIDialogExt {
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private EBIButton getJButtonAbbrechen() {
+	private JButton getJButtonAbbrechen() {
 		if (jButtonAbbrechen == null) {
-			jButtonAbbrechen = new EBIButton();
+			jButtonAbbrechen = new JButton();
 			jButtonAbbrechen.setBounds(new Rectangle(323, 212, 102, 25));
 			jButtonAbbrechen.setText(EBIPGFactory.getLANG("EBI_LANG_CANCEL"));
 			jButtonAbbrechen.addActionListener(new java.awt.event.ActionListener() {
@@ -272,9 +271,9 @@ public class EBIReportSelection extends EBIDialogExt {
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private EBIButton getJButtonOk() {
+	private JButton getJButtonOk() {
 		if (jButtonOk == null) {
-			jButtonOk = new EBIButton();
+			jButtonOk = new JButton();
 			jButtonOk.setBounds(new Rectangle(229, 212, 88, 25));
 			jButtonOk.setText(EBIPGFactory.getLANG("EBI_LANG_OK"));
 			jButtonOk.addActionListener(new java.awt.event.ActionListener() {

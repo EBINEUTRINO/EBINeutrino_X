@@ -15,9 +15,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.TreePath;
-
-import ebiNeutrino.core.gui.component.EBITreeFactory;
+import ebiNeutrino.core.settings.EBIListItem;
 import ebiNeutrinoSDK.gui.component.EBIExtendedPanel;
 import ebiNeutrinoSDK.utils.EBISaveRestoreTableProperties;
 import org.jdesktop.swingx.JXDatePicker;
@@ -26,8 +24,6 @@ import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 import ebiNeutrino.core.EBIMain;
-import ebiNeutrino.core.GUIDesigner.EBIGUIWidgetsBean;
-import ebiNeutrino.core.GUIDesigner.EBIXMLGUIReader;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
 import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
@@ -89,37 +85,16 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         EBIXMLGUIReader xmlGui1 = new EBIXMLGUIReader();
         xmlGui1.setXmlPath(new File("ebiExtensions/" + path));
         init();
-        EBITreeFactory.getEBITreeFactory().initList();
+        ebiMain.container.resetListItem();
+
         if(xmlGui1.loadXMLGUI()){
 
               Iterator ix = xmlGui1.getCompObjects().getSubWidgets().iterator();
 
               while(ix.hasNext()) {
                 EBIGUIWidgetsBean bx = (EBIGUIWidgetsBean)ix.next();
-
-                if(bx.getType().toLowerCase().equals("includetoolbar")){
-                  if( ebiMain._ebifunction.iuserRights.isAdministrator()){
-                    addXMLToolBarGUI(bx);
-                  }else if(EBIPGFactory.moduleToView.contains(bx.getPath())){
-                    addXMLToolBarGUI(bx);
-                  }
-
-                }else{
-                  if(ebiMain._ebifunction.iuserRights.isAdministrator()){
-                      EBITreeFactory.getEBITreeFactory().addChildTORoot(new EBIMutableTreeNode(bx.getName(), bx.getPath(), EBIPGFactory.getLANG(bx.getTitle())));
-                  }else if(EBIPGFactory.moduleToView.contains(bx.getPath())){
-                      EBITreeFactory.getEBITreeFactory().addChildTORoot(new EBIMutableTreeNode(bx.getName(), bx.getPath(), EBIPGFactory.getLANG(bx.getTitle())));
-                  }
-                }
+                ebiMain.container.addListItem(new EBIListItem(bx.getIcon(), EBIPGFactory.getLANG(bx.getTitle()), bx.getPath(), bx.getName(), false));
             }
-
-            if(EBIPGFactory.moduleToView.contains("Calendar")){
-                EBITreeFactory.getEBITreeFactory().addChildTORoot(
-                        new EBIMutableTreeNode(EBIPGFactory.getLANG("EBI_LANG_C_TAB_CALENDAR"), "",
-                                                                      EBIPGFactory.getLANG("EBI_LANG_C_TAB_CALENDAR")));
-            }
-
-            ebiMain.container.getTreeViewInstance().expandPath(new TreePath(EBITreeFactory.getEBITreeFactory().getEBIROOTreeNode().getPath()));
 
         }else{
            canShow = false;
@@ -141,6 +116,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
                 EBIXMLGUIReader xmlApps = new EBIXMLGUIReader();
                 xmlApps.setXmlPath(new File("ebiExtensions/EBICRM/" +  children[i]));
+
 
                 if(xmlApps.loadXMLGUI()){
 
@@ -172,6 +148,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                     toScript.add(script);
                                 }
                                 scriptContainer.put("app",toScript);
+                            }else if("application".equals(bx.getType().toLowerCase())){
+                                ebiMain.container.myListmodel.addElement(new EBIListItem(bx.getIcon(), EBIPGFactory.getLANG(bx.getTitle()),bx.getPath(),bx.getName(),true));
                             }
                         }
                     }
@@ -183,15 +161,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
 
     }
-
-    private  void addXMLToolBarGUI(EBIGUIWidgetsBean bx){
-        if(!"".equals(bx.getPath())){
-            loadGUIExt("EBICRM/"+bx.getPath());
-            showToolBar(bx.getName(), true);
-        }
-        canShow = true;
-    }
-
 
     private  void addXMLGUI(EBIGUIWidgetsBean bx,String path){
         if(!"".equals(bx.getPath())){
@@ -212,13 +181,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
     }
 
     public void loadGUI(String path){
-         if( ebiMain._ebifunction.iuserRights.isAdministrator()){
-            loadGUIExt("EBICRM/"+path);
-            canShow = true;
-         }else if(EBIPGFactory.moduleToView.contains(path)){
-            loadGUIExt("EBICRM/"+path);
-            canShow = true;
-         }
+        loadGUIExt("EBICRM/"+path);
+        canShow = true;
     }
 
     public void useGUI(String name){
@@ -226,13 +190,10 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
     }
 
     public String loadGUIPlus(String path){
-        if( ebiMain._ebifunction.iuserRights.isAdministrator()){
-            loadGUIExtPlus("EBICRM/" + path);
-            canShow = true;
-        }else if(EBIPGFactory.moduleToView.contains(path)){
-            loadGUIExtPlus("EBICRM/" + path);
-            canShow = true;
-        }
+
+        loadGUIExtPlus("EBICRM/" + path);
+        canShow = true;
+
         return mainComponentName;
     }
 
@@ -322,74 +283,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         }
     }
 
-    public  void renderToolbar(boolean isVisualPanel){
-
-        EBIGUIWidgetsBean list = componentsTable.get(mainComponentName);
-
-        Iterator iter = list.getSubWidgets().iterator();
-
-        while(iter.hasNext()){
-
-            EBIGUIWidgetsBean bean = (EBIGUIWidgetsBean)iter.next();
-
-            if ("codecontrol".equals(bean.getType().toLowerCase())) {
-
-                    if ("groovy".equals(bean.getName().toLowerCase())) {
-
-                        EBIGUIScripts script = new EBIGUIScripts();
-                        script.setType("groovy");
-                        script.setPath(bean.getPath());
-                        script.setName(bean.getName());
-                        script.setClassName(bean.getClassName());
-                        scriptContainer.get(mainComponentName).add(script);
-
-                    } else if ("java".equals(bean.getName().toLowerCase())) {
-
-                        EBIGUIScripts script = new EBIGUIScripts();
-                        script.setType("java");
-                        script.setPath(bean.getPath());
-                        script.setName(bean.getName());
-                        script.setClassName(bean.getClassName());
-                        scriptContainer.get(mainComponentName).add(script);
-
-                    }
-
-             }else if ("toolbar".equals(bean.getType())) {
-
-                EBIGUIToolbar bar = new EBIGUIToolbar();
-                bar.setName(bean.getName());
-
-                if (bean.getSubWidgets().size() > 0) {
-
-                    Iterator it = bean.getSubWidgets().iterator();
-
-                    while (it.hasNext()) {
-
-                        EBIGUIWidgetsBean sub = (EBIGUIWidgetsBean) it.next();
-
-                        EBIGUIToolbar br = new EBIGUIToolbar();
-
-                        if(!"".equals(sub.getI18NToolTip())){
-                          br.setToolTip(EBIPGFactory.getLANG(sub.getI18NToolTip()));
-                        }
-                        br.setKeyStroke(sub.getKeyStroke());
-                        br.setName(sub.getName());
-                        br.setTitle(sub.getTitle());
-                        br.setIcon(sub.getIcon());
-                        br.setType(sub.getType());
-                        bar.setBarItem(br);
-
-                    }
-                }
-
-                bar.setVisualPanel(isVisualPanel);
-                toToolbar.put(bean.getName(), bar);
-
-            }
-        }
-    }
-
-
     /**
      * Create and Show components readed from the xml file
      * @param obj
@@ -408,7 +301,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         if (obj == null) {
 
              if("visualpanel".equals(list.getType())){
-                panel = new EBIVisualPanelTemplate(ebiMain._ebifunction);
+                panel = new EBIVisualPanelTemplate(ebiMain.system);
              }else{
                 panel = new EBIVisualPanelTemplate();
              }
@@ -440,8 +333,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
             if(list.getColor() != null){
                 panel.setBackgroundColor(list.getColor());
-            }else{
-                panel.setBackgroundColor(EBIPGFactory.systemColor);
             }
 
             panel.setSize(list.getDimension());
@@ -456,9 +347,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 isVisualPanel = true;
                 panel.setClosable(false);
 
-                if(list.getColor() != null){
-                    panel.setBackground(list.getColor());
-                }
 
             } else if ("dialog".equals(list.getType())) {
 
@@ -479,9 +367,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 dialog.setLocation(list.getPoint());
                 dialog.setSize(list.getDimension().width, list.getDimension().height+30);
 
-                if(list.getColor() != null){
-                   dialog.setBackground(list.getColor());
-                }
                 isVisualPanel = false;
             }
         }
@@ -499,9 +384,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             EBIGUIWidgetsBean bean = (EBIGUIWidgetsBean) iter.next();
 
             if ("button".equals(bean.getType())) {
-            	EBIButton button = new EBIButton();
-                //button.setBorder(BorderFactory.createMatteBorder( 1, 2, 1, 1, Color.lightGray));
-                button.setFont(new Font("Verdana", Font.PLAIN, 10));
+            	JButton button = new JButton();
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
                    button.setText(EBIPGFactory.getLANG(bean.getTitle()));
                 }else{
@@ -549,7 +432,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 
             } else if ("list".equals(bean.getType())) {
                 JList jlist = new JList();
-                jlist.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 jlist.setEnabled(bean.isEnabled());
                 jlist.setName(bean.getName());
                 jlist.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -598,9 +480,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             } else if ("textfield".equals(bean.getType())) {
             	
                 JTextField textField = new JTextField();
-                textField.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
-                textField.setFont(new Font("Verdana", Font.PLAIN, 10));
-                textField.setMargin(new Insets(0,5,0,0));
                 textField.setDoubleBuffered(true);
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
                    textField.setText(EBIPGFactory.getLANG(bean.getTitle()));
@@ -738,8 +617,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             } else if ("checkbox".equals(bean.getType())) {
 
                 JCheckBox box = new JCheckBox();
-                box.setFont(new Font("Verdana", Font.PLAIN, 10));
-                box.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
                     box.setText(EBIPGFactory.getLANG(bean.getTitle()));
                 }else{
@@ -786,8 +663,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             } else if ("radiobutton".equals(bean.getType())) {
 
                 JRadioButton radio = new JRadioButton();
-                radio.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
-                radio.setFont(new Font("Verdana", Font.PLAIN, 10));
                 radio.setDoubleBuffered(true);
 
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
@@ -856,7 +731,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 }
 
                 JScrollPane scr = new JScrollPane();
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 scr.setViewportView(textArea);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
@@ -918,7 +792,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setViewportView(editPane);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     editPane.setBackground(bean.getColor());
@@ -1032,11 +905,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 JScrollPane scr = new JScrollPane(jtable,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
-
-                scr.setBackground(EBIPGFactory.systemColor);
-                jtable.setBackground(EBIPGFactory.systemColor);
-                scr.getViewport().setBackground(EBIPGFactory.systemColor);
 
                 if(!bean.isVisible()){
                     scr.setVisible(bean.isVisible());
@@ -1118,7 +986,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setName(bean.getName());
                 scr.setViewportView(jtable);
                 scr.setDoubleBuffered(true);
-                scr.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     jtable.setBackground(bean.getColor());
@@ -1236,7 +1103,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 JProgressBar progressBar = new JProgressBar();
                 progressBar.setName(bean.getName());
                 progressBar.setEnabled(bean.isEnabled());
-                progressBar.setBorder(BorderFactory.createMatteBorder( 1, 1, 1, 1, new Color(180, 180, 180)));
                 progressBar.setDoubleBuffered(true);
                 if(!"".equals(bean.getI18NToolTip())){
                     progressBar.setToolTipText(EBIPGFactory.getLANG(bean.getI18NToolTip()));
@@ -1281,8 +1147,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                         title= bean.getTitle();
                     }
 
-                    TitledBorder tltB = BorderFactory.createTitledBorder( BorderFactory.createMatteBorder( 0, 0, 0, 0, new Color(190, 190, 190)), title);
-                    tltB.setTitleColor(new Color(245,245,245));
+                    TitledBorder tltB = BorderFactory.createTitledBorder( BorderFactory.createMatteBorder( 1, 1, 1,1, new Color(200, 200, 200)), title);
+                    tltB.setTitleColor(new Color(100,100,100));
                     tltB.setTitleFont(new Font("Verdana", Font.BOLD, 10));
                     p.setBorder(tltB);
                 }
@@ -1360,16 +1226,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
     }
 
 
-    public  void showToolBar(String name, boolean toVisualPanel){
-        if(canShow){
-            renderToolbar(toVisualPanel);
-            initToolbar(name);
-            initScript();
-            isInit = false;
-        }
-    }
-
-
     public  void showGUI() {
          try{
            if(canShow){
@@ -1380,9 +1236,9 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
                         if(list.isCeckable()){
                           if(list.getTitle().indexOf("EBI_LANG") != -1){
-                            ebiMain.container.addScrollableClosableContainer(EBIPGFactory.getLANG(list.getTitle()), ((EBIVisualPanelTemplate) list.getComponent()), list.getIcon(), list.getKeyEvent(),null);
+                            ebiMain.container.addScrollableClosableContainer(EBIPGFactory.getLANG(list.getTitle()), ((EBIVisualPanelTemplate) list.getComponent()), list.getIcon(), list.getKeyEvent());
                           }else{
-                            ebiMain.container.addScrollableClosableContainer(list.getTitle(), ((EBIVisualPanelTemplate) list.getComponent()), list.getIcon(), list.getKeyEvent(),null);
+                            ebiMain.container.addScrollableClosableContainer(list.getTitle(), ((EBIVisualPanelTemplate) list.getComponent()), list.getIcon(), list.getKeyEvent());
                           }
                         }else{
                             if(list.getTitle().indexOf("EBI_LANG") != -1){
@@ -1413,107 +1269,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
          }
     }
 
-    private  void  initToolbar(String name) {
-        JToolBar toolBar = null;
-        JButton button;
-
-            EBIGUIToolbar bar = ((EBIGUIToolbar)toToolbar.get(name));
-
-            if (!bar.isVisualPanel()) {
-                toolBar = new JToolBar();
-                bar.setComponent(toolBar);
-            } else {
-                bar.setComponent(ebiMain._ebifunction.getIEBIToolBarInstance().getJToolBar());
-                ebiMain._ebifunction.getIEBIToolBarInstance().resetToolBar();
-            }
-
-            if (bar.getBarItem().size() > 0) {
-                Iterator it = bar.getBarItem().iterator();
-
-                while (it.hasNext()) {
-                    EBIGUIToolbar b = (EBIGUIToolbar) it.next();
-
-                    if (bar.isVisualPanel()) {
-                        if ("separator".equals(b.getType().toLowerCase())) {
-                            ebiMain._ebifunction.getIEBIToolBarInstance().addButtonSeparator();
-                        } else if("toolbaritem".equals(b.getType().toLowerCase())) {
-
-                            int NEW_ID = ebiMain._ebifunction.getIEBIToolBarInstance().addToolButton(b.getIcon(), null);
-                            ebiMain._ebifunction.getIEBIToolBarInstance().setComponentToolTipp(NEW_ID,"<html><body><br><b>"+b.getToolTip()+"</b><br><br></body></html>");
-                            final JButton bx = ((JButton)(ebiMain._ebifunction.getIEBIToolBarInstance().getToolbarComponent(NEW_ID)));
-
-                            InputMap inputMap;
-                            if(b.getKeyStroke() != null){
-                                 Action refreshAction = new AbstractAction() {
-                                            public void actionPerformed(ActionEvent e) {
-                                                if(bx.getActionListeners()[0] != null){
-                                                    bx.getActionListeners()[0].actionPerformed(e);
-                                                }
-                                            }
-                                };
-
-                                inputMap = ((JPanel)ebiMain.getContentPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-                                inputMap.put(b.getKeyStroke(),  b.getName()+"Action");
-                                ((JPanel)ebiMain.getContentPane()).getActionMap().put( b.getName()+"Action", refreshAction);
-                            }
-                            b.setComponent(bx);
-
-                            b.setId(NEW_ID);
-
-                        } else if("toolbaritemcheckable".equals(b.getType().toLowerCase())) {
-
-                            final JToggleButton check = new JToggleButton(b.getIcon());
-
-                            InputMap inputMap;
-                            if(b.getKeyStroke() != null){
-                                 Action refreshAction = new AbstractAction() {
-                                            public void actionPerformed(ActionEvent e) {
-                                                if(check.getActionListeners()[0] != null){
-                                                    if(check.isSelected() == true){
-                                                        check.setSelected(false);
-                                                    }else{
-                                                        check.setSelected(true);
-                                                    }
-                                                    check.getActionListeners()[0].actionPerformed(e);
-                                                }
-                                            }
-                                };
-
-                                inputMap = ((JPanel)ebiMain.getContentPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-                                inputMap.put(b.getKeyStroke(),  b.getName()+"Action");
-                                ((JPanel)ebiMain.getContentPane()).getActionMap().put( b.getName()+"Action", refreshAction);
-                            }
-
-                            int NEW_ID = ebiMain._ebifunction.getIEBIToolBarInstance().addCustomToolBarComponent(check);
-                            ebiMain._ebifunction.getIEBIToolBarInstance().setComponentToolTipp(NEW_ID,"<html><body><br><b>"+b.getToolTip()+"</b><br><br></body></html>");
-                            b.setComponent(ebiMain._ebifunction.getIEBIToolBarInstance().getToolbarComponent(NEW_ID));
-                            b.setId(NEW_ID);
-                            
-                        }
-
-                    } else {
-                        if ("separator".equals(b.getType().toLowerCase())) {
-                            if (toolBar != null) {
-                                toolBar.addSeparator();
-                            }
-                        } else {
-                            button = new JButton();
-                            button.setIcon(b.getIcon());
-                            button.setToolTipText("<html><body><br><b>"+b.getToolTip()+"</b><br><br></body></html>");
-                            b.setComponent(button);
-                            if (toolBar != null) {
-                                toolBar.add(button);
-                            }
-                        }
-                    }
-                }
-            }
-            if (!bar.isVisualPanel()) {
-                ((EBIDialog) componentsTable.get(mainComponentName).getComponent()).add(toolBar, BorderLayout.NORTH);
-            } else {
-                ebiMain._ebifunction.getIEBIToolBarInstance().showToolBar(true);
-            }
-    }
 
     public  void initScripts(){
       Iterator itr =  scriptContainer.keySet().iterator();
@@ -1539,7 +1294,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                            String[] roots = new String[] { "ebiExtensions/" };
                            GroovyScriptEngine gse = new GroovyScriptEngine(roots);
                            Binding binding = new Binding();
-                           binding.setVariable("system", ebiMain._ebifunction);
+                           binding.setVariable("system", ebiMain.system);
+                           binding.setVariable("core", ebiMain);
 
                            if(resizeContainer.get(componentName) != null){
                                for(int i=0; i< resizeContainer.get(componentName).size(); i++){
@@ -1566,7 +1322,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                        scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
                                        scr.getMetaClass().getMetaMethod("ebiSave",null) != null){
 
-                                   ebiMain._ebifunction.setDataStore(componentName, scr);
+                                   ebiMain.system.setDataStore(componentName, scr);
                                }
                            }else{
 
@@ -1577,7 +1333,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                    String cmpName = "";
                                    cmpName =(String)scr.getMetaClass().invokeMethod(scr,"useComponent",null);
                                    if(!"".equals(cmpName)){
-                                        ebiMain._ebifunction.setDataStore(cmpName, scr);
+                                        ebiMain.system.setDataStore(cmpName, scr);
                                    }
                                }
                            }
@@ -1850,12 +1606,12 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         return actualComponent;
     }
 
-    public  EBIButton getButton(String name,String packages) {
-    	EBIButton actualComponent=null;
+    public  JButton getButton(String name,String packages) {
+    	JButton actualComponent=null;
         if( resizeContainer.get(packages) != null){
             EBIGUINBean res = (EBIGUINBean) resizeContainer.get(packages).get(componentGet.get(packages+"."+name)-1);
             if (res != null) {
-                actualComponent = (EBIButton) res.getComponent();
+                actualComponent = (JButton) res.getComponent();
             }
         }
       return actualComponent;
@@ -2013,4 +1769,5 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         return projectCountEnabled;
     }
 
+    public Hashtable<String,List<Object>> getScriptContainer(){ return scriptContainer; }
 }

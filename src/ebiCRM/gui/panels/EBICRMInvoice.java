@@ -27,7 +27,6 @@ import org.jdesktop.swingx.sort.RowFilters;
 import ebiCRM.EBICRMModule;
 import ebiCRM.data.control.EBIDataControlInvoice;
 import ebiCRM.gui.dialogs.EBICRMDialogAddProduct;
-import ebiCRM.gui.dialogs.EBICRMHistoryView;
 import ebiCRM.gui.dialogs.EBIDialogSearchContact;
 import ebiCRM.table.models.MyTableModelCRMProduct;
 import ebiCRM.utils.AbstractTableKeyAction;
@@ -160,18 +159,8 @@ public class EBICRMInvoice {
                            return;
                 }
                 if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
-                    boolean pass  ;
-                    if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                            ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-                        pass = true;
-                    } else {
-                        pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-                    }
-                    if (pass) {
-                        dataControlInvoice.dataDeleteProduct(Integer.parseInt(tabModProduct.data[selectedProductRow][8].toString()));
-                        dataControlInvoice.calculateTotalAmount();
-                    }
-
+                     dataControlInvoice.dataDeleteProduct(Integer.parseInt(tabModProduct.data[selectedProductRow][8].toString()));
+                     dataControlInvoice.calculateTotalAmount();
                 }
             }
         });
@@ -233,13 +222,6 @@ public class EBICRMInvoice {
             }
         });
 
-        ebiModule.guiRenderer.getButton("historyInvoice","Invoice").setIcon(EBIConstant.ICON_HISTORY);
-        ebiModule.guiRenderer.getButton("historyInvoice","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getButton("historyInvoice","Invoice").addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent event){
-               new EBICRMHistoryView(ebiModule.hcreator.retrieveDBHistory(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()), "Invoice"), ebiModule).setVisible();  
-            }
-        });
 
         ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setIcon(EBIConstant.ICON_REPORT);
         ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(false);
@@ -411,7 +393,6 @@ public class EBICRMInvoice {
         });
 
         ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setEditable(false);
-        ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setBackground(EBIPGFactory.systemColor);
 
         ebiModule.guiRenderer.getComboBox("categoryText", "Invoice").setModel(new DefaultComboBoxModel(invoiceCategory));
         ebiModule.guiRenderer.getComboBox("invoiceStatusText", "Invoice").setModel(new DefaultComboBoxModel(invoiceStatus));
@@ -489,17 +470,8 @@ public class EBICRMInvoice {
     }
 
     private void deleteInvoice(int id) {
-        boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlInvoice.dataDelete(id);
-            newInvoice();
-        }
+        dataControlInvoice.dataDelete(id);
+        newInvoice();
     }
 
     private boolean validateInput() {
@@ -526,30 +498,11 @@ public class EBICRMInvoice {
     }
 
     private void showInvoiceReport(int id) {
-        boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanPrint() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlInvoice.dataShowReport(id);
-        }
+       dataControlInvoice.dataShowReport(id);
     }
 
     public void mailInvoice(final int id){
-
-        boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanPrint() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlInvoice.dataShowAndMailReport(id, false);
-        }
+       dataControlInvoice.dataShowAndMailReport(id, false);
     }
 
     public void ebiNew(){

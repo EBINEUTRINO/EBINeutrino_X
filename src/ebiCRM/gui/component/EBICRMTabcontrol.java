@@ -1,21 +1,8 @@
 package ebiCRM.gui.component;
 
-
-import java.awt.Cursor;
-import java.awt.event.KeyEvent;
-
 import javax.swing.ImageIcon;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import ebiCRM.EBICRMModule;
-import ebiNeutrinoSDK.EBIPGFactory;
-import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
-import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
-import ebiNeutrinoSDK.interfaces.CloseableTabbedPaneListener;
-import ebiNeutrinoSDK.interfaces.IEBIContainer;
+
 
 public class EBICRMTabcontrol {
 

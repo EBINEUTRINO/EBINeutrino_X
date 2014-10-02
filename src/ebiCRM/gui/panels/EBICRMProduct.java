@@ -21,7 +21,6 @@ import org.jdesktop.swingx.sort.RowFilters;
 
 import ebiCRM.EBICRMModule;
 import ebiCRM.data.control.EBIDataControlProduct;
-import ebiCRM.gui.dialogs.EBICRMHistoryView;
 import ebiCRM.table.models.MyTableModelProduct;
 import ebiCRM.table.models.MyTableModelProductDependency;
 import ebiCRM.table.models.MyTableModelProperties;
@@ -352,7 +351,6 @@ public class EBICRMProduct  {
                     } else if (!productModel.data[selectedProductRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
                         ebiModule.guiRenderer.getButton("editProduct","Product").setEnabled(true);
                         ebiModule.guiRenderer.getButton("deleteProduct","Product").setEnabled(true);
-                        ebiModule.guiRenderer.getButton("historyProduct","Product").setEnabled(true);
                         ebiModule.guiRenderer.getButton("reportProduct","Product").setEnabled(true);
                         ebiModule.guiRenderer.getButton("copyProduct","Product").setEnabled(true);
                     }
@@ -474,19 +472,10 @@ public class EBICRMProduct  {
                 }
             });
 
-            ebiModule.guiRenderer.getButton("historyProduct","Product").setEnabled(false);
-            ebiModule.guiRenderer.getButton("historyProduct","Product").setIcon(EBIConstant.ICON_HISTORY);
-            ebiModule.guiRenderer.getButton("historyProduct","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    new EBICRMHistoryView(ebiModule.hcreator.retrieveDBHistory(Integer.parseInt(productModel.data[selectedProductRow][5].toString()), "Product"),ebiModule).setVisible();
-                }
-            });
-
             ebiModule.guiRenderer.getButton("saveProduct","Product").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                        ebiSave();
+               ebiSave();
                 }
             });
 
@@ -528,36 +517,26 @@ public class EBICRMProduct  {
     }
 
     public void saveProduct() {
-        boolean pass;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanSave() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            if (validateInput()) {
-              final Runnable  run = new Runnable(){	
-	            	public void run(){
-                      try{
-                            int row =0;
-                            if(isEdit){
-                                row = ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow();
-                            }
-                            dataControlProduct.dataStore(isEdit);
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {}
-                            ebiModule.guiRenderer.getTable("companyProductTable","Product").changeSelection(row,0,false,false);
-                      }catch(Exception ex){}
-	            	}
-              };
-              
-              Thread save = new Thread(run,"Save Product");
-              save.start();
-            }
-        }
+        if (validateInput()) {
+          final Runnable  run = new Runnable(){
+                public void run(){
+                  try{
+                        int row =0;
+                        if(isEdit){
+                            row = ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow();
+                        }
+                        dataControlProduct.dataStore(isEdit);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {}
+                        ebiModule.guiRenderer.getTable("companyProductTable","Product").changeSelection(row,0,false,false);
+                  }catch(Exception ex){}
+                }
+          };
 
+          Thread save = new Thread(run,"Save Product");
+          save.start();
+        }
     }
 
     private void editProduct(int id) {
@@ -566,17 +545,8 @@ public class EBICRMProduct  {
     }
 
     private void deleteProduct(int id) {
-        boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlProduct.dataDelete(id);
-            newProduct();
-        }
+        dataControlProduct.dataDelete(id);
+        newProduct();
     }
 
     private void showProduct() {
@@ -641,31 +611,11 @@ public class EBICRMProduct  {
     }
 
     private void deleteDimension(int id) {
-        boolean pass  ;
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanDelete() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlProduct.dataDeleteDimension(id);
-        }
+        dataControlProduct.dataDeleteDimension(id);
     }
 
     private void showProductReport(int id) {
-        
-        boolean pass;
-
-        if (ebiModule.ebiPGFactory.getIEBISystemUserRights().isCanPrint() ||
-                ebiModule.ebiPGFactory.getIEBISystemUserRights().isAdministrator()) {
-            pass = true;
-        } else {
-            pass = ebiModule.ebiPGFactory.getIEBISecurityInstance().secureModule();
-        }
-        if (pass) {
-            dataControlProduct.dataShowReport(id);
-        }
+        dataControlProduct.dataShowReport(id);
     }
 
     public void ebiNew(){

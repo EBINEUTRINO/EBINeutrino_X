@@ -1,7 +1,6 @@
 <BusinessModule Name="EBICRM">
- <includeGUI Name="Leads" title="EBI_LANG_C_LEADS" Path="Leads/leadsGUI.xml"/>
- <includeGUI Name="Invoice" title="EBI_LANG_C_TAB_INVOICE" Path="Invoice/invoiceGUI.xml"/>
- <includeGUI Name="Product" title="EBI_LANG_C_TAB_PRODUCT" Path="Product/productGUI.xml"/>
- <includeGUI Name="Account" title="EBI_LANG_C_TAB_ACCOUNT" Path="AccountStack/accountGUI.xml"/>
- <includeToolbar Name="ebiToolBar" Path="CRMToolbar/crmToolbar.xml"/>
+<includeGUI icon="company_big.png" Name="Leads" title="EBI_LANG_C_LEADS" Path="Leads/leadsGUI.xml"/>
+<includeGUI icon="invoice_big.png" Name="Invoice" title="EBI_LANG_C_TAB_INVOICE" Path="Invoice/invoiceGUI.xml"/>
+<includeGUI icon="product_big.png" Name="Product" title="EBI_LANG_C_TAB_PRODUCT" Path="Product/productGUI.xml"/>
+<includeGUI icon="account_big.png" Name="Account" title="EBI_LANG_C_TAB_ACCOUNT" Path="AccountStack/accountGUI.xml"/>
 </BusinessModule>

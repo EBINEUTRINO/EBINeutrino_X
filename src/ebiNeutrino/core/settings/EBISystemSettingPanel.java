@@ -14,7 +14,6 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import ebiNeutrino.core.EBIMain;
-import ebiNeutrino.core.GUIRenderer.EBIButton;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
@@ -36,7 +35,7 @@ public class EBISystemSettingPanel extends JPanel {
     private JComboBox jComboDateFormat = null;
     private JCheckBox isB2C = null;
     private JComboBox systemDate = null;
-    private EBIButton updateYear = null;
+    private JButton updateYear = null;
     private String selectedYear = "";
 
 
@@ -47,7 +46,7 @@ public class EBISystemSettingPanel extends JPanel {
         super();
         ebiMain = main;
         initialize();
-        setBackground(EBIPGFactory.systemColor);
+        setBackground(new Color(200,200,200));
 
         parseLanguageFileFromDir();
         EBIPropertiesRW properties = EBIPropertiesRW.getPropertiesInstance();
@@ -123,10 +122,10 @@ public class EBISystemSettingPanel extends JPanel {
         // A non-cyclic gradient
         GradientPaint gradient1 = new GradientPaint(0,0, sColor, getWidth(), 38, eColor);
         g2.setPaint(gradient1);
-        g2.setColor(EBIPGFactory.systemColor);
+        g2.setColor(new Color(200,200,200));
         g.fillRect(0, 46, getWidth(), getHeight());
 
-        g2.setColor(EBIPGFactory.systemColor);
+        g2.setColor(new Color(200,200,200));
 
         g.setColor(new Color(220,220,220));
 		g.drawLine(0, 45, getWidth(), 45);
@@ -278,7 +277,7 @@ public class EBISystemSettingPanel extends JPanel {
             jButtonSelectPath.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    File file = ebiMain._ebifunction.getOpenDialog(JFileChooser.FILES_ONLY);
+                    File file = ebiMain.system.getOpenDialog(JFileChooser.FILES_ONLY);
 
                     if (file != null) {
                         jtextPDFPath.setText(file.getAbsolutePath());
@@ -316,7 +315,7 @@ public class EBISystemSettingPanel extends JPanel {
             jButtonBrowserPath.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    File file = ebiMain._ebifunction.getOpenDialog(JFileChooser.FILES_ONLY);
+                    File file = ebiMain.system.getOpenDialog(JFileChooser.FILES_ONLY);
                     if (file != null) {
                         jtextBrowserPath.setText(file.getAbsolutePath());
                     }
@@ -361,7 +360,7 @@ public class EBISystemSettingPanel extends JPanel {
         setYearsToProperties();
 
         if (isSaved == true) {
-            ebiMain._ebifunction.reloadTranslationSystem();
+            ebiMain.system.reloadTranslationSystem();
         }
 
         EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_INFO_SETTING_SAVED")).Show(EBIMessage.INFO_MESSAGE);
@@ -411,7 +410,7 @@ public class EBISystemSettingPanel extends JPanel {
             jButtonOpenTextEditor.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    File file = ebiMain._ebifunction.getOpenDialog(JFileChooser.FILES_ONLY);
+                    File file = ebiMain.system.getOpenDialog(JFileChooser.FILES_ONLY);
                     if (file != null) {
                         jTextEditorPath.setText(file.getAbsolutePath());
                     }
@@ -518,9 +517,9 @@ public class EBISystemSettingPanel extends JPanel {
         return systemDate;
     }
 
-    private EBIButton getUpdateYear() {
+    private JButton getUpdateYear() {
         if (updateYear == null) {
-            updateYear = new EBIButton();
+            updateYear = new JButton();
             updateYear.setBounds(new Rectangle(370, 79, 100, 20));
             updateYear.setText(EBIPGFactory.getLANG("EBI_LANG_UPDATE"));
             updateYear.addActionListener(new ActionListener() {
@@ -596,8 +595,8 @@ public class EBISystemSettingPanel extends JPanel {
 
         properties.setValue("SELECTED_SYSTEMYEAR_TEXT", systemDate.getEditor().getItem().toString());
         properties.saveProperties();
-        ebiMain._ebifunction.updateSystemYears();
-        ebiMain.mng.reloadSelectedModule();
+        ebiMain.system.updateSystemYears();
+        ebiMain.mod_management.reloadSelectedModule();
     }
 
     private JCheckBox getUserAsB2C() {
