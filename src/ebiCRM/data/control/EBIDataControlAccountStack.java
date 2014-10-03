@@ -1,5 +1,6 @@
 package ebiCRM.data.control;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -167,11 +168,7 @@ public class EBIDataControlAccountStack {
                 acStackPanel.isEdit = true;
                 acStackPanel.ebiModule.ebiPGFactory.getDataStore("Account","ebiEdit",true);
                 acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
-                
-                acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").
-                				changeSelection(acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").
-                						convertRowIndexToView(acStackPanel.ebiModule.dynMethod.
-                									getIdIndexFormArrayInATable(acStackPanel.tabModAccount.data,6, id)),0,false,false);
+
             
             }else{
             	EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_RECORD_NOT_FOUND")).Show(EBIMessage.INFO_MESSAGE);
@@ -250,64 +247,78 @@ public class EBIDataControlAccountStack {
     }
 
     public void dataShow(final String invoiceYear){
-    	
-            int srow =  acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").getSelectedRow();
-            Query query;
-            try {
-                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
 
-                if(!"".equals(invoiceYear) && !"null".equals(invoiceYear)){
-                    Calendar calendar1 = new GregorianCalendar();
-                    calendar1.set(Calendar.DAY_OF_MONTH,1);
-                    calendar1.set(Calendar.MONTH,Calendar.JANUARY);
-                    calendar1.set(Calendar.YEAR,Integer.parseInt(invoiceYear));
+                    acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            int srow =  acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").getSelectedRow();
+                            Query query;
+                            try {
+                                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
 
-                    Calendar calendar2 = new GregorianCalendar();
-                    calendar2.set(Calendar.DAY_OF_MONTH,31);
-                    calendar2.set(Calendar.MONTH,Calendar.DECEMBER);
-                    calendar2.set(Calendar.YEAR,Integer.parseInt(invoiceYear));
+                                if(!"".equals(invoiceYear) && !"null".equals(invoiceYear)){
+                                    Calendar calendar1 = new GregorianCalendar();
+                                    calendar1.set(Calendar.DAY_OF_MONTH,1);
+                                    calendar1.set(Calendar.MONTH,Calendar.JANUARY);
+                                    calendar1.set(Calendar.YEAR,Integer.parseInt(invoiceYear));
 
-                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac where ac.accountdate between ? and ? order by ac.createddate desc ");
-                    query.setDate(0,calendar1.getTime());
-                    query.setDate(1, calendar2.getTime());
+                                    Calendar calendar2 = new GregorianCalendar();
+                                    calendar2.set(Calendar.DAY_OF_MONTH,31);
+                                    calendar2.set(Calendar.MONTH,Calendar.DECEMBER);
+                                    calendar2.set(Calendar.YEAR,Integer.parseInt(invoiceYear));
 
-                }else{
-                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac order by ac.createddate desc");
-                }
+                                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac where ac.accountdate between ? and ? order by ac.createddate desc ");
+                                    query.setDate(0,calendar1.getTime());
+                                    query.setDate(1, calendar2.getTime());
 
-                  if(query.list().size() > 0){
+                                }else{
+                                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac order by ac.createddate desc");
+                                }
 
-                        Iterator iter =  query.iterate();
+                                if(query.list().size() > 0){
 
-                        acStackPanel.tabModAccount.data = new Object[query.list().size()][8];
-                        String D = EBIPGFactory.getLANG("EBI_LANG_DEBIT").substring(0,3).toUpperCase();
-                        String C = EBIPGFactory.getLANG("EBI_LANG_CREDIT").substring(0,3).toUpperCase();
-                        int i = 0;
-                        while (iter.hasNext()) {
-                            Accountstack act = (Accountstack) iter.next();
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
-                            acStackPanel.tabModAccount.data[i][0] = act.getAccountType() == 1 ? D : C;
-                            acStackPanel.tabModAccount.data[i][1] = acStackPanel.ebiModule.ebiPGFactory.getDateToString(act.getAccountdate());
-                            acStackPanel.tabModAccount.data[i][2] = act.getAccountnr() == null ? "" : act.getAccountnr();
-                            acStackPanel.tabModAccount.data[i][3] = act.getAccountname() == null ? "" : act.getAccountname();
-                            acStackPanel.tabModAccount.data[i][4] = currency.format(act.getAccountvalue()) == null ? "" : currency.format(act.getAccountvalue());
-                            acStackPanel.tabModAccount.data[i][5] = act.getAccountDebit() == null ? "" :  act.getAccountDebit();
-                            acStackPanel.tabModAccount.data[i][6] = act.getAccountCredit() == null ? "" : act.getAccountCredit();
-                            acStackPanel.tabModAccount.data[i][7] = act.getAcstackid();
-                            i++;
+                                    Iterator iter =  query.iterate();
+
+                                    acStackPanel.tabModAccount.data = new Object[query.list().size()][8];
+                                    String D = EBIPGFactory.getLANG("EBI_LANG_DEBIT").substring(0,3).toUpperCase();
+                                    String C = EBIPGFactory.getLANG("EBI_LANG_CREDIT").substring(0,3).toUpperCase();
+                                    int i = 0;
+                                    while (iter.hasNext()) {
+                                        Accountstack act = (Accountstack) iter.next();
+                                        acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
+                                        acStackPanel.tabModAccount.data[i][0] = act.getAccountType() == 1 ? D : C;
+                                        acStackPanel.tabModAccount.data[i][1] = acStackPanel.ebiModule.ebiPGFactory.getDateToString(act.getAccountdate());
+                                        acStackPanel.tabModAccount.data[i][2] = act.getAccountnr() == null ? "" : act.getAccountnr();
+                                        acStackPanel.tabModAccount.data[i][3] = act.getAccountname() == null ? "" : act.getAccountname();
+                                        acStackPanel.tabModAccount.data[i][4] = currency.format(act.getAccountvalue()) == null ? "" : currency.format(act.getAccountvalue());
+                                        acStackPanel.tabModAccount.data[i][5] = act.getAccountDebit() == null ? "" :  act.getAccountDebit();
+                                        acStackPanel.tabModAccount.data[i][6] = act.getAccountCredit() == null ? "" : act.getAccountCredit();
+                                        acStackPanel.tabModAccount.data[i][7] = act.getAcstackid();
+                                        i++;
+                                    }
+                                }else{
+                                    acStackPanel.tabModAccount.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
+                                }
+                                acStackPanel.tabModAccount.fireTableDataChanged();
+                                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }finally {
+                                acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            }
+
+                            acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").changeSelection(srow,0,false,false);
+
                         }
-                  }else{
-                    acStackPanel.tabModAccount.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
-                  }
-                acStackPanel.tabModAccount.fireTableDataChanged();
-                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-
-            acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").changeSelection(srow,0,false,false);
-
-
+                    });
+                }
+            };
+        Thread thread = new Thread(run);
+        thread.start();
     }
 
     public void dataShowReport() {
@@ -634,15 +645,21 @@ public class EBIDataControlAccountStack {
          Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                     createQuery("from Accountstackcd where accountstackcdid=?").setInteger(0,id);
 
-            Iterator it = query.iterate();
-            if(it.hasNext()){
+           Iterator it = query.iterate();
+
+           if(it.hasNext()){
+
                Accountstackcd  actcd = (Accountstackcd) it.next();
 
-                double val = "".equals(acStackPanel.ebiModule.guiRenderer.
-                                                                getFormattedTextfield("amountText","Account").getText()) ? 0.0 :
-                                                Double.parseDouble(acStackPanel.ebiModule.guiRenderer.
-                                                                getFormattedTextfield("amountText","Account").getValue().toString());
+                double val = 0.0;
 
+
+               if(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").getValue()  != null) {
+                   val = "".equals(acStackPanel.ebiModule.guiRenderer.
+                           getFormattedTextfield("amountText", "Account").getText()) ? 0.0 :
+                           Double.parseDouble(acStackPanel.ebiModule.guiRenderer.
+                                   getFormattedTextfield("amountText", "Account").getValue().toString());
+               }
 
               if(actcd.getCreditdebittype() < 3){
 
@@ -708,81 +725,115 @@ public class EBIDataControlAccountStack {
        return exist;
     }
 
-    public void dataShowCreditDebitExt(int type) {
-        Query query;
-        try {
-                    if(type == 0){
-                        query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
-                                            createQuery("from Accountstackcd ");
-                    }else{
-                        query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
-                                           createQuery("from Accountstackcd where creditdebittype=?").setInteger(0,type);
-                    }
+    public void dataShowCreditDebitExt(final int type) {
 
-                    if(query.list().size() > 0){
-                        acStackPanel.creditDebitMod.data = new Object[query.list().size()][3];
-                        Iterator it = query.iterate();
-                        int i=0;
-                        while (it.hasNext()) {
+        Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Query query;
+                        try {
+                            if(type == 0){
+                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                        createQuery("from Accountstackcd ");
+                            }else{
+                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                        createQuery("from Accountstackcd where creditdebittype=?").setInteger(0,type);
+                            }
 
-                            Accountstackcd acCD = (Accountstackcd) it.next();
-                            acStackPanel.creditDebitMod.data[i][0] = acCD.getCreditdebitnumber() == null ? "" : acCD.getCreditdebitnumber();
-                            acStackPanel.creditDebitMod.data[i][1] = acCD.getCreditdebitname() == null ? "": acCD.getCreditdebitname();
-                            acStackPanel.creditDebitMod.data[i][2] = acCD.getAccountstackcdid();
-                            i++;
+                            if(query.list().size() > 0){
+                                acStackPanel.creditDebitMod.data = new Object[query.list().size()][3];
+                                Iterator it = query.iterate();
+                                int i=0;
+                                while (it.hasNext()) {
 
+                                    Accountstackcd acCD = (Accountstackcd) it.next();
+                                    acStackPanel.creditDebitMod.data[i][0] = acCD.getCreditdebitnumber() == null ? "" : acCD.getCreditdebitnumber();
+                                    acStackPanel.creditDebitMod.data[i][1] = acCD.getCreditdebitname() == null ? "": acCD.getCreditdebitname();
+                                    acStackPanel.creditDebitMod.data[i][2] = acCD.getAccountstackcdid();
+                                    i++;
+
+                                }
+                            }else{
+                                acStackPanel.creditDebitMod.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), ""}};
+                            }
+                            acStackPanel.creditDebitMod.fireTableDataChanged();
+
+                        } catch (HibernateException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
-                    }else{
-                        acStackPanel.creditDebitMod.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), ""}};
                     }
-                    acStackPanel.creditDebitMod.fireTableDataChanged();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                });
+            }
+        });
+
+        thr.start();
 
     }
 
-    public void dataShowCreditDebit(int type) {
-        Query query;
-        try {
-                if(type == 0){
-                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+    public void dataShowCreditDebit(final int type) {
+
+        Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Query query;
+                        try {
+                            if(type == 0){
+                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd ");
-                }else{
-                    String qs;
-                    if(type <3){
-                       qs = "from Accountstackcd where creditdebittype <=?";
-                    }else{
-                       qs = "from Accountstackcd where creditdebittype =?";
-                    }
+                            }else{
+                                String qs;
+                                if(type <3){
+                                    qs = "from Accountstackcd where creditdebittype <=?";
+                                }else{
+                                    qs = "from Accountstackcd where creditdebittype =?";
+                                }
 
-                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery(qs).setInteger(0,type);
-                }
-                    if(query.list().size() > 0){
-                        acStackPanel.creditDebitMod.data = new Object[query.list().size()][3];
-                        Iterator it = query.iterate();
-                        int i=0;
-                        while (it.hasNext()) {
+                            }
+                            if(query.list().size() > 0){
+                                acStackPanel.creditDebitMod.data = new Object[query.list().size()][3];
+                                Iterator it = query.iterate();
+                                int i=0;
+                                while (it.hasNext()) {
 
-                            Accountstackcd acCD = (Accountstackcd) it.next();
-                            acStackPanel.creditDebitMod.data[i][0] = acCD.getCreditdebitnumber() == null ? "" : acCD.getCreditdebitnumber();
-                            acStackPanel.creditDebitMod.data[i][1] = acCD.getCreditdebitname() == null ? "": acCD.getCreditdebitname();
-                            acStackPanel.creditDebitMod.data[i][2] = acCD.getAccountstackcdid();
-                            i++;
+                                    Accountstackcd acCD = (Accountstackcd) it.next();
+                                    acStackPanel.creditDebitMod.data[i][0] = acCD.getCreditdebitnumber() == null ? "" : acCD.getCreditdebitnumber();
+                                    acStackPanel.creditDebitMod.data[i][1] = acCD.getCreditdebitname() == null ? "": acCD.getCreditdebitname();
+                                    acStackPanel.creditDebitMod.data[i][2] = acCD.getAccountstackcdid();
+                                    i++;
 
+                                }
+                            }else{
+                                acStackPanel.creditDebitMod.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), ""}};
+                            }
+                            acStackPanel.creditDebitMod.fireTableDataChanged();
+                        } catch (HibernateException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
-                    }else{
-                        acStackPanel.creditDebitMod.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), ""}};
                     }
-                    acStackPanel.creditDebitMod.fireTableDataChanged();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                });
+            }
+        });
+
+        thr.start();
 
     }
 

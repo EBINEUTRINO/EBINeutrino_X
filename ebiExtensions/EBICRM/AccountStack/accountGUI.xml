@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <visualpanel name="Account" title="EBI_LANG_C_TAB_ACCOUNT" Location="0,0" Size="900,650" visualproperties="true" assignable="false" checkable="true" >
- <panel name="generalAccount" title="EBI_LANG_C_ACCOUNT_DATA" Location="11,0" Size="541,335">
-		<button name="saveAccount" tabindex="8" title="EBI_LANG_SAVE" Location="407,247" Size="122,29"/>
+ <panel name="generalAccount" title="EBI_LANG_C_ACCOUNT_DATA" Location="11,10" Size="541,335">
+		<button name="saveAccount" tabindex="8" title="EBI_LANG_SAVE" Location="409,238" Size="122,40"/>
 		<label name="date" title="EBI_LANG_DATE" Location="21,30" Size="100,20"/>
 		<label name="number" title="EBI_LANG_NUMBER" Location="201,31" Size="100,20"/>
 		<label name="name" title="EBI_LANG_NAME" Location="20,79" Size="100,20"/>
@@ -10,45 +10,44 @@
 		<label name="credit" title="EBI_LANG_DEPOSIT" Location="21,160" Size="100,20"/>
 		<label name="description" title="EBI_LANG_DESCRIPTION" Location="21,194" Size="100,20"/>
 		<textarea name="descriptionText" tabindex="7" Location="21,218" Size="378,81"/>
-		<timepicker name="dateText" tabindex="1" Location="22,52" Size="158,20"/>
-		<textfield name="numberText" tabindex="2" Location="200,52" Size="232,20"/>
-		<textfield name="nameText" tabindex="3" Location="20,101" Size="261,20"/>
-		<formattedtextfield name="amountText" tabindex="4" Location="311,101" Size="223,20"/>
-		<textfield name="debitText" tabindex="5" Location="126,131" Size="77,20"/>
-		<textfield name="creditText" tabindex="6" Location="126,160" Size="77,20"/>
-		<button name="selectDebit" Location="205,131" Size="25,20"/>
-		<button name="selectCredit" Location="205,160" Size="25,20"/>
-		<textfield name="descriptionDebit" background="#ebebfe" Location="233,131" Size="198,20"/>
-		<textfield name="descriptionCredit" background="#ebebfe" Location="234,160" Size="197,20"/>
-		<formattedtextfield name="debitCal" Location="434,131" Size="100,20"/>
-		<formattedtextfield name="creditCal" Location="434,160" Size="100,20"/>
+		<timepicker name="dateText" tabindex="1" Location="22,52" Size="158,22"/>
+		<textfield name="numberText" tabindex="2" Location="200,52" Size="232,22"/>
+		<textfield name="nameText" tabindex="3" Location="20,101" Size="261,22"/>
+		<formattedtextfield name="amountText" tabindex="4" Location="311,101" Size="223,22"/>
+		<textfield name="debitText" tabindex="5" Location="126,131" Size="77,22"/>
+		<textfield name="creditText" tabindex="6" Location="126,160" Size="77,22"/>
+		<button name="selectDebit" Location="205,131" Size="25,22"/>
+		<button name="selectCredit" Location="205,160" Size="25,22"/>
+		<textfield name="descriptionDebit" background="#ebebfe" Location="233,131" Size="198,22"/>
+		<textfield name="descriptionCredit" background="#ebebfe" Location="234,160" Size="197,22"/>
+		<formattedtextfield name="debitCal" Location="434,131" Size="100,22"/>
+		<formattedtextfield name="creditCal" Location="434,160" Size="100,22"/>
 </panel>
-<panel name="avAccount" title="EBI_LANG_C_AVAILABLE_ACCOUNT_DATA" Location="10,332" Size="100%,100%">
+<panel name="avAccount" title="EBI_LANG_C_AVAILABLE_ACCOUNT_DATA" Location="10,352" Size="100%,100%">
 		<table name="accountTable" Location="7,55" Size="100%,100%"/>
-		<button name="newAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="8,20" Size="31,27"/>
-		<button name="editAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="42,20" Size="31,27"/>
-		<button name="deleteAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="77,20" Size="31,27"/>
-		<button name="reportAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="112,20" Size="31,27"/>
-        <button name="importInvoices" i18ntooltip="EBI_LANG_C_TOOL_TIP_IMPORT_INVOICE"  Location="149,20" Size="31,27" />
-        <button name="taxButton" i18ntooltip="EBI_LANG_SHOW_TAX_INFOS" icon="../images/edit_dialog.png" Location="184,20" Size="31,27"/>
-		<label name="filterTable" title="EBI_LANG_FILTER" Location="268,23" Size="70,23"/>
-		<textfield name="filterTableText" Location="356,25" Size="261,20"/>
+		<button name="newAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="8,15" Size="35,35"/>
+		<button name="deleteAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="42,15"  Size="35,35"/>
+		<button name="reportAccount" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="77,15" Size="35,35"/>
+        <button name="importInvoices" i18ntooltip="EBI_LANG_C_TOOL_TIP_IMPORT_INVOICE"  Location="112,15"  Size="35,35" />
+        <button name="taxButton" i18ntooltip="EBI_LANG_SHOW_TAX_INFOS" icon="../images/edit_dialog.png" Location="149,15" Size="35,35"/>
+		<label name="filterTable" title="EBI_LANG_FILTER" Location="268,20" Size="70,23"/>
+		<textfield name="filterTableText" Location="356,18" Size="261,30"/>
 		<label name="invoiceYear" title="EBI_LANG_YEAR" Location="625,23" Size="66,20"/>
-		<combobox name="invoiceYearText" Location="690,23" Size="130,20"/>
-		<button name="updateYear" title="EBI_LANG_UPDATE" Location="828,19" Size="106,26"/>
+		<combobox name="invoiceYearText" Location="690,20" Size="130,27"/>
+		<button name="updateYear" title="EBI_LANG_UPDATE" Location="828,21" Size="136,26"/>
 </panel>
-<panel name="documentPanel" title="EBI_LANG_AVAILABLE_DOCUMENT" Location="555,0" Size="100%,137">
-		<button name="newAccountDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="10,20" Size="31,27"/>
-		<button name="showAccountDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="45,20" Size="31,27"/>
-		<button name="deleteAccountDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="80,20" Size="31,27"/>
+<panel name="documentPanel" title="EBI_LANG_AVAILABLE_DOCUMENT" Location="555,10" Size="100%,137">
+		<button name="newAccountDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="10,15" Size="35,35"/>
+		<button name="showAccountDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="45,15" Size="35,35"/>
+		<button name="deleteAccountDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="80,15" Size="35,35"/>
 		<table name="tableAccountDoc" Location="10,53" Size="100%,100%"/>
 </panel>
-<panel name="debCreditPanelList" title="EBI_LANG_DEBIT_CREDIT_LIST" Location="555,136" Size="100%,199">
+<panel name="debCreditPanelList" title="EBI_LANG_DEBIT_CREDIT_LIST" Location="555,146" Size="100%,199">
 		<table name="debCreditTable" Location="7,54" Size="100%,100%"/>
-		<button name="newCreditDebit" Location="8,20" Size="31,27"/>
-		<button name="editCreditDebit" Location="44,20" Size="31,27"/>
-		<button name="deleteCreditDebit" Location="80,20" Size="31,27"/>
-		<combobox name="selectCreditDebitText" Location="133,25" Size="188,20"/>
+		<button name="newCreditDebit" Location="8,15"  Size="35,35"/>
+		<button name="editCreditDebit" Location="44,15"  Size="35,35"/>
+		<button name="deleteCreditDebit" Location="80,15"  Size="35,35"/>
+		<combobox name="selectCreditDebitText" Location="133,18" Size="188,27"/>
 </panel>
 		<codecontrol name="groovy" path="EBICRM/showTax.groovy" classname="" />
 		<codecontrol name="groovy" path="EBICRM/ActionAccounting.groovy" classname="" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <visualpanel name="Leads" title="EBI_LANG_C_LEADS" Location="375,0" Size="900,650" visualproperties="true" assignable="false" >
- <panel name="companyData" title="EBI_LANG_COMPANY_DATA" Location="7,2" Size="602,325">
+ <panel name="companyData" title="EBI_LANG_COMPANY_DATA" Location="7,10" Size="602,325">
 		<label name="compName" title="EBI_LANG_COMPANY_NAME" Location="8,20" Size="100,20"/>
 		<textfield name="compNameText" tabindex="1" Location="110,20" Size="220,20"/>
 		<label name="comTelephon" title="EBI_LANG_TELEPHONE" Location="8,201" Size="100,20"/>
@@ -10,9 +10,9 @@
 		<label name="comInternet" title="EBI_LANG_INTERNET" Location="8,272" Size="100,20"/>
 		<textfield name="internetText" tabindex="14" Location="110,272" Size="220,20"/>
 		<label name="comEMail" title="EBI_LANG_EMAIL" Location="8,295" Size="100,20"/>
-		<textfield name="emailText" tabindex="15" Location="110,295" Size="220,20"/>
+		<textfield name="emailText" tabindex="15" Location="110,295" Size="220,21"/>
 		<label name="comClassification" title="EBI_LANG_CLASSIFICATION" Location="338,41" Size="100,20"/>
-		<combobox name="classificationText" tabindex="16" Location="441,41" Size="151,20"/>
+		<combobox name="classificationText" tabindex="16" Location="441,41" Size="151,21"/>
 		<label name="contactName" title="EBI_LANG_C_NAME" Location="8,88" Size="100,20"/>
 		<label name="surname" title="EBI_LANG_SURNAME" Location="8,111" Size="100,20"/>
 		<label name="strNr" title="EBI_LANG_STREET" Location="8,133" Size="100,20"/>
@@ -23,18 +23,18 @@
 		<textfield name="addressStrNrText" tabindex="7" Location="110,135" Size="220,20"/>
 		<textfield name="addressCityText" tabindex="9" Location="186,158" Size="144,20"/>
 		<textfield name="addressCountryText" tabindex="10" Location="110,181" Size="220,20"/>
-		<button name="saveLeads" tabindex="18" title="EBI_LANG_SAVE" Location="341,278" Size="133,29"/>
+		<button name="saveLeads" tabindex="18" title="EBI_LANG_SAVE" Location="341,278" Size="145,35"/>
 		<textarea name="descriptionText" tabindex="17" Location="338,65" Size="256,204"/>
 		<textfield name="addressZipText" tabindex="8" Location="110,158" Size="73,20"/>
 		<label name="gender" title="EBI_LANG_C_GENDER" Location="8,42" Size="100,20"/>
-		<combobox name="genderText" tabindex="2" Location="110,43" Size="121,20"/>
+		<combobox name="genderText" tabindex="2" Location="108,43" Size="121,21"/>
 		<textfield name="titleText" tabindex="3" Location="235,43" Size="95,20"/>
 		<label name="position" title="EBI_LANG_C_POSITION" Location="7,65" Size="100,20"/>
 		<textfield name="positionText" tabindex="4" Location="110,66" Size="220,20"/>
 		<label name="contactMobile" title="EBI_LANG_C_MOBILE_PHONE" Location="8,225" Size="100,20"/>
 		<textfield name="contactMobileText" tabindex="12" Location="110,227" Size="220,20"/>
 </panel>
-<panel name="availableLeads" title="EBI_LANG_AVAILABLE_LEADS" Location="8,325" Size="100%,100%">
+<panel name="availableLeads" title="EBI_LANG_AVAILABLE_LEADS" Location="7,340" Size="100%,100%">
 		<table name="leadsTable" Location="10,52" Size="100%,100%">
 		<column name="" title="EBI_LANG_COMPANY_NAME" Location="0,0" Size="0,0"/>
 		<column name="" title="EBI_LANG_C_GENDER" Location="0,0" Size="0,0"/>
@@ -48,11 +48,10 @@
 		<column name="" title="EBI_LANG_EMAIL" Location="0,0" Size="0,0"/>
 		<column name="" title="EBI_LANG_CLASSIFICATION" Location="0,0" Size="0,0"/>
 </table>
-		<button name="newLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="10,18" Size="31,27"/>
-		<button name="editLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="44,18" Size="31,27"/>
-		<button name="copyLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="78,18" Size="31,27"/>
-		<button name="deleteLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="113,18" Size="31,27"/>
-		<textfield name="searchLeadsText" Location="328,22" Size="430,20"/>
+		<button name="newLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="10,14" Size="35,35"/>
+		<button name="copyLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="44,14" Size="35,35"/>
+		<button name="deleteLeads" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="78,14" Size="35,35"/>
+		<textfield name="searchLeadsText" Location="328,20" Size="430,25"/>
 		<label name="searchLead" title="EBI_LANG_SEARCH_LEADS" Location="248,22" Size="77,20"/>
 </panel>
 <panel name="businessCard" background="#fffdff" Location="615,62" Size="403,192">

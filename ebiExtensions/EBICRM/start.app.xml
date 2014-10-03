@@ -1,4 +1,4 @@
 
 <AppModule Name="EBICRM">
-<application icon="app_big.png" name="groovy" title="Execute Hallo world" path="EBICRM/start_app.groovy" />
+<application icon="app_big.png" name="groovy" title="Settings" path="EBICRM/start_app.groovy" />
 </AppModule>

@@ -201,14 +201,6 @@ public class EBICRMInvoice {
         });
 
 
-        ebiModule.guiRenderer.getButton("editInvoice","Invoice").setIcon(EBIConstant.ICON_EDIT);
-        ebiModule.guiRenderer.getButton("editInvoice","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getButton("editInvoice","Invoice").addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent event){
-                  editInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
-            }
-        });
-
         ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setIcon(EBIConstant.ICON_DELETE);
         ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(false);
         ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").addActionListener(new ActionListener(){
@@ -267,22 +259,16 @@ public class EBICRMInvoice {
                     }
                    try{
                         if (lsm.isSelectionEmpty()) {
-                            ebiModule.guiRenderer.getButton("editInvoice","Invoice").setEnabled(false);
                             ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(false);
-                            ebiModule.guiRenderer.getButton("historyInvoice","Invoice").setEnabled(false);
                             ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(false);
                             ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(false);
-                        } else if (!model.data[selectedInvoiceRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                            ebiModule.guiRenderer.getButton("editInvoice","Invoice").setEnabled(true);
+                        }else if (!model.data[selectedInvoiceRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
                             ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(true);
-                            ebiModule.guiRenderer.getButton("historyInvoice","Invoice").setEnabled(true);
                             ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(true);
                             ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(true);
                         }
                    }catch(ArrayIndexOutOfBoundsException ex){
-                        ebiModule.guiRenderer.getButton("editInvoice","Invoice").setEnabled(false);
                         ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(false);
-                        ebiModule.guiRenderer.getButton("historyInvoice","Invoice").setEnabled(false);
                         ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(false);
                         ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(false);
                    }
@@ -292,14 +278,7 @@ public class EBICRMInvoice {
             new JTableActionMaps(ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice")).setTableAction(new AbstractTableKeyAction() {
 
                 public void setDownKeyAction(int selRow) {
-                    selectedInvoiceRow = selRow;
-                }
 
-                public void setUpKeyAction(int selRow) {
-                    selectedInvoiceRow = selRow;
-                }
-
-                public void setEnterKeyAction(int selRow) {
                     selectedInvoiceRow = selRow;
 
                     if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
@@ -307,31 +286,41 @@ public class EBICRMInvoice {
                         return;
                     }
                     editInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
-                    ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").grabFocus();
+                }
+
+                public void setUpKeyAction(int selRow) {
+                    selectedInvoiceRow = selRow;
+
+                    if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                            equals(model.data[selectedInvoiceRow][0].toString())) {
+                        return;
+                    }
+                    editInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
+                }
+
+                public void setEnterKeyAction(int selRow) {
+
                 }
             });
-
 
             ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").addMouseListener(new java.awt.event.MouseAdapter() {
 
-                public void mouseClicked(java.awt.event.MouseEvent e) {
-                    
-                   if(ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").rowAtPoint(e.getPoint()) != -1){
-                        selectedInvoiceRow = ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").rowAtPoint(e.getPoint()));
-                   }
+                public void mouseReleased(java.awt.event.MouseEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
 
-                   if (e.getClickCount() == 2) {
-
-                        if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                                equals(model.data[selectedInvoiceRow][0].toString())) {
+                        if (ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(model.data[selectedInvoiceRow][0].toString())) {
                             return;
                         }
-
+                        selectedInvoiceRow = ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectedRow());
                         editInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
-                        ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").grabFocus();
-                   }
+                        }
+                    });
+
                 }
             });
+
     }
 
 
@@ -378,8 +367,6 @@ public class EBICRMInvoice {
         ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setForeground(new Color(255,40,40));
         ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
 
-        ebiModule.guiRenderer.getButton("selectOrder","Invoice").setEnabled(false);
-
         ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").setModel(tabModProduct);
 
         TableColumn col7 = ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").getColumnModel().getColumn(5);
@@ -401,8 +388,6 @@ public class EBICRMInvoice {
 
         ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setText("");
         ebiModule.guiRenderer.getTextfield("invoiceNameText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("orderText","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getTextfield("orderText","Invoice").setText("");
 
         ebiModule.guiRenderer.getComboBox("genderText","Invoice").setModel(new DefaultComboBoxModel(EBICRMModule.gendersList));
         ebiModule.guiRenderer.getComboBox("genderText","Invoice").setSelectedIndex(0);

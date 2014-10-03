@@ -102,8 +102,6 @@ public class EBICRMModule implements IEBIExtension {
     public EBICRMLead getLeadPane() {
         if (leadsPane == null) {
             leadsPane = new EBICRMLead(this);
-            leadsPane.initialize();
-            leadsPane.initializeAction();
             ebiPGFactory.setDataStore("Leads",leadsPane);
         }
         return leadsPane;

@@ -199,7 +199,6 @@ public class EBICRMProduct  {
                     }
 
                     editDimension(Integer.parseInt(productModelDimension.data[selectedDimensionRow][2].toString()));
-
                 }
             });
 
@@ -343,13 +342,10 @@ public class EBICRMProduct  {
                      }catch(IndexOutOfBoundsException ex){}
                     }
                     if (lsm.isSelectionEmpty()) {
-                        ebiModule.guiRenderer.getButton("editProduct","Product").setEnabled(false);
                         ebiModule.guiRenderer.getButton("deleteProduct","Product").setEnabled(false);
-                        ebiModule.guiRenderer.getButton("historyProduct","Product").setEnabled(false);
                         ebiModule.guiRenderer.getButton("reportProduct","Product").setEnabled(false);
                         ebiModule.guiRenderer.getButton("copyProduct","Product").setEnabled(false);
                     } else if (!productModel.data[selectedProductRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                        ebiModule.guiRenderer.getButton("editProduct","Product").setEnabled(true);
                         ebiModule.guiRenderer.getButton("deleteProduct","Product").setEnabled(true);
                         ebiModule.guiRenderer.getButton("reportProduct","Product").setEnabled(true);
                         ebiModule.guiRenderer.getButton("copyProduct","Product").setEnabled(true);
@@ -361,45 +357,43 @@ public class EBICRMProduct  {
 
                 public void setDownKeyAction(int selRow) {
                     selectedProductRow = selRow;
-                }
-
-                public void setUpKeyAction(int selRow) {
-                    selectedProductRow = selRow;
-                }
-
-                public void setEnterKeyAction(int selRow) {
-                    selectedProductRow = selRow;
-
-
                     if (selectedProductRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                             equals(productModel.data[selectedProductRow][0].toString())) {
                         return;
                     }
 
                     editProduct(Integer.parseInt(productModel.data[selectedProductRow][5].toString()));
-                    ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").grabFocus();
                 }
+
+                public void setUpKeyAction(int selRow){
+                    selectedProductRow = selRow;
+                    if (selectedProductRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                            equals(productModel.data[selectedProductRow][0].toString())) {
+                        return;
+                    }
+
+                    editProduct(Integer.parseInt(productModel.data[selectedProductRow][5].toString()));
+                }
+
+                public void setEnterKeyAction(int selRow) {}
             });
+
 
             ebiModule.guiRenderer.getTable("companyProductTable","Product").addMouseListener(new java.awt.event.MouseAdapter() {
 
-                public void mouseClicked(java.awt.event.MouseEvent e) {
-                    
-                    if(ebiModule.guiRenderer.getTable("companyProductTable","Product").rowAtPoint(e.getPoint()) != -1){
-                        selectedProductRow = ebiModule.guiRenderer.getTable("companyProductTable","Product").convertRowIndexToModel(ebiModule.guiRenderer.getTable("companyProductTable","Product").rowAtPoint(e.getPoint()));
-                    }
+                public void mouseReleased(java.awt.event.MouseEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
 
-                    if (e.getClickCount() == 2) {
-
-                        if (selectedProductRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                                equals(productModel.data[selectedProductRow][0].toString())) {
-                            return;
+                            if (ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(productModel.data[selectedProductRow][0].toString())) {
+                                return;
+                            }
+                            selectedProductRow = ebiModule.guiRenderer.getTable("companyProductTable","Product").convertRowIndexToModel(ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow());
+                            editProduct(Integer.parseInt(productModel.data[selectedProductRow][5].toString()));
                         }
+                    });
 
-                        editProduct(Integer.parseInt(productModel.data[selectedProductRow][5].toString()));
-                        ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").grabFocus();
-
-                    }
                 }
             });
 
@@ -423,21 +417,6 @@ public class EBICRMProduct  {
                     }
                     
                     dataControlProduct.dataCopy(Integer.parseInt(productModel.data[selectedProductRow][5].toString()));
-                }
-            });
-
-            ebiModule.guiRenderer.getButton("editProduct","Product").setIcon(EBIConstant.ICON_EDIT);
-            ebiModule.guiRenderer.getButton("editProduct","Product").setEnabled(false);
-            ebiModule.guiRenderer.getButton("editProduct","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (selectedProductRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                            equals(productModel.data[selectedProductRow][0].toString())) {
-                        return;
-                    }
-
-                    editProduct(Integer.parseInt(productModel.data[selectedProductRow][5].toString()));
-                    ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").grabFocus();
                 }
             });
 

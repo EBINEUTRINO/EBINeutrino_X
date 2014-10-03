@@ -2,49 +2,48 @@
 <visualpanel name="Product" title="EBI_LANG_C_TAB_PRODUCT" Location="0,0" Size="900,800" visualproperties="true" assignable="false" checkable="true" >
  <panel name="ProductData" title="EBI_LANG_C_TAB_PRODUCT" Location="7,8" Size="100%,464">
 		<label name="ProductNr" title="EBI_LANG_PRODUCT_NUMBER" Location="9,18" Size="105,20"/>
-		<textfield name="ProductNrTex" tabindex="1" Location="115,18" Size="245,20"/>
+		<textfield name="ProductNrTex" tabindex="1" Location="115,18" Size="245,23"/>
 		<label name="ProductName" title="EBI_LANG_NAME" Location="9,43" Size="105,20"/>
-		<textfield name="ProductNameText" tabindex="2" Location="115,43" Size="245,20"/>
-		<label name="ProductCategory" title="EBI_LANG_CATEGORY" Location="9,68" Size="105,20"/>
-		<combobox name="ProductCategoryText" tabindex="3" Location="115,68" Size="245,20"/>
-		<label name="ProductType" title="EBI_LANG_TYPE" Location="9,93" Size="104,20"/>
-		<combobox name="ProductTypeText" tabindex="4" Location="115,93" Size="245,20"/>
+		<textfield name="ProductNameText" tabindex="2" Location="115,45" Size="245,23"/>
+		<label name="ProductCategory" title="EBI_LANG_CATEGORY" Location="9,69" Size="105,20"/>
+		<combobox name="ProductCategoryText" tabindex="3" Location="115,72" Size="245,21"/>
+		<label name="ProductType" title="EBI_LANG_TYPE" Location="9,95" Size="104,20"/>
+		<combobox name="ProductTypeText" tabindex="4" Location="115,98" Size="245,21"/>
 <panel name="taxPanel" title="EBI_LANG_PRICE" Location="388,8" Size="434,126">
 		<label name="productTaxType" title="EBI_LANG_TAX_TYPE" Location="9,18" Size="113,20"/>
-		<combobox name="productTaxTypeTex" editable="false" tabindex="5" Location="115,18" Size="245,20"/>
+		<combobox name="productTaxTypeTex" editable="false" tabindex="5" Location="111,18" Size="253,22"/>
 		<label name="productGross" title="EBI_LANG_PRE_TAX_PRICE" Location="9,43" Size="113,20"/>
-		<formattedtextfield name="productGrossText" tabindex="6" Location="115,43" Size="245,20"/>
-		<button name="calcClear" Location="370,68" Size="25,20"/>
+		<formattedtextfield name="productGrossText" tabindex="6" Location="115,43" Size="245,23"/>
 		<label name="productNetamout" title="EBI_LANG_CLEAR_PRICE" Location="9,68" Size="113,20"/>
-		<formattedtextfield name="productNetamoutText" tabindex="7" Location="115,68" Size="245,20"/>
-		<button name="calcGross" Location="370,43" Size="25,20"/>
+		<formattedtextfield name="productNetamoutText" tabindex="7" Location="115,68" Size="245,23"/>
+        <button name="calcClear" Location="370,68" Size="35,35"/>
+        <button name="calcGross" Location="370,35" Size="35,35"/>
 		<label name="salePrice" title="EBI_LANG_SALE_PRICE" Location="10,94" Size="112,20"/>
-		<formattedtextfield name="salePriceText" tabindex="8" Location="115,94" Size="245,20"/>
+		<formattedtextfield name="salePriceText" tabindex="8" Location="115,94" Size="245,23"/>
 </panel>
-		<button name="newProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_PROPERTIES" Location="8,144" Size="31,27"/>
-		<button name="editProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="41,144" Size="31,27"/>
-		<button name="deleteProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="76,144" Size="31,27"/>
+		<button name="newProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_PROPERTIES" Location="8,138" Size="35,35"/>
+		<button name="editProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="41,138" Size="35,35"/>
+		<button name="deleteProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="76,138" Size="35,35"/>
 		<table name="ProductPropertiesTable" Location="9,175" Size="355,120"/>
-		<label name="productPropertiesLabel" title="EBI_LANG_PROPERTIES" Location="110,147" Size="113,20"/>
-		<button name="newRelation" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_RELATION" Location="12,306" Size="31,27"/>
-		<button name="deleteRelation" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="46,306" Size="31,27"/>
+		<label name="productPropertiesLabel" title="EBI_LANG_PROPERTIES" Location="120,149" Size="113,20"/>
+		<button name="newRelation" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_RELATION" Location="10,300" Size="35,35"/>
+		<button name="deleteRelation" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="44,300" Size="35,35"/>
 		<table name="ProductRelationTable" Location="9,337" Size="355,120"/>
-		<label name="productRelationLabel" title="EBI_LANG_PRODUCT_DEPENDENCY" Location="80,310" Size="113,20"/>
-		<button name="saveProduct" tabindex="10" title="EBI_LANG_SAVE" Location="393,427" Size="141,27"/>
+		<label name="productRelationLabel" title="EBI_LANG_PRODUCT_DEPENDENCY" Location="90,310" Size="113,20"/>
+		<button name="saveProduct" tabindex="10" title="EBI_LANG_SAVE" Location="390,422" Size="160,35"/>
 		<table name="productDoc" Location="392,175" Size="100%,241"/>
-		<button name="newProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="393,144" Size="31,27"/>
-		<button name="showProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="430,144" Size="31,27"/>
-		<button name="deleteProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="467,144" Size="31,27"/>
+		<button name="newProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="393,138" Size="35,35"/>
+		<button name="showProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="430,138" Size="35,35"/>
+		<button name="deleteProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="467,138" Size="35,35"/>
 </panel>
 <panel name="avProduct" title="EBI_LANG_C_AVAILABLE_PRODUCT" Location="6,647" Size="100%,100%">
 		<table name="companyProductTable" Location="8,52" Size="100%,100%"/>
-		<button name="newProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="9,19" Size="31,27"/>
-		<button name="editProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="44,19" Size="31,27"/>
-		<button name="copyProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="79,19" Size="31,27"/>
-		<button name="deleteProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="114,19" Size="31,27"/>
-		<button name="reportProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="150,19" Size="31,27"/>
+		<button name="newProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="9,15" Size="35,35"/>
+		<button name="copyProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="44,15"  Size="35,35"/>
+		<button name="deleteProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="79,15" Size="35,35"/>
+		<button name="reportProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_REPORT" Location="114,15" Size="35,35"/>
 		<label name="filterTable" title="EBI_LANG_FILTER" Location="285,19" Size="77,23"/>
-		<textfield name="filterTableText" Location="364,20" Size="381,20"/>
+		<textfield name="filterTableText" Location="364,14" Size="400,30"/>
 </panel>
 <panel name="descriptionPanel" title="EBI_LANG_DESCRIPTION" Location="6,477" Size="100%,163">
 		<textarea name="productDescription" tabindex="9" Location="9,29" Size="100%,100%"/>

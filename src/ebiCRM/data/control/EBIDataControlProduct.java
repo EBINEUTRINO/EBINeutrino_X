@@ -313,55 +313,67 @@ public class EBIDataControlProduct {
     }
 
     public void dataShow() {
+        Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                productPane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ResultSet set = null;
 
-        ResultSet set = null;
+                        try {
+                            int srow = productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow();
+                            PreparedStatement ps = productPane.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT PRODUCTID,PRODUCTNR,PRODUCTNAME,CATEGORY,TYPE,DESCRIPTION FROM CRMPRODUCT ORDER BY CREATEDDATE DESC");
+                            set = productPane.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
 
-        try {
+                            if (set != null) {
+                                set.last();
+                                productPane.productModel.data = new Object[set.getRow()][6];
 
-            int srow = productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow();
-            PreparedStatement ps = productPane.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT PRODUCTID,PRODUCTNR,PRODUCTNAME,CATEGORY,TYPE,DESCRIPTION FROM CRMPRODUCT ORDER BY CREATEDDATE DESC");
-            set = productPane.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+                                if (set.getRow() > 0) {
+                                    set.beforeFirst();
+                                    int i = 0;
+                                    while (set.next()) {
 
-            if (set != null) {
-                set.last();
-                productPane.productModel.data = new Object[set.getRow()][6];
+                                        productPane.productModel.data[i][0] = set.getString("PRODUCTNR") == null ? "" : set.getString("PRODUCTNR");
+                                        productPane.productModel.data[i][1] = set.getString("PRODUCTNAME") == null ? "" : set.getString("PRODUCTNAME");
+                                        productPane.productModel.data[i][2] = set.getString("CATEGORY") == null ? "" : set.getString("CATEGORY");
+                                        productPane.productModel.data[i][3] = set.getString("TYPE") == null ? "" : set.getString("TYPE");
+                                        productPane.productModel.data[i][4] = set.getString("DESCRIPTION") == null ? "" : set.getString("DESCRIPTION");
+                                        productPane.productModel.data[i][5] = set.getInt("PRODUCTID");
+                                        i++;
+                                    }
 
-                if (set.getRow() > 0) {
-                    set.beforeFirst();
-                    int i = 0;
-                    while (set.next()) {
+                                } else {
+                                    productPane.productModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
+                                }
 
-                        productPane.productModel.data[i][0] = set.getString("PRODUCTNR") == null ? "" : set.getString("PRODUCTNR");
-                        productPane.productModel.data[i][1] = set.getString("PRODUCTNAME") == null ? "" : set.getString("PRODUCTNAME");
-                        productPane.productModel.data[i][2] = set.getString("CATEGORY") == null ? "" : set.getString("CATEGORY");
-                        productPane.productModel.data[i][3] = set.getString("TYPE") == null ? "" : set.getString("TYPE");
-                        productPane.productModel.data[i][4] = set.getString("DESCRIPTION") == null ? "" : set.getString("DESCRIPTION");
-                        productPane.productModel.data[i][5] = set.getInt("PRODUCTID");
-                        i++;
+                            } else {
+                                productPane.productModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
+                            }
+                            productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").changeSelection(srow,0,false,false);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        } finally {
+                            if(set != null){
+                                try {
+                                    set.close();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            productPane.productModel.fireTableDataChanged();
+                            productPane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        }
                     }
-
-                } else {
-                    productPane.productModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
-                }
-
-            } else {
-                productPane.productModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
+                });
             }
-            productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").changeSelection(srow,0,false,false);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            if(set != null){
-                try {
-                    set.close();
-                } catch (SQLException e) {
-                    e.printStackTrace(); 
-                }
-            }
-            productPane.productModel.fireTableDataChanged();
-        }
+        });
+
+        thr.start();
 
     }
     
@@ -411,7 +423,6 @@ public class EBIDataControlProduct {
         dataShowDependency();
         dataShowDimension();
         dataShowDoc();
-        dataShow();
       }catch (Exception ex){}
 
     }

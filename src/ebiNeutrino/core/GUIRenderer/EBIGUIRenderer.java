@@ -57,6 +57,10 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
     private int projectCount = 0;
     private int projectCountEnabled = 0;
     private EBISaveRestoreTableProperties tabProp = null;
+    private JXTable actualTable = null;
+    private String actualCmpStr = "";
+    private String[] roots=null;
+    private GroovyScriptEngine gse = null;
 
 
     public EBIGUIRenderer(EBIMain main) {
@@ -65,6 +69,12 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         focusTraversal = new EBIFocusTraversalPolicy();
         componentGet = new Hashtable<String,Integer>();
         tabProp = new EBISaveRestoreTableProperties();
+        roots = new String[] { "ebiExtensions/" };
+        try {
+            gse = new GroovyScriptEngine(roots);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void init(){
@@ -436,7 +446,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 jlist.setName(bean.getName());
                 jlist.setFont(new Font("Verdana", Font.PLAIN, 10));
                 jlist.setDoubleBuffered(true);
-
+                jlist.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 JScrollPane scr = new JScrollPane();
                 scr.setViewportView(jlist);
                 scr.setName(bean.getName());
@@ -481,6 +491,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
             	
                 JTextField textField = new JTextField();
                 textField.setDoubleBuffered(true);
+                textField.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
                    textField.setText(EBIPGFactory.getLANG(bean.getTitle()));
                 }else{
@@ -712,6 +723,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 
                 JTextArea textArea = new JTextArea();
                 textArea.setFont(new Font("Verdana", Font.PLAIN, 10));
+                textArea.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(bean.getTitle().indexOf("EBI_LANG") != -1){
                     textArea.setText(EBIPGFactory.getLANG(bean.getTitle()));
                 }else{
@@ -734,6 +746,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setViewportView(textArea);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
+                scr.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     textArea.setBackground(bean.getColor());
@@ -792,6 +805,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setViewportView(editPane);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
+                scr.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     editPane.setBackground(bean.getColor());
@@ -905,7 +919,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 JScrollPane scr = new JScrollPane(jtable,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scr.setName(bean.getName());
                 scr.setDoubleBuffered(true);
-
+                scr.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(!bean.isVisible()){
                     scr.setVisible(bean.isVisible());
                 }
@@ -986,6 +1000,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 scr.setName(bean.getName());
                 scr.setViewportView(jtable);
                 scr.setDoubleBuffered(true);
+                scr.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(bean.getColor() != null){
                     scr.setBackground(bean.getColor());
                     jtable.setBackground(bean.getColor());
@@ -1023,7 +1038,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 timePicker.setEnabled(bean.isEnabled());
                 timePicker.setFormats(EBIPGFactory.DateFormat);
                 timePicker.setDoubleBuffered(true);
-
+                timePicker.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(!"".equals(bean.getI18NToolTip())){
                     timePicker.setToolTipText(EBIPGFactory.getLANG(bean.getI18NToolTip()));
                 }
@@ -1062,6 +1077,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 spinner.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 spinner.setDoubleBuffered(true);
                 SpinnerNumberModel model = new SpinnerNumberModel();
+                spinner.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 model.setMaximum(bean.getMax());
                 model.setMinimum(bean.getMin());
 
@@ -1104,6 +1120,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                 progressBar.setName(bean.getName());
                 progressBar.setEnabled(bean.isEnabled());
                 progressBar.setDoubleBuffered(true);
+                progressBar.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
                 if(!"".equals(bean.getI18NToolTip())){
                     progressBar.setToolTipText(EBIPGFactory.getLANG(bean.getI18NToolTip()));
                 }
@@ -1228,6 +1245,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
     public  void showGUI() {
          try{
+           ebiMain.setCursor(new Cursor(Cursor.WAIT_CURSOR));
            if(canShow){
                if(componentsTable.get(mainComponentName) != null){
                     EBIGUIWidgetsBean list = componentsTable.get(mainComponentName);
@@ -1253,19 +1271,14 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                     }
                     initScript();
 
-                       SwingUtilities.invokeLater(new Runnable() {
-                           @Override
-                           public void run() {
-                               excScript("app");
-                           }
-                       });
-
                     isInit = false;
                     fileToTabPath = "";
                }
            }
+           ebiMain.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
          }catch(Exception ex){
              ex.printStackTrace();
+             ebiMain.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
          }
     }
 
@@ -1281,7 +1294,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         excScript(mainComponentName);
     }
 
-    public  synchronized  void excScript(final String componentName){
+    public void excScript(final String componentName){
       if(scriptContainer.get(componentName) != null){
         Iterator iter = scriptContainer.get(componentName).iterator();
         while (iter.hasNext()) {
@@ -1290,60 +1303,71 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
             if("groovy".equals(script.getType()) && !script.isExecuted()){
 
-                       try{
-                           String[] roots = new String[] { "ebiExtensions/" };
-                           GroovyScriptEngine gse = new GroovyScriptEngine(roots);
-                           Binding binding = new Binding();
-                           binding.setVariable("system", ebiMain.system);
-                           binding.setVariable("core", ebiMain);
+                    Thread thr = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try{
 
-                           if(resizeContainer.get(componentName) != null){
-                               for(int i=0; i< resizeContainer.get(componentName).size(); i++){
-                                   EBIGUINBean bx = (EBIGUINBean) resizeContainer.get(componentName).get(i);
-                                   binding.setVariable(componentName+"_"+bx.getName(),bx.getComponent() );
-                               }
-                           }else{
-                                Iterator itx = resizeContainer.keySet().iterator();
-                                while(itx.hasNext()){
-                                   String compName = (String)itx.next();
-                                   for(int i=0; i< resizeContainer.get(compName).size(); i++){
-                                       EBIGUINBean bx = (EBIGUINBean) resizeContainer.get(compName).get(i);
-                                       binding.setVariable(compName+"_"+bx.getName(),bx.getComponent() );
-                                   }
+                                        Binding binding = new Binding();
+                                        binding.setVariable("system", ebiMain.system);
+                                        binding.setVariable("core", ebiMain);
+
+                                        if(resizeContainer.get(componentName) != null){
+                                            for(int i=0; i< resizeContainer.get(componentName).size(); i++){
+                                                EBIGUINBean bx = (EBIGUINBean) resizeContainer.get(componentName).get(i);
+                                                binding.setVariable(componentName+"_"+bx.getName(),bx.getComponent() );
+                                            }
+                                        }else{
+                                            Iterator itx = resizeContainer.keySet().iterator();
+                                            while(itx.hasNext()){
+                                                String compName = (String)itx.next();
+                                                for(int i=0; i< resizeContainer.get(compName).size(); i++){
+                                                    EBIGUINBean bx = (EBIGUINBean) resizeContainer.get(compName).get(i);
+                                                    binding.setVariable(compName+"_"+bx.getName(),bx.getComponent() );
+                                                }
+                                            }
+                                        }
+                                        gse.run(script.getPath(),binding);
+
+                                        Script scr = gse.createScript(script.getPath(),binding);
+
+                                        if(!"app".equals(componentName)){
+                                            if(scr.getMetaClass().getMetaMethod("ebiEdit",null) != null ||
+                                                    scr.getMetaClass().getMetaMethod("ebiDelete",null) != null ||
+                                                    scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
+                                                    scr.getMetaClass().getMetaMethod("ebiSave",null) != null){
+
+                                                ebiMain.system.setDataStore(componentName, scr);
+                                            }
+                                        }else{
+
+                                            if(scr.getMetaClass().getMetaMethod("ebiEdit",null) != null ||
+                                                    scr.getMetaClass().getMetaMethod("ebiDelete",null) != null ||
+                                                    scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
+                                                    scr.getMetaClass().getMetaMethod("ebiSave",null) != null){
+                                                String cmpName = "";
+                                                cmpName =(String)scr.getMetaClass().invokeMethod(scr,"useComponent",null);
+                                                if(!"".equals(cmpName)){
+                                                    ebiMain.system.setDataStore(cmpName, scr);
+                                                }
+                                            }
+                                        }
+
+                                        script.setExecuted(true);
+                                    }
+                                    catch(ResourceException ex){ EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE); }
+                                    catch(ScriptException ex){ EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE); }
+                                    catch(Exception ex){ EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE); }
+                                    catch(NoClassDefFoundError e){ EBIExceptionDialog.getInstance(e.getMessage()).Show(EBIMessage.ERROR_MESSAGE);}
                                 }
-                           }
-                           gse.run(script.getPath(),binding);
+                            });
+                        }
+                    });
 
-                           Script scr = gse.createScript(script.getPath(),binding);
-
-                           if(!"app".equals(componentName)){
-                               if(scr.getMetaClass().getMetaMethod("ebiEdit",null) != null ||
-                                       scr.getMetaClass().getMetaMethod("ebiDelete",null) != null ||
-                                       scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
-                                       scr.getMetaClass().getMetaMethod("ebiSave",null) != null){
-
-                                   ebiMain.system.setDataStore(componentName, scr);
-                               }
-                           }else{
-
-                               if(scr.getMetaClass().getMetaMethod("ebiEdit",null) != null ||
-                                       scr.getMetaClass().getMetaMethod("ebiDelete",null) != null ||
-                                       scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
-                                       scr.getMetaClass().getMetaMethod("ebiSave",null) != null){
-                                   String cmpName = "";
-                                   cmpName =(String)scr.getMetaClass().invokeMethod(scr,"useComponent",null);
-                                   if(!"".equals(cmpName)){
-                                        ebiMain.system.setDataStore(cmpName, scr);
-                                   }
-                               }
-                           }
-
-                           script.setExecuted(true);
-                       }catch(IOException ex){ EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_FILE_NOT_FOUND") + ":\n(" + EBIPGFactory.printStackTrace(ex) + ")").Show(EBIMessage.ERROR_MESSAGE); }
-                       catch(ResourceException ex){ EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE); }
-                       catch(ScriptException ex){ EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE); }
-                       catch(Exception ex){ EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE); }
-                       catch(NoClassDefFoundError e){ EBIExceptionDialog.getInstance(e.getMessage()).Show(EBIMessage.ERROR_MESSAGE);}
+                thr.start();
 
 
 
@@ -1528,50 +1552,6 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         return ((EBIDialog) componentsTable.get(Name).getComponent());
     }
 
-    public  JToolBar getToolBar(String name) {
-
-        JToolBar bar = null;
-
-        if(toToolbar.get(name) != null){
-            bar = (JToolBar)((EBIGUIToolbar)toToolbar.get(name)).getComponent();
-        }
-        
-        return bar;
-    }
-
-    public  JComponent getToolBarComponent(String name,String packages) {
-        JComponent comp = null;
-
-        if(toToolbar.get(packages) != null){
-
-            Iterator i = ((EBIGUIToolbar)toToolbar.get(packages)).getBarItem().iterator();
-            while (i.hasNext()) {
-                EBIGUIToolbar tb = (EBIGUIToolbar) i.next();
-                if (name.equals(tb.getName())) {
-                    comp =  tb.getComponent();
-                    break;
-                }
-            }
-        }
-        return comp;
-    }
-
-    public  JButton getToolBarButton(String name, String packages) {
-        JButton bnt = null;
-
-                EBIGUIToolbar toolbar = ((EBIGUIToolbar)toToolbar.get(packages));
-                if(toolbar != null){
-                    Iterator i = toolbar.getBarItem().iterator();
-                    while (i.hasNext()) {
-                        EBIGUIToolbar tb = (EBIGUIToolbar) i.next();
-                        if (name.equals(tb.getName())) {
-                            bnt = (JButton) tb.getComponent();
-                            break;
-                        }
-                    }
-                }
-        return bnt;
-    }
 
     public  JRadioButton getRadioButton(String name,String packages) {
         JRadioButton actualComponent=null;
@@ -1673,14 +1653,16 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
     }
 
     public  JXTable getTable(String name,String packages) {
-        JXTable actualComponent=null;
-        if( resizeContainer.get(packages) != null){
-            EBIGUINBean res = (EBIGUINBean) resizeContainer.get(packages).get(componentGet.get(packages+"."+name)-1);
-            if (res != null) {
-                actualComponent = (JXTable)res.getScrollComponent();
+
+        if(!actualCmpStr.equals(packages+"."+name)) {
+            if (resizeContainer.get(packages) != null) {
+                EBIGUINBean res = (EBIGUINBean) resizeContainer.get(packages).get(componentGet.get(packages + "." + name) - 1);
+                if (res != null) {
+                    actualTable = (JXTable) res.getScrollComponent();
+                }
             }
         }
-       return actualComponent;
+       return actualTable;
     }
 
     public  JXTreeTable getTreeTable(String name,String packages) {

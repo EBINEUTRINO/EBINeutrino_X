@@ -18,6 +18,8 @@ import ebiNeutrinoSDK.model.hibernate.Company;
 import ebiNeutrinoSDK.model.hibernate.Companyaddress;
 import ebiNeutrinoSDK.model.hibernate.Companycontacts;
 
+import javax.swing.*;
+
 
 public class EBIDataControlLeads {
 
@@ -27,8 +29,7 @@ public class EBIDataControlLeads {
     private Companyaddress address = null;
     private Companycontactaddress contactAddrs=null;
     public boolean isEdit = false;
-    private String searchText = "";
-
+    private String srcTxt = "";
 
     public EBIDataControlLeads(EBICRMLead leads){
         this.ebiLeadsPanel = leads;
@@ -36,7 +37,6 @@ public class EBIDataControlLeads {
         address = new Companyaddress();
         contactAddrs = new Companycontactaddress();
     }
-
 
     public boolean dataStore() {
       try{
@@ -159,10 +159,10 @@ public class EBIDataControlLeads {
           isEdit = true;
       }catch(Exception ex){ex.printStackTrace(); return false;}
 
-          if("".equals(this.searchText)){
+          if("".equals(this.srcTxt)){
             dataShow();
           }else{
-            dataShow(this.searchText);
+            dataShow(this.srcTxt);
           }
           
           ebiLeadsPanel.ebiModule.ebiContainer.showInActionStatus("Leads",false);
@@ -286,6 +286,7 @@ public class EBIDataControlLeads {
                             ebiLeadsPanel.ebiModule.guiRenderer.getLabel("cName","Leads").setText(cName);
 
                             ebiLeadsPanel.ebiModule.guiRenderer.getComboBox("genderText","Leads").setSelectedItem(contact.getGender() == null ? EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT") : contact.getGender());
+                            ebiLeadsPanel.ebiModule.guiRenderer.getComboBox("genderText","Leads").getEditor().setItem(contact.getGender() == null ? EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT") : contact.getGender());
                             ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("titleText","Leads").setText(contact.getTitle() == null ? "" : contact.getTitle());
 
                             ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("positionText","Leads").setText(contact.getPosition() == null ? "" : contact.getPosition());
@@ -338,6 +339,7 @@ public class EBIDataControlLeads {
                 ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("compNameText","Leads").setText(company.getName() == null ? "" : company.getName());
                 ebiLeadsPanel.ebiModule.guiRenderer.getTextfield("internetText","Leads").setText(company.getWeb() == null ? "" : company.getWeb());
                 ebiLeadsPanel.ebiModule.guiRenderer.getComboBox("classificationText","Leads").setSelectedItem(company.getQualification() == null ? "" : company.getQualification());
+                ebiLeadsPanel.ebiModule.guiRenderer.getComboBox("classificationText","Leads").getEditor().setItem(company.getQualification() == null ? "" : company.getQualification());
                 ebiLeadsPanel.ebiModule.guiRenderer.getTextarea("descriptionText","Leads").setText(company.getDescription() == null ? "" : company.getDescription());
                 ebiLeadsPanel.ebiModule.guiRenderer.getLabel("webLabel","Leads").setText(company.getWeb() == null ? "" : company.getWeb());
                 isEdit  = true;
@@ -382,153 +384,177 @@ public class EBIDataControlLeads {
     }
 
     public void dataShow() {
+        Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ebiLeadsPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ResultSet set = null;
+                        int srow = ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow();
+                        try {
+                            PreparedStatement ps1 = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("" +
+                                    " SELECT COMPANY.COMPANYID,COMPANY.NAME,COMPANY.CATEGORY,COMPANY.WEB,COMPANY.QUALIFICATION,COMPANY.DESCRIPTION,COMPANYCONTACTS.GENDER," +
+                                    " COMPANYCONTACTS.CONTACTID,COMPANYCONTACTS.TITLE,COMPANYCONTACTS.SURNAME,COMPANYCONTACTS.NAME,COMPANYCONTACTS.POSITION,COMPANYCONTACTS.PHONE,COMPANYCONTACTS.FAX,COMPANYCONTACTS.MOBILE,COMPANYCONTACTS.EMAIL," +
+                                    " COMPANYADDRESS.ADDRESSID, COMPANYADDRESS.STREET,COMPANYADDRESS.ZIP,COMPANYADDRESS.LOCATION,COMPANYADDRESS.COUNTRY" +
+                                    " FROM COMPANY LEFT JOIN COMPANYCONTACTS  ON  " +
+                                    " COMPANYCONTACTS.COMPANYID=COMPANY.COMPANYID LEFT JOIN COMPANYADDRESS ON COMPANYADDRESS.COMPANYID=COMPANY.COMPANYID ");
 
-        ResultSet set = null;
+                            set = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps1);
 
+                            if (set != null) {
+                                set.last();
+                                ebiLeadsPanel.tabModel.data = new Object[set.getRow()][14];
 
-        int srow = ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow();
-        try {
-            PreparedStatement ps1 = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("" +
-                            " SELECT COMPANY.COMPANYID,COMPANY.NAME,COMPANY.CATEGORY,COMPANY.WEB,COMPANY.QUALIFICATION,COMPANY.DESCRIPTION,COMPANYCONTACTS.GENDER," +
-                            " COMPANYCONTACTS.CONTACTID,COMPANYCONTACTS.TITLE,COMPANYCONTACTS.SURNAME,COMPANYCONTACTS.NAME,COMPANYCONTACTS.POSITION,COMPANYCONTACTS.PHONE,COMPANYCONTACTS.FAX,COMPANYCONTACTS.MOBILE,COMPANYCONTACTS.EMAIL," +
-                            " COMPANYADDRESS.ADDRESSID, COMPANYADDRESS.STREET,COMPANYADDRESS.ZIP,COMPANYADDRESS.LOCATION,COMPANYADDRESS.COUNTRY" +
-                            " FROM COMPANY LEFT JOIN COMPANYCONTACTS  ON  " +
-                            " COMPANYCONTACTS.COMPANYID=COMPANY.COMPANYID LEFT JOIN COMPANYADDRESS ON COMPANYADDRESS.COMPANYID=COMPANY.COMPANYID ");
-            
-            //ps1.setString(1,"Leads");
-            set = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps1);
-
-            if (set != null) {
-                set.last();
-                ebiLeadsPanel.tabModel.data = new Object[set.getRow()][14];
-
-                if (set.getRow() > 0) {
-                    set.beforeFirst();
-                    int i = 0;
-                    while (set.next()) {
-                       ebiLeadsPanel.tabModel.data[i][0] = set.getString("COMPANY.NAME") == null ? "" : set.getString("COMPANY.NAME");
-                       ebiLeadsPanel.tabModel.data[i][1] = set.getString("COMPANYCONTACTS.GENDER") == null ? "" : set.getString("COMPANYCONTACTS.GENDER");
-                       ebiLeadsPanel.tabModel.data[i][2] = set.getString("COMPANYCONTACTS.POSITION") == null ? "" : set.getString("COMPANYCONTACTS.POSITION");
-                       ebiLeadsPanel.tabModel.data[i][3] = set.getString("COMPANYCONTACTS.NAME") == null ? "" : set.getString("COMPANYCONTACTS.NAME");
-                       ebiLeadsPanel.tabModel.data[i][4] = set.getString("COMPANYCONTACTS.SURNAME") == null ? "" : set.getString("COMPANYCONTACTS.SURNAME");
-                       String zipLoc =  set.getString("COMPANYADDRESS.ZIP") == null ? "" : set.getString("COMPANYADDRESS.ZIP")+" ";
-                              zipLoc += set.getString("COMPANYADDRESS.LOCATION") == null ? "" : set.getString("COMPANYADDRESS.LOCATION");
-                       ebiLeadsPanel.tabModel.data[i][5] = zipLoc;
-                       ebiLeadsPanel.tabModel.data[i][6] = set.getString("COMPANYADDRESS.COUNTRY") == null ? "" : set.getString("COMPANYADDRESS.COUNTRY");
-                       ebiLeadsPanel.tabModel.data[i][7] = set.getString("COMPANYCONTACTS.PHONE") == null ? "" : set.getString("COMPANYCONTACTS.PHONE");
-                       ebiLeadsPanel.tabModel.data[i][8] = set.getString("COMPANYCONTACTS.MOBILE") == null ? "" : set.getString("COMPANYCONTACTS.MOBILE");
-                       ebiLeadsPanel.tabModel.data[i][9] = set.getString("COMPANYCONTACTS.EMAIL") == null ? "" : set.getString("COMPANYCONTACTS.EMAIL");
-                       ebiLeadsPanel.tabModel.data[i][10] = set.getString("COMPANY.QUALIFICATION") == null ? "" : set.getString("COMPANY.QUALIFICATION");
-                       ebiLeadsPanel.tabModel.data[i][11] = set.getInt("COMPANY.COMPANYID") == 0 ? 0 : set.getInt("COMPANY.COMPANYID");
-                       ebiLeadsPanel.tabModel.data[i][12] = set.getString("COMPANYCONTACTS.CONTACTID") == null ? "" : set.getString("COMPANYCONTACTS.CONTACTID");
-                       ebiLeadsPanel.tabModel.data[i][13] = set.getString("COMPANYADDRESS.ADDRESSID") == null ? "" : set.getString("COMPANYADDRESS.ADDRESSID");
-                       i++;
+                                if (set.getRow() > 0) {
+                                    set.beforeFirst();
+                                    int i = 0;
+                                    while (set.next()) {
+                                        ebiLeadsPanel.tabModel.data[i][0] = set.getString("COMPANY.NAME") == null ? "" : set.getString("COMPANY.NAME");
+                                        ebiLeadsPanel.tabModel.data[i][1] = set.getString("COMPANYCONTACTS.GENDER") == null ? "" : set.getString("COMPANYCONTACTS.GENDER");
+                                        ebiLeadsPanel.tabModel.data[i][2] = set.getString("COMPANYCONTACTS.POSITION") == null ? "" : set.getString("COMPANYCONTACTS.POSITION");
+                                        ebiLeadsPanel.tabModel.data[i][3] = set.getString("COMPANYCONTACTS.NAME") == null ? "" : set.getString("COMPANYCONTACTS.NAME");
+                                        ebiLeadsPanel.tabModel.data[i][4] = set.getString("COMPANYCONTACTS.SURNAME") == null ? "" : set.getString("COMPANYCONTACTS.SURNAME");
+                                        String zipLoc =  set.getString("COMPANYADDRESS.ZIP") == null ? "" : set.getString("COMPANYADDRESS.ZIP")+" ";
+                                        zipLoc += set.getString("COMPANYADDRESS.LOCATION") == null ? "" : set.getString("COMPANYADDRESS.LOCATION");
+                                        ebiLeadsPanel.tabModel.data[i][5] = zipLoc;
+                                        ebiLeadsPanel.tabModel.data[i][6] = set.getString("COMPANYADDRESS.COUNTRY") == null ? "" : set.getString("COMPANYADDRESS.COUNTRY");
+                                        ebiLeadsPanel.tabModel.data[i][7] = set.getString("COMPANYCONTACTS.PHONE") == null ? "" : set.getString("COMPANYCONTACTS.PHONE");
+                                        ebiLeadsPanel.tabModel.data[i][8] = set.getString("COMPANYCONTACTS.MOBILE") == null ? "" : set.getString("COMPANYCONTACTS.MOBILE");
+                                        ebiLeadsPanel.tabModel.data[i][9] = set.getString("COMPANYCONTACTS.EMAIL") == null ? "" : set.getString("COMPANYCONTACTS.EMAIL");
+                                        ebiLeadsPanel.tabModel.data[i][10] = set.getString("COMPANY.QUALIFICATION") == null ? "" : set.getString("COMPANY.QUALIFICATION");
+                                        ebiLeadsPanel.tabModel.data[i][11] = set.getInt("COMPANY.COMPANYID") == 0 ? 0 : set.getInt("COMPANY.COMPANYID");
+                                        ebiLeadsPanel.tabModel.data[i][12] = set.getString("COMPANYCONTACTS.CONTACTID") == null ? "" : set.getString("COMPANYCONTACTS.CONTACTID");
+                                        ebiLeadsPanel.tabModel.data[i][13] = set.getString("COMPANYADDRESS.ADDRESSID") == null ? "" : set.getString("COMPANYADDRESS.ADDRESSID");
+                                        i++;
+                                    }
+                                }else{
+                                    ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
+                                }
+                            }else {
+                                ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
+                            }
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }finally{
+                            ebiLeadsPanel.tabModel.fireTableDataChanged();
+                            if(set != null){
+                                try {
+                                    set.close();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            ebiLeadsPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        }
+                        ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(srow,0,false,false);
                     }
-                }else{
-                    ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
-                }
-            }else {
-                ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
+                });
             }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }finally{
-            ebiLeadsPanel.tabModel.fireTableDataChanged();
-            if(set != null){
-                try {
-                    set.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(srow,0,false,false);
+        });
+
+        thr.start();
     }
 
-    public void dataShow(String searchText) {
-        ResultSet set = null;
-        this.searchText = searchText;
-        int srow = ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow();
-        try {
-            ebiLeadsPanel.ebiModule.guiRenderer.getVisualPanel("Leads").setCursor(new Cursor(Cursor.WAIT_CURSOR));
-            PreparedStatement ps1 = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("" +
-                            " SELECT COMPANY.COMPANYID,COMPANY.NAME,COMPANY.COOPERATION,COMPANY.CATEGORY,COMPANY.WEB,COMPANY.QUALIFICATION,COMPANY.DESCRIPTION,COMPANYCONTACTS.GENDER," +
-                            " COMPANYCONTACTS.CREATEDDATE, COMPANYCONTACTS.CONTACTID,COMPANYCONTACTS.TITLE,COMPANYCONTACTS.SURNAME,COMPANYCONTACTS.NAME,COMPANYCONTACTS.POSITION,COMPANYCONTACTS.PHONE,COMPANYCONTACTS.FAX,COMPANYCONTACTS.MOBILE,COMPANYCONTACTS.EMAIL," +
-                            " COMPANYADDRESS.ADDRESSID, COMPANYADDRESS.STREET,COMPANYADDRESS.ZIP,COMPANYADDRESS.LOCATION,COMPANYADDRESS.COUNTRY" +
-                            " FROM COMPANY LEFT JOIN COMPANYCONTACTS ON  " +
-                            " COMPANYCONTACTS.COMPANYID=COMPANY.COMPANYID LEFT JOIN COMPANYADDRESS ON COMPANYADDRESS.COMPANYID=COMPANY.COMPANYID " +
-                            " WHERE COMPANY.NAME LIKE ? OR COMPANY.CATEGORY LIKE ? OR COMPANY.COOPERATION LIKE ? OR COMPANY.QUALIFICATION LIKE ? OR COMPANY.DESCRIPTION LIKE ? OR COMPANY.WEB LIKE ? OR COMPANYCONTACTS.GENDER LIKE ? " +
-                            " OR COMPANYCONTACTS.TITLE LIKE ? OR COMPANYCONTACTS.SURNAME LIKE ? OR COMPANYCONTACTS.NAME LIKE ? OR COMPANYCONTACTS.POSITION LIKE ? OR " +
-                            " COMPANYCONTACTS.FAX LIKE ? OR COMPANYCONTACTS.MOBILE LIKE ? OR COMPANYCONTACTS.EMAIL LIKE ? OR" +
-                            " COMPANYADDRESS.STREET LIKE ? OR COMPANYADDRESS.ZIP LIKE ? OR COMPANYADDRESS.LOCATION LIKE ? OR COMPANYADDRESS.COUNTRY LIKE ? ORDER BY COMPANYCONTACTS.CREATEDDATE DESC ");
+    public void dataShow(final String searchText) {
+        srcTxt = searchText;
+        System.out.println("search text is:"+srcTxt);
+        Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ResultSet set = null;
+                        System.out.println("search text xis:"+srcTxt);
+                        int srow = ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow();
+                        try {
+                            ebiLeadsPanel.ebiModule.guiRenderer.getVisualPanel("Leads").setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                            PreparedStatement ps1 = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("" +
+                                    " SELECT COMPANY.COMPANYID,COMPANY.NAME,COMPANY.COOPERATION,COMPANY.CATEGORY,COMPANY.WEB,COMPANY.QUALIFICATION,COMPANY.DESCRIPTION,COMPANYCONTACTS.GENDER," +
+                                    " COMPANYCONTACTS.CREATEDDATE, COMPANYCONTACTS.CONTACTID,COMPANYCONTACTS.TITLE,COMPANYCONTACTS.SURNAME,COMPANYCONTACTS.NAME,COMPANYCONTACTS.POSITION,COMPANYCONTACTS.PHONE,COMPANYCONTACTS.FAX,COMPANYCONTACTS.MOBILE,COMPANYCONTACTS.EMAIL," +
+                                    " COMPANYADDRESS.ADDRESSID, COMPANYADDRESS.STREET,COMPANYADDRESS.ZIP,COMPANYADDRESS.LOCATION,COMPANYADDRESS.COUNTRY" +
+                                    " FROM COMPANY LEFT JOIN COMPANYCONTACTS ON  " +
+                                    " COMPANYCONTACTS.COMPANYID=COMPANY.COMPANYID LEFT JOIN COMPANYADDRESS ON COMPANYADDRESS.COMPANYID=COMPANY.COMPANYID " +
+                                    " WHERE COMPANY.NAME LIKE ? OR COMPANY.CATEGORY LIKE ? OR COMPANY.COOPERATION LIKE ? OR COMPANY.QUALIFICATION LIKE ? OR COMPANY.DESCRIPTION LIKE ? OR COMPANY.WEB LIKE ? OR COMPANYCONTACTS.GENDER LIKE ? " +
+                                    " OR COMPANYCONTACTS.TITLE LIKE ? OR COMPANYCONTACTS.SURNAME LIKE ? OR COMPANYCONTACTS.NAME LIKE ? OR COMPANYCONTACTS.POSITION LIKE ? OR " +
+                                    " COMPANYCONTACTS.FAX LIKE ? OR COMPANYCONTACTS.MOBILE LIKE ? OR COMPANYCONTACTS.EMAIL LIKE ? OR" +
+                                    " COMPANYADDRESS.STREET LIKE ? OR COMPANYADDRESS.ZIP LIKE ? OR COMPANYADDRESS.LOCATION LIKE ? OR COMPANYADDRESS.COUNTRY LIKE ? ORDER BY COMPANYCONTACTS.CREATEDDATE DESC ");
 
-            searchText = searchText+"%";
-            ps1.setString(1,searchText);
-            ps1.setString(2,searchText);
-            ps1.setString(3,searchText);
-            ps1.setString(4,searchText);
-            ps1.setString(5,searchText);
-            ps1.setString(6,searchText);
-            ps1.setString(7,searchText);
-            ps1.setString(8,searchText);
-            ps1.setString(9,searchText);
-            ps1.setString(10,searchText);
-            ps1.setString(11,searchText);
-            ps1.setString(12,searchText);
-            ps1.setString(13,searchText);
-            ps1.setString(14,searchText);
-            ps1.setString(15,searchText);
-            ps1.setString(16,searchText);
-            ps1.setString(17,searchText);
-            ps1.setString(18,searchText);
-            set = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps1);
+                            final String searchText1 = srcTxt+"%";
+                            ps1.setString(1,searchText1);
+                            ps1.setString(2,searchText1);
+                            ps1.setString(3,searchText1);
+                            ps1.setString(4,searchText1);
+                            ps1.setString(5,searchText1);
+                            ps1.setString(6,searchText1);
+                            ps1.setString(7,searchText1);
+                            ps1.setString(8,searchText1);
+                            ps1.setString(9,searchText1);
+                            ps1.setString(10,searchText1);
+                            ps1.setString(11,searchText1);
+                            ps1.setString(12,searchText1);
+                            ps1.setString(13,searchText1);
+                            ps1.setString(14,searchText1);
+                            ps1.setString(15,searchText1);
+                            ps1.setString(16,searchText1);
+                            ps1.setString(17,searchText1);
+                            ps1.setString(18,searchText1);
+                            set = ebiLeadsPanel.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps1);
 
-            if (set != null) {
-                set.last();
-                ebiLeadsPanel.tabModel.data = new Object[set.getRow()][14];
+                            if (set != null) {
+                                set.last();
+                                ebiLeadsPanel.tabModel.data = new Object[set.getRow()][14];
 
-                if (set.getRow() > 0) {
-                    set.beforeFirst();
-                    int i = 0;
-                    while (set.next()) {
-                       ebiLeadsPanel.tabModel.data[i][0] = set.getString("COMPANY.NAME") == null ? "" : set.getString("COMPANY.NAME");
-                       ebiLeadsPanel.tabModel.data[i][1] = set.getString("COMPANYCONTACTS.GENDER") == null ? "" : set.getString("COMPANYCONTACTS.GENDER");
-                       ebiLeadsPanel.tabModel.data[i][2] = set.getString("COMPANYCONTACTS.POSITION") == null ? "" : set.getString("COMPANYCONTACTS.POSITION");
-                       ebiLeadsPanel.tabModel.data[i][3] = set.getString("COMPANYCONTACTS.NAME") == null ? "" : set.getString("COMPANYCONTACTS.NAME");
-                       ebiLeadsPanel.tabModel.data[i][4] = set.getString("COMPANYCONTACTS.SURNAME") == null ? "" : set.getString("COMPANYCONTACTS.SURNAME");
-                       String zipLoc =  set.getString("COMPANYADDRESS.ZIP") == null ? "" : set.getString("COMPANYADDRESS.ZIP")+" ";
-                              zipLoc += set.getString("COMPANYADDRESS.LOCATION") == null ? "" : set.getString("COMPANYADDRESS.LOCATION");
-                       ebiLeadsPanel.tabModel.data[i][5] = zipLoc;
-                       ebiLeadsPanel.tabModel.data[i][6] = set.getString("COMPANYADDRESS.COUNTRY") == null ? "" : set.getString("COMPANYADDRESS.COUNTRY");
-                       ebiLeadsPanel.tabModel.data[i][7] = set.getString("COMPANYCONTACTS.PHONE") == null ? "" : set.getString("COMPANYCONTACTS.PHONE");
-                       ebiLeadsPanel.tabModel.data[i][8] = set.getString("COMPANYCONTACTS.MOBILE") == null ? "" : set.getString("COMPANYCONTACTS.MOBILE");
-                       ebiLeadsPanel.tabModel.data[i][9] = set.getString("COMPANYCONTACTS.EMAIL") == null ? "" : set.getString("COMPANYCONTACTS.EMAIL");
-                       ebiLeadsPanel.tabModel.data[i][10] = set.getString("COMPANY.QUALIFICATION") == null ? "" : set.getString("COMPANY.QUALIFICATION");
-                       ebiLeadsPanel.tabModel.data[i][11] = set.getString("COMPANY.COMPANYID") == null ? "" : set.getString("COMPANY.COMPANYID");
-                       ebiLeadsPanel.tabModel.data[i][12] = set.getString("COMPANYCONTACTS.CONTACTID") == null ? "" : set.getString("COMPANYCONTACTS.CONTACTID");
-                       ebiLeadsPanel.tabModel.data[i][13] = set.getString("COMPANYADDRESS.ADDRESSID") == null ? "" : set.getString("COMPANYADDRESS.ADDRESSID");
-                       i++;
+                                if (set.getRow() > 0) {
+                                    set.beforeFirst();
+                                    int i = 0;
+                                    while (set.next()) {
+                                        ebiLeadsPanel.tabModel.data[i][0] = set.getString("COMPANY.NAME") == null ? "" : set.getString("COMPANY.NAME");
+                                        ebiLeadsPanel.tabModel.data[i][1] = set.getString("COMPANYCONTACTS.GENDER") == null ? "" : set.getString("COMPANYCONTACTS.GENDER");
+                                        ebiLeadsPanel.tabModel.data[i][2] = set.getString("COMPANYCONTACTS.POSITION") == null ? "" : set.getString("COMPANYCONTACTS.POSITION");
+                                        ebiLeadsPanel.tabModel.data[i][3] = set.getString("COMPANYCONTACTS.NAME") == null ? "" : set.getString("COMPANYCONTACTS.NAME");
+                                        ebiLeadsPanel.tabModel.data[i][4] = set.getString("COMPANYCONTACTS.SURNAME") == null ? "" : set.getString("COMPANYCONTACTS.SURNAME");
+                                        String zipLoc =  set.getString("COMPANYADDRESS.ZIP") == null ? "" : set.getString("COMPANYADDRESS.ZIP")+" ";
+                                        zipLoc += set.getString("COMPANYADDRESS.LOCATION") == null ? "" : set.getString("COMPANYADDRESS.LOCATION");
+                                        ebiLeadsPanel.tabModel.data[i][5] = zipLoc;
+                                        ebiLeadsPanel.tabModel.data[i][6] = set.getString("COMPANYADDRESS.COUNTRY") == null ? "" : set.getString("COMPANYADDRESS.COUNTRY");
+                                        ebiLeadsPanel.tabModel.data[i][7] = set.getString("COMPANYCONTACTS.PHONE") == null ? "" : set.getString("COMPANYCONTACTS.PHONE");
+                                        ebiLeadsPanel.tabModel.data[i][8] = set.getString("COMPANYCONTACTS.MOBILE") == null ? "" : set.getString("COMPANYCONTACTS.MOBILE");
+                                        ebiLeadsPanel.tabModel.data[i][9] = set.getString("COMPANYCONTACTS.EMAIL") == null ? "" : set.getString("COMPANYCONTACTS.EMAIL");
+                                        ebiLeadsPanel.tabModel.data[i][10] = set.getString("COMPANY.QUALIFICATION") == null ? "" : set.getString("COMPANY.QUALIFICATION");
+                                        ebiLeadsPanel.tabModel.data[i][11] = set.getString("COMPANY.COMPANYID") == null ? "" : set.getString("COMPANY.COMPANYID");
+                                        ebiLeadsPanel.tabModel.data[i][12] = set.getString("COMPANYCONTACTS.CONTACTID") == null ? "" : set.getString("COMPANYCONTACTS.CONTACTID");
+                                        ebiLeadsPanel.tabModel.data[i][13] = set.getString("COMPANYADDRESS.ADDRESSID") == null ? "" : set.getString("COMPANYADDRESS.ADDRESSID");
+                                        i++;
+                                    }
+                                }else{
+                                    ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
+                                }
+                            }else {
+                                ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
+                            }
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }finally{
+                            ebiLeadsPanel.tabModel.fireTableDataChanged();
+                            if(set != null){
+                                try {
+                                    set.close();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            ebiLeadsPanel.ebiModule.guiRenderer.getVisualPanel("Leads").setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        }
+                        ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(srow,0,false,false);
                     }
-                }else{
-                    ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
-                }
-            }else {
-                ebiLeadsPanel.tabModel.data = new Object[][] {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),"","","","","","","","","","","","",""}};
+                });
             }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }finally{
-            ebiLeadsPanel.tabModel.fireTableDataChanged();
-            if(set != null){
-                try {
-                    set.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            ebiLeadsPanel.ebiModule.guiRenderer.getVisualPanel("Leads").setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        }
-       ebiLeadsPanel.ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(srow,0,false,false);
+        });
+
+        thr.start();
     }
 
     public void dataNew() {
@@ -574,7 +600,6 @@ public class EBIDataControlLeads {
       ebiLeadsPanel.ebiModule.guiRenderer.getLabel("positionLabel","Leads").setText("");
 
       ebiLeadsPanel.ebiModule.ebiPGFactory.getDataStore("Leads","ebiNew",true);
-      dataShow();
     }
 
 }

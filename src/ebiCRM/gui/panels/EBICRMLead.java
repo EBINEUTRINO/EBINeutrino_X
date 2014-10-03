@@ -10,10 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Date;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -28,6 +25,7 @@ import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIAbstractTableModel;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import ebiNeutrinoSDK.utils.EBIPropertiesRW;
+import org.jdesktop.swingx.JXTable;
 
 
 public class EBICRMLead {
@@ -90,23 +88,8 @@ public class EBICRMLead {
            public void actionPerformed(ActionEvent e){
               ebiNew();
            }
-       });                                  
-
-       ebiModule.guiRenderer.getButton("editLeads","Leads").setIcon(EBIConstant.ICON_EDIT);
-       ebiModule.guiRenderer.getButton("editLeads","Leads").setEnabled(false); 
-       ebiModule.guiRenderer.getButton("editLeads","Leads").addActionListener(new ActionListener(){
-           public void actionPerformed(ActionEvent e){
-              if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                            equals(tabModel.data[selectedRow][0].toString())) {
-                        return;
-              }
-
-              controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
-              ebiModule.guiRenderer.getTextfield("compNameText","Leads").requestFocus();
-           }
        });
-       
-       
+
        ebiModule.guiRenderer.getButton("copyLeads","Leads").setIcon(EBIConstant.ICON_COPY);
        ebiModule.guiRenderer.getButton("copyLeads","Leads").setEnabled(false);
        ebiModule.guiRenderer.getButton("copyLeads","Leads").addActionListener(new ActionListener(){
@@ -134,32 +117,37 @@ public class EBICRMLead {
        });
 
 
-      ebiModule.guiRenderer.getTable("leadsTable","Leads").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      ebiModule.guiRenderer.getTable("leadsTable","Leads").setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
-                    if (e.getValueIsAdjusting()) {
+                    /*if (e.getValueIsAdjusting()) {
                         return;
-                    }
+                    }*/
 
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                     if(ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow() != -1 &&
                     				ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow() < tabModel.data.length){
                       
-                    	selectedRow =  ebiModule.guiRenderer.getTable("leadsTable","Leads").convertRowIndexToModel(ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow());
+                    	selectedRow =  ebiModule.guiRenderer.getTable("leadsTable","Leads").convertRowIndexToModel(lsm.getMinSelectionIndex());
  
                         if(selectedRow < tabModel.data.length){
 	                        if (lsm.isSelectionEmpty()) {
-	                            ebiModule.guiRenderer.getButton("editLeads","Leads").setEnabled(false);
 	                            ebiModule.guiRenderer.getButton("deleteLeads","Leads").setEnabled(false);
 	                            ebiModule.guiRenderer.getButton("copyLeads","Leads").setEnabled(false);
 	                        } else if (!tabModel.data[selectedRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-	                            ebiModule.guiRenderer.getButton("editLeads","Leads").setEnabled(true);
 	                            ebiModule.guiRenderer.getButton("deleteLeads","Leads").setEnabled(true);
 	                            ebiModule.guiRenderer.getButton("copyLeads","Leads").setEnabled(true);
 	                        }
                         }
+
+                        if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                                equals(tabModel.data[selectedRow][0].toString())) {
+                            return;
+                        }
+
+
                     }
                 }
       });
@@ -167,11 +155,13 @@ public class EBICRMLead {
       new JTableActionMaps(ebiModule.guiRenderer.getTable("leadsTable","Leads")).setTableAction(new AbstractTableKeyAction() {
 
                 public void setDownKeyAction(int selRow) {
-                    selectedRow= selRow;
+                    selectedRow = selRow;
                     if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                             equals(tabModel.data[selectedRow][0].toString())) {
                         return;
                     }
+
+                    controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
 
                 }
 
@@ -182,34 +172,33 @@ public class EBICRMLead {
                         return;
                     }
 
+                    controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
+
                 }
 
                 public void setEnterKeyAction(int selRow) {
-                    selectedRow = selRow;
-                    if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                            equals(tabModel.data[selectedRow][0].toString())) {
-                        return;
-                    }
 
-                    controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
                 }
             });
 
             ebiModule.guiRenderer.getTable("leadsTable","Leads").addMouseListener(new java.awt.event.MouseAdapter() {
 
-                public void mouseClicked(java.awt.event.MouseEvent e) {
+                public void mouseReleased(java.awt.event.MouseEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
 
-                    if(ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow() != -1){
-                        selectedRow =  ebiModule.guiRenderer.getTable("leadsTable","Leads").convertRowIndexToModel( ebiModule.guiRenderer.getTable("leadsTable","Leads").getSelectedRow());
-
-                            if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                            if (ebiModule.guiRenderer.getTable("leadsTable", "Leads").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                                     equals(tabModel.data[selectedRow][0].toString())) {
                                 return;
                             }
-                            if(e.getClickCount() >= 2 ){
-                            	controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
-                            }
-                    }
+                            selectedRow = ebiModule.guiRenderer.getTable("leadsTable", "Leads").convertRowIndexToModel(ebiModule.guiRenderer.getTable("leadsTable", "Leads").getSelectedRow());
+                            controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
+
+
+                        }
+                    });
+
                 }
             });
 
@@ -224,17 +213,6 @@ public class EBICRMLead {
           ebiModule.guiRenderer.getTextfield("searchLeadsText","Leads").addKeyListener(new KeyListener(){
              public void keyReleased(KeyEvent e){
                  controlLeads.dataShow(((JTextField)e.getSource()).getText());
-                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    selectedRow = 0;
-                    ebiModule.guiRenderer.getTable("leadsTable","Leads").changeSelection(0, 0, false, false);
-                    if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                                    equals(tabModel.data[selectedRow][0].toString())) {
-                                return;
-                            }
-
-                    controlLeads.dataEdit(Integer.parseInt(tabModel.data[selectedRow][11].toString()));
-                    ebiModule.guiRenderer.getTable("leadsTable","Leads").requestFocus();
-                 }
              }
              public void keyTyped(KeyEvent e){}
              public void keyPressed(KeyEvent e){}
