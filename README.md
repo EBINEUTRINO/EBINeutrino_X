@@ -10,4 +10,4 @@ IT:
 Java swing con Intellij IDE open source gestionale sistema crm e erp
 
 DE:
-Java swing con Intellij IDE open source warenwirtschaftsystem crm und erp system
+Java swing mit Intellij IDE open source warenwirtschaftsystem crm und erp system
