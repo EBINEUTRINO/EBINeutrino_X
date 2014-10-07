@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <visualpanel name="Invoice" title="EBI_LANG_C_TAB_INVOICE" Location="0,0" Size="900,750" visualproperties="true" assignable="true" checkable="true" >
- <panel name="panelTotal" title="EBI_LANG_AVAILABLE_INVOICE" Location="6,481" Size="100%,100%">
+<panel name="panelTotal" title="EBI_LANG_AVAILABLE_INVOICE" Location="6,500" Size="100%,100%">
 		<table name="tableTotalInvoice" Location="8,56" Size="100%,100%">
 		<column name="" title="EBI_LANG_INVOICE_NR" Location="0,0" Size="0,0"/>
 		<column name="" title="EBI_LANG_NAME" Location="0,0" Size="0,0"/>
@@ -18,27 +18,39 @@
 		<button name="sendEmail" i18ntooltip="EBI_LANG_C_TOOL_TIP_MAIL_RECORD" Location="76,15" Size="35,35"/>
 		<label name="filterTable" title="EBI_LANG_FILTER" Location="224,22" Size="79,23"/>
 		<textfield name="filterTableText" Location="309,18" Size="263,30"/>
+        <label name="invoiceYear" title="EBI_LANG_YEAR" Location="625,23" Size="66,20"/>
+        <combobox name="invoiceYearText" Location="690,20" Size="130,27"/>
+        <button name="updateYear" title="EBI_LANG_UPDATE" Location="828,21" Size="136,26"/>
 </panel>
-		<label name="invoiceNr" title="EBI_LANG_INVOICE_NR" Location="12,6" Size="100,20"/>
-		<label name="invoiceName" title="EBI_LANG_NAME" Location="12,31" Size="100,20"/>
-		<label name="invoiceStatus" title="EBI_LANG_STATUS" Location="12,55" Size="100,20"/>
-		<label name="invoiceDate" title="EBI_LANG_INVOICE_DATE" Location="382,31" Size="100,20"/>
-<panel name="positionPanel" title="EBI_LANG_C_PANEL_POSITION_PRODUCT" Location="432,79" Size="100%,396">
-		<table name="invoicePositionTable" Location="13,56" Size="100%,221"/>
-		<button name="newPosition" Location="14,15" Size="35,35"/>
-		<button name="deletePosition" Location="51,15" Size="35,35"/>
-		<label name="totalNetAmount" title="EBI_LANG_TOTAL_NETAMOUNT" Location="339,289" Size="109,20"/>
-		<label name="Tax" title="EBI_LANG_TAX" Location="340,334" Size="109,20"/>
-		<label name="totalGrossAmount" title="EBI_LANG_TOTAL_GROSSAMOUNT" Location="340,367" Size="131,20"/>
-		<label name="line" background="#898989" Location="339,356" Size="100%,3"/>
-		<formattedtextfield name="totalNetAmountText" Location="470,289" Size="100%,20"/>
-		<formattedtextfield name="taxText" Location="470,334" Size="100%,20"/>
-		<formattedtextfield name="totalGrossAmountText" Location="471,367" Size="100%,22"/>
-		<label name="deduction" title="EBI_LANG_DEDUCTION" Location="340,311" Size="108,20"/>
-		<formattedtextfield name="deductionText" Location="470,311" Size="100%,20"/>
-		<button name="saveInvoice" title="EBI_LANG_SAVE" Location="20,320" Size="170,35"/>
-</panel>
-<panel name="recieverPanel" title="EBI_LANG_SENDED" Location="6,80" Size="424,395">
+		<label name="invoiceNr" title="EBI_LANG_INVOICE_NR" Location="12,12" Size="100,20"/>
+		<label name="invoiceName" title="EBI_LANG_NAME" Location="12,37" Size="100,20"/>
+		<label name="invoiceStatus" title="EBI_LANG_STATUS" Location="12,65" Size="100,20"/>
+		<label name="invoiceDate" title="EBI_LANG_INVOICE_DATE" Location="430,40" Size="100,20"/>
+        <panel name="positionPanel" title="EBI_LANG_C_PANEL_POSITION_PRODUCT" Location="432,100" Size="100%,396">
+            <table name="invoicePositionTable" Location="13,56" Size="100%,221">
+                <column name="" title="EBI_LANG_QUANTITY" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_PRODUCT_NUMBER" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_NAME" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_CATEGORY" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_TAX" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_PRICE" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_DEDUCTION" Location="0,0" Size="0,0"/>
+                <column name="" title="EBI_LANG_DESCRIPTION" Location="0,0" Size="0,0"/>
+            </table>
+            <button name="newPosition" Location="14,15" Size="35,35"/>
+            <button name="deletePosition" Location="51,15" Size="35,35"/>
+            <label name="totalNetAmount" title="EBI_LANG_TOTAL_NETAMOUNT" Location="339,289" Size="109,20"/>
+            <label name="Tax" title="EBI_LANG_TAX" Location="340,334" Size="109,20"/>
+            <label name="totalGrossAmount" title="EBI_LANG_TOTAL_GROSSAMOUNT" Location="340,367" Size="131,20"/>
+            <label name="line" background="#898989" Location="339,360" Size="100%,1"/>
+            <label name="deduction" title="EBI_LANG_DEDUCTION" Location="340,311" Size="108,23"/>
+            <formattedtextfield name="totalNetAmountText" Location="470,289" Size="200,23"/>
+            <formattedtextfield name="taxText" Location="470,334" Size="200,23"/>
+            <formattedtextfield name="totalGrossAmountText" Location="471,367" Size="200,22"/>
+            <formattedtextfield name="deductionText" Location="470,311" Size="200,23"/>
+            <button name="saveInvoice" title="EBI_LANG_SAVE" Location="20,320" Size="170,35"/>
+        </panel>
+<panel name="recieverPanel" title="EBI_LANG_SENDED" Location="6,100" Size="424,395">
 		<label name="gender" title="EBI_LANG_C_GENDER" Location="10,20" Size="100,20"/>
 		<label name="name" title="EBI_LANG_C_CNAME" Location="10,70" Size="100,20"/>
 		<label name="surname" title="EBI_LANG_SURNAME" Location="10,95" Size="100,20"/>
@@ -68,10 +80,14 @@
 		<label name="web" title="EBI_LANG_INTERNET" Location="10,296" Size="100,21"/>
 		<textfield name="internetText" tabindex="20" Location="117,295" Size="271,21"/>
 </panel>
-		<textfield name="invoiceNrText" Location="114,6" Size="252,21"/>
-		<textfield name="invoiceNameText" tabindex="1" Location="114,31" Size="252,20"/>
-		<combobox name="invoiceStatusText" tabindex="2" Location="114,55" Size="253,21"/>
-		<timepicker name="invoiceDateText" tabindex="4" Location="485,32" Size="210,22"/>
-		<label name="category" title="EBI_LANG_CATEGORY" Location="381,6" Size="100,20"/>
-		<combobox name="categoryText" editable="false" tabindex="3" Location="485,7" Size="211,20"/>
+		<textfield name="invoiceNrText" Location="114,8" Size="182,21"/>
+        <button name="admnInvoiceAutoInc" icon="../images/edit_dialog.png" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="305,0" Size="35,35"/>
+		<textfield name="invoiceNameText" tabindex="1" Location="114,38" Size="252,20"/>
+		<combobox name="invoiceStatusText" tabindex="2" Location="112,67" Size="256,21"/>
+        <button name="admnInvoiceStatus" icon="../images/edit_dialog.png" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="370,60" Size="35,35"/>
+		<timepicker name="invoiceDateText" tabindex="4" Location="520,40" Size="210,22"/>
+		<label name="category" title="EBI_LANG_CATEGORY" Location="430,10" Size="100,20"/>
+		<combobox name="categoryText" editable="false" tabindex="3" Location="515,10" Size="211,20"/>
+        <button name="admnInvoiceCategory" icon="../images/edit_dialog.png" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="730,2" Size="35,35"/>
+        <codecontrol name="groovy" path="EBICRM/adminDialogInvoice.groovy" classname="" />
 </visualpanel>

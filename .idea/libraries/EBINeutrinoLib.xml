@@ -26,6 +26,8 @@
       <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/poi-3.11-beta.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/poi-ooxml-3.11-beta.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

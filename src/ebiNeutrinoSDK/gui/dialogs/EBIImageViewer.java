@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
  * Show a image file
  *
  */
-public class EBIImageViewer extends EBIDialogExt {
+public class EBIImageViewer extends EBIDialog {
 
 	private EBIVisualPanelTemplate jContentPane = null;
 	private JScrollPane jScrollPane = null;
@@ -63,7 +63,7 @@ public class EBIImageViewer extends EBIDialogExt {
 	 */
 	private EBIVisualPanelTemplate getJContentPane() {
 		if (jContentPane == null) {
-			jContentPane = new EBIVisualPanelTemplate();
+			jContentPane = new EBIVisualPanelTemplate(false);
 			jContentPane.getPanel().setLayout(new BorderLayout());
 			jContentPane.setBackground(Color.black);
 			jContentPane.getPanel().add(getJScrollPane(), BorderLayout.CENTER);

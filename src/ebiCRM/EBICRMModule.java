@@ -19,14 +19,14 @@ public class EBICRMModule implements IEBIExtension {
     private EBICRMAccountStack accountPane =null;
     private EBICRMProduct productPane = null;
     private EBICRMInvoice invoicePane = null;
-    public EBIPGFactory ebiPGFactory = null;
+    public EBIPGFactory system = null;
     public int companyID = -1;
     public static boolean RELOAD = false;
     public static boolean isExistCompany = false;
     public EBICRMTabcontrol ebiContainer = null;
     public EBICRMDynamicFunctionalityMethods dynMethod = null;
     public int EBICRM_SESSION = 0;
-    public IEBIGUIRenderer guiRenderer = null;
+    public IEBIGUIRenderer gui = null;
     public static final Logger logger = Logger.getLogger(EBICRMModule.class.getName());
     public static String classification[]=null;
     public static String categories[]=null;
@@ -38,11 +38,10 @@ public class EBICRMModule implements IEBIExtension {
 
     public EBICRMModule(EBIPGFactory func) {
         //Init CODE
-        ebiPGFactory = func;
-        
-        // tabProp = new EBISaveRestoreTableProperties();
+        system = func;
+
         try {
-            ebiPGFactory.hibernate.openHibernateSession("EBICRM_SESSION");
+            system.hibernate.openHibernateSession("EBICRM_SESSION");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -67,11 +66,13 @@ public class EBICRMModule implements IEBIExtension {
             isExistCompany = false;
             RELOAD = false;
 
-            guiRenderer = ebiPGFactory.getIEBIGUIRendererInstance();
-            guiRenderer.loadProject("EBICRM/project.xml");
+            gui = system.getIEBIGUIRendererInstance();
+            gui.loadProject("EBICRM/project.xml");
 
             dynMethod.initComboBoxes(false);
-            ebiPGFactory.getIEBIContainerInstance().setSelectedListIndex(0);
+            if(obj == null) {
+                system.getIEBIContainerInstance().loadSelectedListIndex(0);
+            }
         }catch(Exception ex){
              ex.printStackTrace();
              logger.error("EBI Neutrino CRM Error:",ex.fillInStackTrace());
@@ -102,7 +103,7 @@ public class EBICRMModule implements IEBIExtension {
     public EBICRMLead getLeadPane() {
         if (leadsPane == null) {
             leadsPane = new EBICRMLead(this);
-            ebiPGFactory.setDataStore("Leads",leadsPane);
+            system.setDataStore("Leads", leadsPane);
         }
         return leadsPane;
     }
@@ -110,16 +111,16 @@ public class EBICRMModule implements IEBIExtension {
     public EBICRMInvoice getInvoicePane(){
         if(invoicePane == null){
             invoicePane = new EBICRMInvoice(this);
-            ebiPGFactory.setDataStore("Invoice",invoicePane);
+            system.setDataStore("Invoice", invoicePane);
         }
-        invoicePane.dataControlInvoice.dataShow(-1);
-       return invoicePane; 
+
+       return invoicePane;
     }
 
     public EBICRMProduct getProductPane(){
         if(productPane == null){
             productPane = new EBICRMProduct(this);
-            ebiPGFactory.setDataStore("Product",productPane);
+            system.setDataStore("Product", productPane);
         }
         return productPane;
     }
@@ -127,7 +128,7 @@ public class EBICRMModule implements IEBIExtension {
     public EBICRMAccountStack getAccountPane(){
         if(accountPane == null){
            accountPane = new EBICRMAccountStack(this);
-           ebiPGFactory.setDataStore("Account",accountPane);
+           system.setDataStore("Account", accountPane);
         }
        return accountPane;
     }

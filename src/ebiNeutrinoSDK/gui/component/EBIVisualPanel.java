@@ -17,19 +17,19 @@ import org.jdesktop.swingx.JXPanel;
  * The EBIVisualPanel
  */
 
-public class EBIVisualPanel extends JXPanel {
+public class EBIVisualPanel extends JDesktopPane {
 
     protected JLabel jTextFieldAdded = null;
-	protected JLabel jTextFieldAddedFrom = null;
-	protected JLabel jTextFieldChanged = null;
-	protected JLabel jTextFieldChangedFrom = null;
-	protected JComboBox jTextComboAddedFrom = null;
-	protected JLabel iconPanel = null;
-	protected JLabel moduleTitle = null;
-	private JLabel createdDate = null;
-	private JLabel createdFrom = null;
-	private JLabel changedDate = null;
-	private JLabel changedFrom = null;
+    protected JLabel jTextFieldAddedFrom = null;
+    protected JLabel jTextFieldChanged = null;
+    protected JLabel jTextFieldChangedFrom = null;
+    protected JComboBox jTextComboAddedFrom = null;
+    protected JLabel iconPanel = null;
+    protected JLabel moduleTitle = null;
+    private JLabel createdDate = null;
+    private JLabel createdFrom = null;
+    private JLabel changedDate = null;
+    private JLabel changedFrom = null;
     private JButton lockButton = null;
     private boolean visualProperties = true;
     private boolean assignable = true;
@@ -38,14 +38,15 @@ public class EBIVisualPanel extends JXPanel {
     private boolean pessimisticLocked = false;
     private String oldText = "";
     private boolean closable = false;
+    private boolean showStripe=true;
 
-    public EBIVisualPanel(){
+    public EBIVisualPanel(boolean showStripe){
+        this.showStripe = showStripe;
         initialize();
         initFocusTravesal();
     }
 
 	private void initialize() {
-
 		changedFrom = new JLabel();
 		changedFrom.setBounds(new Rectangle(827, 0, 63, 20));
 		changedFrom.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -99,46 +100,43 @@ public class EBIVisualPanel extends JXPanel {
 	}
 	
 	public void paintComponent(Graphics g){
+        if(isShowStripe()){
+            Graphics2D g2 = (Graphics2D) g;
+            // Draw bg top
+            Color startColor = new Color(150, 150, 150);
+            Color endColor = startColor.darker();
 
-        Graphics2D g2 = (Graphics2D)g;
-        // Draw bg top
-        Color startColor = new Color(150,150,150);
-        Color endColor = startColor.darker();
+            // A non-cyclic gradient
+            GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, 10, endColor);
+            g2.setPaint(gradient);
+            g2.fillRect(0, 0, getWidth(), 20);
 
-        // A non-cyclic gradient
-        GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, 10, endColor);
-        g2.setPaint(gradient);
-        g2.fillRect(0, 0, getWidth(), 20);
+            g2.setColor(new Color(250, 250, 250));
+            g2.drawLine(0, 20, getWidth(), 20);
 
-        g2.setColor(new Color(250,250,250));
-        g2.drawLine(0, 20, getWidth(), 20);
+            setOpaque(true);
 
-        setOpaque(true);
-
-        if(isPessimistic()){
-            if(pessimisticLocked){
-                g2.drawImage(new ImageIcon("images/red.png").getImage(), 280,5 ,null);
-                lockButton.setVisible(true);
-            }else{
-                //g2.drawImage(new ImageIcon("images/green.png").getImage(), 280, 5 ,null);
-                lockButton.setVisible(false);
+            if (isPessimistic()) {
+                if (pessimisticLocked) {
+                    g2.drawImage(new ImageIcon("images/red.png").getImage(), 280, 5, null);
+                    lockButton.setVisible(true);
+                }else{
+                    //g2.drawImage(new ImageIcon("images/green.png").getImage(), 280, 5 ,null);
+                    lockButton.setVisible(false);
+                }
             }
-        }
-        //g.setColor(new Color(250,250,250));
-		//g.drawLine(0, 21, getWidth(), 21);
-        
-        
-        if(closable){
-            BufferedImage bi = new BufferedImage(30,30, BufferedImage.TYPE_INT_ARGB);
-            Graphics gx = bi.getGraphics();
+            //g.setColor(new Color(250,250,250));
+            //g.drawLine(0, 21, getWidth(), 21);
 
-            gx.drawImage(EBIConstant.ICON_CLOSE.getImage(), 0, 0, null);
-            g2.drawImage(bi,getWidth()-25,2,null);
-        }
-        
-        
-		//setOpaque(false);
+            if (closable) {
+                BufferedImage bi = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
+                Graphics gx = bi.getGraphics();
 
+                gx.drawImage(EBIConstant.ICON_CLOSE.getImage(), 0, 0, null);
+                g2.drawImage(bi, getWidth() - 25, 2, null);
+            }
+
+        }
 	}
 
     /**
@@ -245,7 +243,6 @@ public class EBIVisualPanel extends JXPanel {
 			jTextFieldChanged.setForeground(new Color(240,240,240));
 			jTextFieldChanged.setFocusable(false);
 			jTextFieldChanged.setVisible(false);
-
 		}
 		return jTextFieldChanged;
 	}
@@ -279,7 +276,7 @@ public class EBIVisualPanel extends JXPanel {
     }
 
     public void setModuleIcon(ImageIcon pIcon){
-		if(pIcon != null){
+            if(pIcon != null){
 		    iconPanel.setIcon(pIcon);
             iconPanel.repaint();
             this.updateUI();
@@ -300,6 +297,7 @@ public class EBIVisualPanel extends JXPanel {
 		if(visible == true ){
 			jTextFieldAdded.setVisible(true);
 			jTextFieldChanged.setVisible(true);
+            moduleTitle.setVisible(true);
             if(isAssignable()){
               jTextComboAddedFrom.setVisible(true);
               jTextFieldAddedFrom.setVisible(false);
@@ -313,8 +311,8 @@ public class EBIVisualPanel extends JXPanel {
 			createdFrom.setVisible(true);
 			changedDate.setVisible(true);
 			changedFrom.setVisible(true);
-
 		}else{
+            moduleTitle.setVisible(false);
 			jTextFieldAdded.setVisible(false);
             jTextFieldAddedFrom.setVisible(false);
             jTextComboAddedFrom.setVisible(false);
@@ -421,12 +419,21 @@ public class EBIVisualPanel extends JXPanel {
 		
 	}
 
-
-    public boolean isClosable() {
+    public boolean isClosable(){
         return closable;
     }
 
-    public void setClosable(boolean closable) {
+    public void setClosable(boolean closable){
         this.closable = closable;
     }
+
+    public void showStripe(boolean showStripe){
+        this.showStripe=showStripe;
+    }
+
+    public boolean isShowStripe(){
+        return showStripe;
+    }
+
+
 }

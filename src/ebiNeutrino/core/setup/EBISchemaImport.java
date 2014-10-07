@@ -21,13 +21,13 @@ import javax.swing.WindowConstants;
 import ebiNeutrino.core.EBIDBConnection;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
+import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import ebiNeutrinoSDK.utils.Encrypter;
 
-public class EBISchemaImport extends EBIDialogExt {
+public class EBISchemaImport extends EBIDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EBIVisualPanelTemplate jContentPane = null;
@@ -58,7 +58,7 @@ public class EBISchemaImport extends EBIDialogExt {
 		setResizable(false);
 		setModal(true);
         setName("EBISchemaImport");
-        setClosable(true);
+        setUndecorated(true);
         catalog = catalogDB;
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 	    Dimension frameSize = getSize();
@@ -89,7 +89,7 @@ public class EBISchemaImport extends EBIDialogExt {
 			JLabel jLabel= new JLabel();
 			jLabel.setBounds(new Rectangle(132, 9, 266, 28));
 			jLabel.setText("EBI Neutrino Database Schema Import");
-			jContentPane = new EBIVisualPanelTemplate();
+			jContentPane = new EBIVisualPanelTemplate(false);
             jContentPane.setEnableChangeComponent(false);
 			jContentPane.setLayout(null);
 			jContentPane.add(getJButtonCancel(), null);

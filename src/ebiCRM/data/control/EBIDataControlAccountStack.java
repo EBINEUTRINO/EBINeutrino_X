@@ -12,13 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
@@ -68,32 +66,33 @@ public class EBIDataControlAccountStack {
                  return false;
                 }
             }
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+            int srow =  acStackPanel.ebiModule.gui.getTable("accountTable","Account").getSelectedRow();
+            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
             if (isEdit == false) {
                 actStack.setCreateddate(new Date());
-                actStack.setCreatedfrom(acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").getCreatedFrom());
+                actStack.setCreatedfrom(acStackPanel.ebiModule.gui.getVisualPanel("Account").getCreatedFrom());
             } else {
                 actStack.setChangeddate(new Date());
                 actStack.setChangedfrom(EBIPGFactory.ebiUser);
             }
 
-            actStack.setAccountdate(acStackPanel.ebiModule.guiRenderer.getTimepicker("dateText","Account").getDate());
-            actStack.setAccountnr(acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","Account").getText());
-            actStack.setAccountname(acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","Account").getText());
-            actStack.setAccountvalue(Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").getValue().toString()));
+            actStack.setAccountdate(acStackPanel.ebiModule.gui.getTimepicker("dateText","Account").getDate());
+            actStack.setAccountnr(acStackPanel.ebiModule.gui.getTextfield("numberText","Account").getText());
+            actStack.setAccountname(acStackPanel.ebiModule.gui.getTextfield("nameText","Account").getText());
+            actStack.setAccountvalue(Double.parseDouble(acStackPanel.ebiModule.gui.getFormattedTextfield("amountText","Account").getValue().toString()));
 
-            actStack.setAccountDebit(acStackPanel.ebiModule.guiRenderer.getTextfield("debitText","Account").getText());
-            actStack.setAccountDName(acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionDebit","Account").getText());
-            actStack.setAccountDValue(Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").getValue().toString()));
+            actStack.setAccountDebit(acStackPanel.ebiModule.gui.getTextfield("debitText","Account").getText());
+            actStack.setAccountDName(acStackPanel.ebiModule.gui.getTextfield("descriptionDebit","Account").getText());
+            actStack.setAccountDValue(Double.parseDouble(acStackPanel.ebiModule.gui.getFormattedTextfield("debitCal","Account").getValue().toString()));
 
-            actStack.setAccountCredit(acStackPanel.ebiModule.guiRenderer.getTextfield("creditText","Account").getText());
-            actStack.setAccountCName(acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionCredit","Account").getText());
-            actStack.setAccountCValue(Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("creditCal","Account").getValue().toString()));
+            actStack.setAccountCredit(acStackPanel.ebiModule.gui.getTextfield("creditText","Account").getText());
+            actStack.setAccountCName(acStackPanel.ebiModule.gui.getTextfield("descriptionCredit","Account").getText());
+            actStack.setAccountCValue(Double.parseDouble(acStackPanel.ebiModule.gui.getFormattedTextfield("creditCal","Account").getValue().toString()));
 
             actStack.setAccountType(acStackPanel.accountDebitCreditType);
             actStack.setAccountTaxType(acStackPanel.accountDebitTaxName);
 
-            actStack.setDescription(acStackPanel.ebiModule.guiRenderer.getTextarea("descriptionText","Account").getText());
+            actStack.setDescription(acStackPanel.ebiModule.gui.getTextarea("descriptionText","Account").getText());
 
            if (!actStack.getAccountstackdocses().isEmpty()) {
                 Iterator iter = actStack.getAccountstackdocses().iterator();
@@ -101,12 +100,12 @@ public class EBIDataControlAccountStack {
                    Accountstackdocs docs = (Accountstackdocs)iter.next();
                    docs.setAccountstack(actStack);
                    if(docs.getAccountdocid() < 0){ docs.setAccountdocid(null);}
-                   acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(docs);
+                   acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(docs);
                 }
             }
-            storeActualCredit(acStackPanel.ebiModule.guiRenderer.getTextfield("creditText","Account").getText(),creditValue);
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(actStack);
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+            storeActualCredit(acStackPanel.ebiModule.gui.getTextfield("creditText","Account").getText(),creditValue);
+            acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(actStack);
+            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
             dataNew(true);
        }catch(Exception ex){
           ex.printStackTrace();
@@ -119,9 +118,9 @@ public class EBIDataControlAccountStack {
         Query query;
         try {
         	
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
 
-            query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
+            query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
                     "from Accountstack where acstackid=? ").setInteger(0, id);
 
             Iterator iter =  query.iterate();
@@ -130,44 +129,44 @@ public class EBIDataControlAccountStack {
                 this.accountID = id;
 
                 actStack = (Accountstack) iter.next();
-                acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setID(id);
-                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(actStack);
+                acStackPanel.ebiModule.gui.getVisualPanel("Account").setID(id);
+                acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(actStack);
 
-                acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setCreatedDate(acStackPanel.ebiModule.ebiPGFactory.
+                acStackPanel.ebiModule.gui.getVisualPanel("Account").setCreatedDate(acStackPanel.ebiModule.system.
                                                                                             getDateToString(actStack.getCreateddate() == null
                                                                                                                     ? new Date() : actStack.getCreateddate()));
 
-                acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setCreatedFrom(actStack.getCreatedfrom() ==
+                acStackPanel.ebiModule.gui.getVisualPanel("Account").setCreatedFrom(actStack.getCreatedfrom() ==
                                                                                     null ? EBIPGFactory.ebiUser : actStack.getCreatedfrom());
 
                 if (actStack.getChangeddate() != null) {
-                    acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setChangedDate(acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getChangeddate()));
-                    acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setChangedFrom(actStack.getChangedfrom());
+                    acStackPanel.ebiModule.gui.getVisualPanel("Account").setChangedDate(acStackPanel.ebiModule.system.getDateToString(actStack.getChangeddate()));
+                    acStackPanel.ebiModule.gui.getVisualPanel("Account").setChangedFrom(actStack.getChangedfrom());
                 } else {
-                    acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setChangedDate("");
-                    acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setChangedFrom("");
+                    acStackPanel.ebiModule.gui.getVisualPanel("Account").setChangedDate("");
+                    acStackPanel.ebiModule.gui.getVisualPanel("Account").setChangedFrom("");
                 }
 
-                acStackPanel.ebiModule.guiRenderer.getTimepicker("dateText","Account").setDate(actStack.getAccountdate() == null ? new Date() : actStack.getAccountdate() );
-                //acStackPanel.ebiModule.guiRenderer.getTimepicker("dateText","Account").getEditor().setText(acStackPanel.ebiModule.ebiPGFactory.getDateToString(actStack.getAccountdate()));
-                acStackPanel.ebiModule.guiRenderer.getTextfield("numberText", "Account").setText(actStack.getAccountnr());
-                acStackPanel.ebiModule.guiRenderer.getTextfield("nameText", "Account").setText(actStack.getAccountname());
-                acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("amountText", "Account").setValue(actStack.getAccountvalue() == null ? 0.0 : actStack.getAccountvalue());
-                acStackPanel.ebiModule.guiRenderer.getTextfield("debitText", "Account").setText(actStack.getAccountDebit());
-                acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionDebit", "Account").setText(actStack.getAccountDName());
-                acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("debitCal", "Account").setValue(actStack.getAccountDValue() == null ? 0.0 : actStack.getAccountDValue());
+                acStackPanel.ebiModule.gui.getTimepicker("dateText","Account").setDate(actStack.getAccountdate() == null ? new Date() : actStack.getAccountdate() );
+                //acStackPanel.mod.gui.getTimepicker("dateText","Account").getEditor().setText(acStackPanel.mod.system.getDateToString(actStack.getAccountdate()));
+                acStackPanel.ebiModule.gui.getTextfield("numberText", "Account").setText(actStack.getAccountnr());
+                acStackPanel.ebiModule.gui.getTextfield("nameText", "Account").setText(actStack.getAccountname());
+                acStackPanel.ebiModule.gui.getFormattedTextfield("amountText", "Account").setValue(actStack.getAccountvalue() == null ? 0.0 : actStack.getAccountvalue());
+                acStackPanel.ebiModule.gui.getTextfield("debitText", "Account").setText(actStack.getAccountDebit());
+                acStackPanel.ebiModule.gui.getTextfield("descriptionDebit", "Account").setText(actStack.getAccountDName());
+                acStackPanel.ebiModule.gui.getFormattedTextfield("debitCal", "Account").setValue(actStack.getAccountDValue() == null ? 0.0 : actStack.getAccountDValue());
 
-                acStackPanel.ebiModule.guiRenderer.getTextfield("creditText","Account").setText(actStack.getAccountCredit());
-                acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionCredit","Account").setText(actStack.getAccountCName());
-                acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("creditCal", "Account").setValue(actStack.getAccountCValue() == null ? 0.0 : actStack.getAccountCValue());
-                acStackPanel.ebiModule.guiRenderer.getTextarea("descriptionText", "Account").setText(actStack.getDescription());
+                acStackPanel.ebiModule.gui.getTextfield("creditText","Account").setText(actStack.getAccountCredit());
+                acStackPanel.ebiModule.gui.getTextfield("descriptionCredit","Account").setText(actStack.getAccountCName());
+                acStackPanel.ebiModule.gui.getFormattedTextfield("creditCal", "Account").setValue(actStack.getAccountCValue() == null ? 0.0 : actStack.getAccountCValue());
+                acStackPanel.ebiModule.gui.getTextarea("descriptionText", "Account").setText(actStack.getDescription());
                 acStackPanel.accountDebitCreditType = actStack.getAccountType();
                 acStackPanel.accountDebitTaxName = actStack.getAccountTaxType();
 
                 dataShowDoc();
                 acStackPanel.isEdit = true;
-                acStackPanel.ebiModule.ebiPGFactory.getDataStore("Account","ebiEdit",true);
-                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+                acStackPanel.ebiModule.system.getDataStore("Account","ebiEdit",true);
+                acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
 
             
             }else{
@@ -189,7 +188,7 @@ public class EBIDataControlAccountStack {
                  return;
             }
 
-            query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
+            query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
                     "from Accountstack where acstackid=? ").setInteger(0, id);
 
             Iterator iter =  query.iterate();
@@ -200,11 +199,11 @@ public class EBIDataControlAccountStack {
 
                     if (act.getAcstackid() == id) {
                         try {
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").delete(act);
+                            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+                            acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").delete(act);
 
-                            acStackPanel.ebiModule.ebiPGFactory.getDataStore("Account","ebiDelete",true);
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+                            acStackPanel.ebiModule.system.getDataStore("Account","ebiDelete",true);
+                            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
                         } catch (HibernateException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
@@ -236,10 +235,10 @@ public class EBIDataControlAccountStack {
         acStackPanel.showDebitID = -1;
         acStackPanel.isEdit=false;
         acStackPanel.isDebit = false;
-        acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").setID(-1);
+        acStackPanel.ebiModule.gui.getVisualPanel("Account").setID(-1);
         actStack = new Accountstack();
 
-        acStackPanel.ebiModule.ebiPGFactory.getDataStore("Account","ebiNew",true);
+        acStackPanel.ebiModule.system.getDataStore("Account","ebiNew",true);
         dataShowDoc();
         if(load){
             acStackPanel.initialize();
@@ -251,14 +250,13 @@ public class EBIDataControlAccountStack {
                 @Override
                 public void run() {
 
-                    acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    acStackPanel.ebiModule.system.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            int srow =  acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").getSelectedRow();
                             Query query;
                             try {
-                                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+                                acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
 
                                 if(!"".equals(invoiceYear) && !"null".equals(invoiceYear)){
                                     Calendar calendar1 = new GregorianCalendar();
@@ -271,12 +269,12 @@ public class EBIDataControlAccountStack {
                                     calendar2.set(Calendar.MONTH,Calendar.DECEMBER);
                                     calendar2.set(Calendar.YEAR,Integer.parseInt(invoiceYear));
 
-                                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac where ac.accountdate between ? and ? order by ac.createddate desc ");
+                                    query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac where ac.accountdate between ? and ? order by ac.createddate desc ");
                                     query.setDate(0,calendar1.getTime());
                                     query.setDate(1, calendar2.getTime());
 
                                 }else{
-                                    query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac order by ac.createddate desc");
+                                    query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery("from Accountstack ac order by ac.createddate desc");
                                 }
 
                                 if(query.list().size() > 0){
@@ -289,9 +287,9 @@ public class EBIDataControlAccountStack {
                                     int i = 0;
                                     while (iter.hasNext()) {
                                         Accountstack act = (Accountstack) iter.next();
-                                        acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
+                                        acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
                                         acStackPanel.tabModAccount.data[i][0] = act.getAccountType() == 1 ? D : C;
-                                        acStackPanel.tabModAccount.data[i][1] = acStackPanel.ebiModule.ebiPGFactory.getDateToString(act.getAccountdate());
+                                        acStackPanel.tabModAccount.data[i][1] = acStackPanel.ebiModule.system.getDateToString(act.getAccountdate());
                                         acStackPanel.tabModAccount.data[i][2] = act.getAccountnr() == null ? "" : act.getAccountnr();
                                         acStackPanel.tabModAccount.data[i][3] = act.getAccountname() == null ? "" : act.getAccountname();
                                         acStackPanel.tabModAccount.data[i][4] = currency.format(act.getAccountvalue()) == null ? "" : currency.format(act.getAccountvalue());
@@ -304,14 +302,13 @@ public class EBIDataControlAccountStack {
                                     acStackPanel.tabModAccount.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
                                 }
                                 acStackPanel.tabModAccount.fireTableDataChanged();
-                                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+                                acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
                             }catch(Exception ex){
                                 ex.printStackTrace();
                             }finally {
-                                acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                                acStackPanel.ebiModule.system.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                             }
 
-                            acStackPanel.ebiModule.guiRenderer.getTable("accountTable","Account").changeSelection(srow,0,false,false);
 
                         }
                     });
@@ -327,9 +324,9 @@ public class EBIDataControlAccountStack {
 
         map.put("ID", 0);
 
-        acStackPanel.ebiModule.ebiPGFactory.getIEBIReportSystemInstance().
+        acStackPanel.ebiModule.system.getIEBIReportSystemInstance().
                 useReportSystem(map,
-                acStackPanel.ebiModule.ebiPGFactory.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_PRINT_ACCOUNT")),
+                acStackPanel.ebiModule.system.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_PRINT_ACCOUNT")),
                 "Account");
        }catch(Exception ex){}
     }
@@ -345,9 +342,9 @@ public class EBIDataControlAccountStack {
                 if (doc.getAccountdocid() == id) {
                       if(id >= 0){
                         try {
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").delete(doc);
-                            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+                            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+                            acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").delete(doc);
+                            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -362,7 +359,7 @@ public class EBIDataControlAccountStack {
 
     public void dataNewDoc() {
       try{
-        File fs = acStackPanel.ebiModule.ebiPGFactory.getOpenDialog(JFileChooser.FILES_ONLY);
+        File fs = acStackPanel.ebiModule.system.getOpenDialog(JFileChooser.FILES_ONLY);
         if (fs != null) {
             byte[] file = readFileToByte(fs);
             if (file != null) {
@@ -436,7 +433,7 @@ public class EBIDataControlAccountStack {
                     Accountstackdocs obj = (Accountstackdocs) itr.next();
 
                     acStackPanel.tabModDoc.data[i][0] = obj.getName() == null ? "" : obj.getName();
-                    acStackPanel.tabModDoc.data[i][1] = acStackPanel.ebiModule.ebiPGFactory.getDateToString(obj.getCreateddate()) == null ? "" : acStackPanel.ebiModule.ebiPGFactory.getDateToString(obj.getCreateddate());
+                    acStackPanel.tabModDoc.data[i][1] = acStackPanel.ebiModule.system.getDateToString(obj.getCreateddate()) == null ? "" : acStackPanel.ebiModule.system.getDateToString(obj.getCreateddate());
                     acStackPanel.tabModDoc.data[i][2] = obj.getCreatedfrom() == null ? "" : obj.getCreatedfrom();
                     if(obj.getAccountdocid() == null || obj.getAccountdocid() < 0){ obj.setAccountdocid(((i+1) *(-1)));}
                     acStackPanel.tabModDoc.data[i][3] = obj.getAccountdocid();
@@ -453,42 +450,42 @@ public class EBIDataControlAccountStack {
 
         try {
 
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
 
             Query query;
             Accountstackcd actcd=null;
 
             if(isEdit){
-                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd where accountstackcdid=?").setInteger(0,id);
                 Iterator it = query.iterate();
                 if(it.hasNext()){
                     actcd = (Accountstackcd) it.next();
                 }
             }else{
-                if(checkifRecordExist(acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","creditDebitDialog").getText(),
-                        acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","creditDebitDialog").getText())){
+                if(checkifRecordExist(acStackPanel.ebiModule.gui.getTextfield("numberText","creditDebitDialog").getText(),
+                        acStackPanel.ebiModule.gui.getTextfield("nameText","creditDebitDialog").getText())){
                     return;
                 }
                 actcd = new Accountstackcd();
             }
             actcd.setCreateddate(new Date());
             actcd.setCreatedfrom(EBIPGFactory.ebiUser);
-            actcd.setCreditdebitnumber(acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","creditDebitDialog").getText());
-            actcd.setCreditdebitname(acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","creditDebitDialog").getText());
-            actcd.setCreditdebittaxtname(acStackPanel.ebiModule.guiRenderer.getComboBox("taxTypeText","creditDebitDialog").getSelectedItem().toString());
+            actcd.setCreditdebitnumber(acStackPanel.ebiModule.gui.getTextfield("numberText","creditDebitDialog").getText());
+            actcd.setCreditdebitname(acStackPanel.ebiModule.gui.getTextfield("nameText","creditDebitDialog").getText());
+            actcd.setCreditdebittaxtname(acStackPanel.ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").getSelectedItem().toString());
 
-            if(acStackPanel.ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").getSelectedIndex() == 3){
-                 actcd.setCreditdebitvalue(Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("valueText","creditDebitDialog").getValue() == null ? "0.0" :
-                   acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("valueText","creditDebitDialog").getValue().toString() ));
+            if(acStackPanel.ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").getSelectedIndex() == 3){
+                 actcd.setCreditdebitvalue(Double.parseDouble(acStackPanel.ebiModule.gui.getFormattedTextfield("valueText","creditDebitDialog").getValue() == null ? "0.0" :
+                   acStackPanel.ebiModule.gui.getFormattedTextfield("valueText","creditDebitDialog").getValue().toString() ));
             }else{
-                actcd.setCreditdebitvalue(Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getLabel("taxValue","creditDebitDialog").getText().replace("%","")));
+                actcd.setCreditdebitvalue(Double.parseDouble(acStackPanel.ebiModule.gui.getLabel("taxValue","creditDebitDialog").getText().replace("%","")));
             }
 
-            actcd.setCreditdebittype(acStackPanel.ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").getSelectedIndex());
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(actcd);
-            acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
-            dataShowCreditDebit(acStackPanel.ebiModule.guiRenderer.getComboBox("selectCreditDebitText","Account").getSelectedIndex());
+            actcd.setCreditdebittype(acStackPanel.ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").getSelectedIndex());
+            acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(actcd);
+            acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+            dataShowCreditDebit(acStackPanel.ebiModule.gui.getComboBox("selectCreditDebitText","Account").getSelectedIndex());
             dataNewCreditDebit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -499,20 +496,20 @@ public class EBIDataControlAccountStack {
     public void dataEditCreditDebit(int id){
         try {
 
-            Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+            Query query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                     createQuery("from Accountstackcd where accountstackcdid=?").setInteger(0,id);
 
             Iterator it = query.iterate();
             if(it.hasNext()){
                Accountstackcd  actcd = (Accountstackcd) it.next();
-               acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","creditDebitDialog").setText(actcd.getCreditdebitnumber());
-               acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","creditDebitDialog").setText(actcd.getCreditdebitname());
+               acStackPanel.ebiModule.gui.getTextfield("numberText","creditDebitDialog").setText(actcd.getCreditdebitnumber());
+               acStackPanel.ebiModule.gui.getTextfield("nameText","creditDebitDialog").setText(actcd.getCreditdebitname());
                if(actcd.getCreditdebittype() == 3){
-                  acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("valueText","creditDebitDialog").setValue(actcd.getCreditdebitvalue());
+                  acStackPanel.ebiModule.gui.getFormattedTextfield("valueText","creditDebitDialog").setValue(actcd.getCreditdebitvalue());
                }else{
-                  acStackPanel.ebiModule.guiRenderer.getComboBox("taxTypeText","creditDebitDialog").setSelectedItem(actcd.getCreditdebittaxtname());
+                  acStackPanel.ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").setSelectedItem(actcd.getCreditdebittaxtname());
                }
-               acStackPanel.ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").setSelectedIndex(actcd.getCreditdebittype());
+               acStackPanel.ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").setSelectedIndex(actcd.getCreditdebittype());
 
             }
         } catch (Exception e) {
@@ -523,16 +520,16 @@ public class EBIDataControlAccountStack {
     public void dataDeleteCreditDebit(int id){
         try {
 
-            Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+            Query query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                     createQuery("from Accountstackcd where accountstackcdid=?").setInteger(0,id);
 
             Iterator it = query.iterate();
             if(it.hasNext()){
                Accountstackcd  actcd = (Accountstackcd) it.next();
-               acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
-               acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").delete(actcd);
-               acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
-               dataShowCreditDebit(acStackPanel.ebiModule.guiRenderer.getComboBox("selectCreditDebitText","Account").getSelectedIndex());
+               acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+               acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").delete(actcd);
+               acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+               dataShowCreditDebit(acStackPanel.ebiModule.gui.getComboBox("selectCreditDebitText","Account").getSelectedIndex());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -540,11 +537,11 @@ public class EBIDataControlAccountStack {
     }
 
     public void dataNewCreditDebit(){
-         acStackPanel.ebiModule.guiRenderer.getTextfield("numberText","creditDebitDialog").setText("");
-         acStackPanel.ebiModule.guiRenderer.getTextfield("nameText","creditDebitDialog").setText("");
-         acStackPanel.ebiModule.guiRenderer.getComboBox("taxTypeText","creditDebitDialog").setSelectedIndex(0);
-         acStackPanel.ebiModule.guiRenderer.getLabel("taxValue","creditDebitDialog").setText("0.0%");
-         acStackPanel.ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").setSelectedIndex(0);
+         acStackPanel.ebiModule.gui.getTextfield("numberText","creditDebitDialog").setText("");
+         acStackPanel.ebiModule.gui.getTextfield("nameText","creditDebitDialog").setText("");
+         acStackPanel.ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").setSelectedIndex(0);
+         acStackPanel.ebiModule.gui.getLabel("taxValue","creditDebitDialog").setText("0.0%");
+         acStackPanel.ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").setSelectedIndex(0);
     }
 
     private String getAccountNamefromId(int id) {
@@ -553,15 +550,15 @@ public class EBIDataControlAccountStack {
         Query query;
 
         try {
-                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
-                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
+                acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
                         "from Accountstack where acstackid=? ").setInteger(0, id);
 
                 Iterator iter =  query.iterate();
 
                 if (iter.hasNext()) {
                     Accountstack act = (Accountstack) iter.next();
-                    acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
+                    acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").refresh(act);
                     name = act.getAccountname();
 
                 }
@@ -577,7 +574,7 @@ public class EBIDataControlAccountStack {
       double toRet = 0.0;
       try{
 
-           query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+           query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd where creditdebitnumber=? and creditdebittype=?");
 
            query.setString(0,cdnr);
@@ -603,11 +600,11 @@ public class EBIDataControlAccountStack {
 
          Query query;
             if(isCredit){
-                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd where creditdebitnumber=? and creditdebittype>=2").setString(0,nr);
 
             }else{
-                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd where creditdebitnumber=? and creditdebittype < 2").setString(0,nr);
             }
 
@@ -626,14 +623,14 @@ public class EBIDataControlAccountStack {
     public void storeActualCredit(String acnr, double crdValue){
 
         try{
-         Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+         Query query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                     createQuery("from Accountstackcd where creditdebitnumber=?").setString(0,acnr);
 
             Iterator it = query.iterate();
             if(it.hasNext()){
               Accountstackcd  actcd = (Accountstackcd) it.next();
               actcd.setCreditdebitvalue(crdValue);
-              acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(actcd);
+              acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(actcd);
             }
         }catch(Exception ex){
            ex.printStackTrace();
@@ -642,7 +639,7 @@ public class EBIDataControlAccountStack {
 
     public void dataCalculateTax(int id){
        try {
-         Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+         Query query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                     createQuery("from Accountstackcd where accountstackcdid=?").setInteger(0,id);
 
            Iterator it = query.iterate();
@@ -654,10 +651,10 @@ public class EBIDataControlAccountStack {
                 double val = 0.0;
 
 
-               if(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").getValue()  != null) {
-                   val = "".equals(acStackPanel.ebiModule.guiRenderer.
+               if(acStackPanel.ebiModule.gui.getFormattedTextfield("amountText","Account").getValue()  != null) {
+                   val = "".equals(acStackPanel.ebiModule.gui.
                            getFormattedTextfield("amountText", "Account").getText()) ? 0.0 :
-                           Double.parseDouble(acStackPanel.ebiModule.guiRenderer.
+                           Double.parseDouble(acStackPanel.ebiModule.gui.
                                    getFormattedTextfield("amountText", "Account").getValue().toString());
                }
 
@@ -665,11 +662,11 @@ public class EBIDataControlAccountStack {
 
                    acStackPanel.showDebitID = actcd.getAccountstackcdid();
 
-                   acStackPanel.ebiModule.guiRenderer.
+                   acStackPanel.ebiModule.gui.
                             getFormattedTextfield("debitCal","Account").setValue(
                                                         ((actcd.getCreditdebitvalue() * val)/100));
-                   acStackPanel.ebiModule.guiRenderer.getTextfield("debitText","Account").setText(actcd.getCreditdebitnumber());
-                   acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionDebit","Account").setText(actcd.getCreditdebitname());
+                   acStackPanel.ebiModule.gui.getTextfield("debitText","Account").setText(actcd.getCreditdebitnumber());
+                   acStackPanel.ebiModule.gui.getTextfield("descriptionDebit","Account").setText(actcd.getCreditdebitname());
 
                    if(actcd.getCreditdebittype() == 1){
                        acStackPanel.isDebit = true;
@@ -680,11 +677,11 @@ public class EBIDataControlAccountStack {
                   acStackPanel.accountDebitTaxName = actcd.getCreditdebittaxtname();
                }else{
                   acStackPanel.showCreditID = actcd.getAccountstackcdid();
-                  acStackPanel.ebiModule.guiRenderer.getTextfield("creditText","Account").setText(actcd.getCreditdebitnumber());
-                  acStackPanel.ebiModule.guiRenderer.getTextfield("descriptionCredit","Account").setText(actcd.getCreditdebitname());
+                  acStackPanel.ebiModule.gui.getTextfield("creditText","Account").setText(actcd.getCreditdebitnumber());
+                  acStackPanel.ebiModule.gui.getTextfield("descriptionCredit","Account").setText(actcd.getCreditdebitname());
 
-                  double tax = Double.parseDouble(acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").getValue() == null ? "0.0" :
-                                                    acStackPanel.ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").getValue().toString());
+                  double tax = Double.parseDouble(acStackPanel.ebiModule.gui.getFormattedTextfield("debitCal","Account").getValue() == null ? "0.0" :
+                                                    acStackPanel.ebiModule.gui.getFormattedTextfield("debitCal","Account").getValue().toString());
 
                   if(acStackPanel.isDebit){
                     creditValue =  actcd.getCreditdebitvalue() -  (tax + val);
@@ -692,7 +689,7 @@ public class EBIDataControlAccountStack {
                     creditValue =  actcd.getCreditdebitvalue() +  (tax + val);
                   }
 
-                  acStackPanel.ebiModule.guiRenderer.
+                  acStackPanel.ebiModule.gui.
                             getFormattedTextfield("creditCal","Account").setValue(creditValue);
                }
 
@@ -706,7 +703,7 @@ public class EBIDataControlAccountStack {
     private boolean checkifRecordExist(String nr, String name) {
        boolean exist = false;
        try {
-        Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+        Query query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd where creditdebitnumber=? or creditdebitname=?  ");
              query.setString(0,nr);
              query.setString(1,name);
@@ -730,17 +727,17 @@ public class EBIDataControlAccountStack {
         Thread thr = new Thread(new Runnable() {
             @Override
             public void run() {
-                acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                acStackPanel.ebiModule.system.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         Query query;
                         try {
                             if(type == 0){
-                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd ");
                             }else{
-                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd where creditdebittype=?").setInteger(0,type);
                             }
 
@@ -767,7 +764,7 @@ public class EBIDataControlAccountStack {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }finally {
-                            acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            acStackPanel.ebiModule.system.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
                     }
                 });
@@ -784,14 +781,14 @@ public class EBIDataControlAccountStack {
             @Override
             public void run() {
 
-                acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                acStackPanel.ebiModule.system.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         Query query;
                         try {
                             if(type == 0){
-                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery("from Accountstackcd ");
                             }else{
                                 String qs;
@@ -801,7 +798,7 @@ public class EBIDataControlAccountStack {
                                     qs = "from Accountstackcd where creditdebittype =?";
                                 }
 
-                                query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+                                query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                                         createQuery(qs).setInteger(0,type);
                             }
                             if(query.list().size() > 0){
@@ -826,7 +823,7 @@ public class EBIDataControlAccountStack {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }finally {
-                            acStackPanel.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            acStackPanel.ebiModule.system.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
                     }
                 });
@@ -841,14 +838,14 @@ public class EBIDataControlAccountStack {
        try{
             type = type.toLowerCase();
             if (".jpg".equals(type) || ".gif".equals(type) || ".png".equals(type)) {
-                EBIImageViewer view = new EBIImageViewer(acStackPanel.ebiModule.ebiPGFactory.getMainFrame(),new javax.swing.ImageIcon(fileName));
+                EBIImageViewer view = new EBIImageViewer(acStackPanel.ebiModule.system.getMainFrame(),new javax.swing.ImageIcon(fileName));
                 view.setVisible(true);
             } else if (".pdf".equals(type)) {
-                acStackPanel.ebiModule.ebiPGFactory.openPDFReportFile(fileName);
+                acStackPanel.ebiModule.system.openPDFReportFile(fileName);
             } else if (".doc".equals(type)) {
-                acStackPanel.ebiModule.ebiPGFactory.openTextDocumentFile(fileName);
+                acStackPanel.ebiModule.system.openTextDocumentFile(fileName);
             } else {
-                acStackPanel.ebiModule.ebiPGFactory.openTextDocumentFile(fileName);
+                acStackPanel.ebiModule.system.openTextDocumentFile(fileName);
             }
        }catch(Exception ex){}
     }
@@ -883,7 +880,7 @@ public class EBIDataControlAccountStack {
         double ret=0.0;
         Query query;
         try {
-            query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
+            query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").
                     createQuery("from Companyproducttax where name=? ").setString(0,value);
 
                     Iterator it = query.iterate();
@@ -929,8 +926,8 @@ public class EBIDataControlAccountStack {
                        calendar2.set(Calendar.YEAR,Calendar.getInstance().get(Calendar.YEAR));
                    }
 
-                  acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
-                  Query query = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
+                  acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").begin();
+                  Query query = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
                                     "from Crminvoice where date between ? and ? ");
                   query.setDate(0,calendar1.getTime());
                   query.setDate(1, calendar2.getTime());
@@ -946,7 +943,7 @@ public class EBIDataControlAccountStack {
                        Crminvoiceposition pox = (Crminvoiceposition)ivnIter.next();
                        String inpNr = "INV"+inv.getBeginchar()+inv.getInvoicenr()+pox.getPositionid();
 
-                       Query query1 = acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
+                       Query query1 = acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").createQuery(
                                     "from Accountstack where accountnr=?");
                        query1.setString(0,inpNr);
 
@@ -975,12 +972,12 @@ public class EBIDataControlAccountStack {
                            storeActualCredit("1000",nValx);
                            stck.setAccountType(2);
                            stck.setDescription(inv.getContactdescription());
-                           acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(stck);
+                           acStackPanel.ebiModule.system.hibernate.getHibernateSession("EBIACCOUNT_SESSION").saveOrUpdate(stck);
                        }
                      }
                   }
 
-                acStackPanel.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
+                acStackPanel.ebiModule.system.hibernate.getHibernateTransaction("EBIACCOUNT_SESSION").commit();
 
                }catch(Exception ex){
                   ex.printStackTrace();
@@ -1011,10 +1008,10 @@ public class EBIDataControlAccountStack {
     public boolean checkIslocked(int compNr, boolean showMessage) throws Exception{
             boolean ret = false;
         try{
-            PreparedStatement ps =  acStackPanel.ebiModule.ebiPGFactory.database.initPreparedStatement("SELECT * FROM EBIPESSIMISTIC WHERE RECORDID=? AND MODULENAME=?  ");
+            PreparedStatement ps =  acStackPanel.ebiModule.system.database.initPreparedStatement("SELECT * FROM EBIPESSIMISTIC WHERE RECORDID=? AND MODULENAME=?  ");
             ps.setInt(1,compNr);
             ps.setString(2,"CRMAccount");
-            ResultSet rs = acStackPanel.ebiModule.ebiPGFactory.database.executePreparedQuery(ps);
+            ResultSet rs = acStackPanel.ebiModule.system.database.executePreparedQuery(ps);
 
             rs.last();
 
@@ -1044,9 +1041,9 @@ public class EBIDataControlAccountStack {
             }
 
              // Pessimistic Dialog view info
-             acStackPanel.ebiModule.guiRenderer.getLabel("userx","pessimisticViewDialog").setText(lockUser);
-             acStackPanel.ebiModule.guiRenderer.getLabel("statusx","pessimisticViewDialog").setText(EBIPGFactory.getLANG("EBI_LANG_LOCKED"));
-             acStackPanel.ebiModule.guiRenderer.getLabel("timex","pessimisticViewDialog").setText(lockTime.toString());
+             acStackPanel.ebiModule.gui.getLabel("userx","pessimisticViewDialog").setText(lockUser);
+             acStackPanel.ebiModule.gui.getLabel("statusx","pessimisticViewDialog").setText(EBIPGFactory.getLANG("EBI_LANG_LOCKED"));
+             acStackPanel.ebiModule.gui.getLabel("timex","pessimisticViewDialog").setText(lockTime.toString());
         }catch(Exception ex){}
         return ret;
     }
@@ -1059,11 +1056,11 @@ public class EBIDataControlAccountStack {
     public void activateLockedInfo(boolean enabled){
        try{
         //show red icon to a visual panel
-        acStackPanel.ebiModule.guiRenderer.getVisualPanel("Account").showLockIcon(enabled);
+        acStackPanel.ebiModule.gui.getVisualPanel("Account").showLockIcon(enabled);
 
         //hide the delete buttons from crm panel
-        acStackPanel.ebiModule.guiRenderer.getButton("saveAccount","Account").setEnabled(enabled ? false : true);
-        acStackPanel.ebiModule.guiRenderer.getButton("deleteAccount","Account").setVisible(enabled ? false : true);
+        acStackPanel.ebiModule.gui.getButton("saveAccount","Account").setEnabled(enabled ? false : true);
+        acStackPanel.ebiModule.gui.getButton("deleteAccount","Account").setVisible(enabled ? false : true);
        }catch(Exception ex){}
     }
 

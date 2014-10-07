@@ -33,6 +33,7 @@ public class EBIModuleManagement {
     private Object module = null;
     private String selectedModName = "";
     private String selectedModXMLPath = "";
+    private int selectedModindex=-1;
 
 
 	/**
@@ -113,23 +114,26 @@ public class EBIModuleManagement {
 	}
 
     public boolean showModule(Object module,Object o){
+
          try{
-		  ebiMain.container.removeAllFromContainer();
+              ebiMain.container.removeAllFromContainer();
+              if(!((IEBIExtension)module).ebiMain(o)){
+                  return false;
+              }
 
- 		  if(!((IEBIExtension)module).ebiMain(o)){
-			  return false;
-		  }
+              this.module = module;
+              ebiExtension =(IEBIExtension)module;
+              loadCRM(selectedModName, selectedModXMLPath);
+              ebiMain.container.setSelectedModIndex(selectedModindex);
+              addF5Action();
 
-          this.module = module;
-          ebiExtension =(IEBIExtension)module;
-          loadCRM(selectedModName, selectedModXMLPath);
-
-          addF5Action();
          }catch(Exception ex){
              ex.printStackTrace();
              EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE);
          }
+
          ebiMain.setVisible(true);
+
         return true;
 	}
 
@@ -141,7 +145,9 @@ public class EBIModuleManagement {
     public void addF5Action(){
         Action refreshAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
+                selectedModindex = ebiMain.container.getSelectedListIndex();
                 reloadSelectedModule();
+
             }
         };
         try{
@@ -158,7 +164,6 @@ public class EBIModuleManagement {
         Object obj = getActiveModule();
         //Return object to restore
         Object restore = releaseModule(obj);
-
         showModule(obj,restore);
 
         ebiMain.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -172,13 +177,11 @@ public class EBIModuleManagement {
 
       try{
         if(ebiMain.guiRenderer.existPackage("Leads") && name.equals("Leads")){
-
             ebiMain.guiRenderer.useGUI("Leads");
                 ((EBICRMModule) ebiMain.getActiveModule()).getLeadPane();
             ebiMain.guiRenderer.showGUI();
 
         }else if(name.equals("Leads")){
-
             ebiMain.guiRenderer.loadGUI(xmlPath);
                 ((EBICRMModule) ebiMain.getActiveModule()).getLeadPane().initialize();
                 ((EBICRMModule) ebiMain.getActiveModule()).getLeadPane().initializeAction();
@@ -231,7 +234,7 @@ public class EBIModuleManagement {
 
         selectedModName = name;
         selectedModXMLPath = xmlPath;
-      }catch(Exception ex){}
+      }catch(Exception ex){ ex.printStackTrace();}
     }
 
 

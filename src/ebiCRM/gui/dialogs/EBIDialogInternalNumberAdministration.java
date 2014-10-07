@@ -34,7 +34,7 @@ public class EBIDialogInternalNumberAdministration{
 
         this.ebiModule = module;
         this.isInvoice = isInvoice;
-        ebiModule.guiRenderer.loadGUI("CRMDialog/autoIncNrDialog.xml");
+        ebiModule.gui.loadGUI("CRMDialog/autoIncNrDialog.xml");
         tabModel = new MyTableModelInternalNumber();
         if(isInvoice){
             fillComboInvoiceCategory();
@@ -52,15 +52,15 @@ public class EBIDialogInternalNumberAdministration{
         ResultSet set = null;
 
         try {
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT NAME FROM CRMINVOICECATEGORY ");
-            set = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
-            ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement("SELECT NAME FROM CRMINVOICECATEGORY ");
+            set = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
+            ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
 
             set.last();
             if (set.getRow() > 0) {
                 set.beforeFirst();
                 while (set.next()) {
-                    ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").addItem(set.getString("NAME"));
+                    ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").addItem(set.getString("NAME"));
                 }
             }
 
@@ -82,15 +82,15 @@ public class EBIDialogInternalNumberAdministration{
         ResultSet set = null;
 
         try {
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT NAME FROM COMPANYCATEGORY ");
-            set = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
-            ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement("SELECT NAME FROM COMPANYCATEGORY ");
+            set = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
+            ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
 
             set.last();
             if (set.getRow() > 0) {
                 set.beforeFirst();
                 while (set.next()) {
-                    ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").addItem(set.getString("NAME"));
+                    ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").addItem(set.getString("NAME"));
                 }
             }
 
@@ -113,13 +113,13 @@ public class EBIDialogInternalNumberAdministration{
      * @return void
      */
     public void setVisible() {
-        ebiModule.guiRenderer.getEBIDialog("autoIncNrDialog").setTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_FORM_INTERNAL_NUMBER_SETTING"));
-        ebiModule.guiRenderer.getVisualPanel("autoIncNrDialog").setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_FORM_INTERNAL_NUMBER_SETTING"));
-        ebiModule.guiRenderer.getLabel("numberTo","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_NUMBER_TO"));
-        ebiModule.guiRenderer.getLabel("numberFrom","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_NUMBER_FROM"));
-        ebiModule.guiRenderer.getLabel("category","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_CATEGORY"));
+        ebiModule.gui.getEBIDialog("autoIncNrDialog").setTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_FORM_INTERNAL_NUMBER_SETTING"));
+        ebiModule.gui.getVisualPanel("autoIncNrDialog").setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_FORM_INTERNAL_NUMBER_SETTING"));
+        ebiModule.gui.getLabel("numberTo","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_NUMBER_TO"));
+        ebiModule.gui.getLabel("numberFrom","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_C_NUMBER_FROM"));
+        ebiModule.gui.getLabel("category","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_CATEGORY"));
 
-        ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").addKeyListener(new KeyAdapter() {
+        ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").addKeyListener(new KeyAdapter() {
 
                 public void keyPressed(KeyEvent e) {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -132,8 +132,8 @@ public class EBIDialogInternalNumberAdministration{
                 }
             });
 
-        ebiModule.guiRenderer.getButton("saveValue","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_SAVE"));
-        ebiModule.guiRenderer.getButton("saveValue","autoIncNrDialog").addActionListener(new ActionListener() {
+        ebiModule.gui.getButton("saveValue","autoIncNrDialog").setText(EBIPGFactory.getLANG("EBI_LANG_SAVE"));
+        ebiModule.gui.getButton("saveValue","autoIncNrDialog").addActionListener(new ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     if (isEdit == false) {
@@ -144,8 +144,8 @@ public class EBIDialogInternalNumberAdministration{
                 }
             });
 
-        ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").setModel(tabModel);
-        ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        ebiModule.gui.getTable("valueTable","autoIncNrDialog").setModel(tabModel);
+        ebiModule.gui.getTable("valueTable","autoIncNrDialog").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
                     if (e.getValueIsAdjusting()) {
@@ -154,23 +154,23 @@ public class EBIDialogInternalNumberAdministration{
 
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
                     if(lsm.getMinSelectionIndex() != -1){
-                        selRow = ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                        selRow = ebiModule.gui.getTable("valueTable","autoIncNrDialog").convertRowIndexToModel(lsm.getMinSelectionIndex());
                     }
 
                     if (lsm.isSelectionEmpty()) {
-                        ebiModule.guiRenderer.getButton("editBnt","autoIncNrDialog").setEnabled(false);
-                        ebiModule.guiRenderer.getButton("deleteBnt","autoIncNrDialog").setEnabled(false);
-                    } else if (!tabModel.getRow(ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").getSelectedRow())[0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                        ebiModule.guiRenderer.getButton("editBnt","autoIncNrDialog").setEnabled(true);
-                        ebiModule.guiRenderer.getButton("deleteBnt","autoIncNrDialog").setEnabled(true);
+                        ebiModule.gui.getButton("editBnt","autoIncNrDialog").setEnabled(false);
+                        ebiModule.gui.getButton("deleteBnt","autoIncNrDialog").setEnabled(false);
+                    } else if (!tabModel.getRow(ebiModule.gui.getTable("valueTable","autoIncNrDialog").getSelectedRow())[0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
+                        ebiModule.gui.getButton("editBnt","autoIncNrDialog").setEnabled(true);
+                        ebiModule.gui.getButton("deleteBnt","autoIncNrDialog").setEnabled(true);
                     }
                 }
             });
-            ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").addMouseListener(new MouseAdapter() {
+            ebiModule.gui.getTable("valueTable","autoIncNrDialog").addMouseListener(new MouseAdapter() {
 
                 public void mouseClicked(MouseEvent e) {
-                    if(ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").rowAtPoint(e.getPoint()) != -1){
-                        selRow = ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").convertRowIndexToModel(ebiModule.guiRenderer.getTable("valueTable","autoIncNrDialog").rowAtPoint(e.getPoint()));
+                    if(ebiModule.gui.getTable("valueTable","autoIncNrDialog").rowAtPoint(e.getPoint()) != -1){
+                        selRow = ebiModule.gui.getTable("valueTable","autoIncNrDialog").convertRowIndexToModel(ebiModule.gui.getTable("valueTable","autoIncNrDialog").rowAtPoint(e.getPoint()));
                     }
                     if (e.getClickCount() == 2 && selRow != -1) {
 
@@ -181,40 +181,40 @@ public class EBIDialogInternalNumberAdministration{
                 }
             });
 
-           ebiModule.guiRenderer.getButton("newBnt","autoIncNrDialog").setIcon(EBIConstant.ICON_NEW);
-           ebiModule.guiRenderer.getButton("newBnt","autoIncNrDialog").addActionListener(new java.awt.event.ActionListener() {
+           ebiModule.gui.getButton("newBnt","autoIncNrDialog").setIcon(EBIConstant.ICON_NEW);
+           ebiModule.gui.getButton("newBnt","autoIncNrDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     newNumber();
                 }
            });
 
-          ebiModule.guiRenderer.getButton("editBnt","autoIncNrDialog").setIcon(EBIConstant.ICON_EDIT);
-          ebiModule.guiRenderer.getButton("editBnt","autoIncNrDialog").setEnabled(false);
-          ebiModule.guiRenderer.getButton("editBnt","autoIncNrDialog").addActionListener(new java.awt.event.ActionListener() {
+          ebiModule.gui.getButton("editBnt","autoIncNrDialog").setIcon(EBIConstant.ICON_EDIT);
+          ebiModule.gui.getButton("editBnt","autoIncNrDialog").setEnabled(false);
+          ebiModule.gui.getButton("editBnt","autoIncNrDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     editNumber(selRow);
                 }
             });
 
-        ebiModule.guiRenderer.getButton("deleteBnt","autoIncNrDialog").setIcon(EBIConstant.ICON_DELETE);
-        ebiModule.guiRenderer.getButton("deleteBnt","autoIncNrDialog").setEnabled(false);
-        ebiModule.guiRenderer.getButton("deleteBnt","autoIncNrDialog").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("deleteBnt","autoIncNrDialog").setIcon(EBIConstant.ICON_DELETE);
+        ebiModule.gui.getButton("deleteBnt","autoIncNrDialog").setEnabled(false);
+        ebiModule.gui.getButton("deleteBnt","autoIncNrDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     deleteNumber(selRow);
                 }
          });
 
-        ebiModule.guiRenderer.showGUI();
+        ebiModule.gui.showGUI();
     }
 
     private void newNumber() {
-        ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").setSelectedIndex(0);
-        ebiModule.guiRenderer.getTextfield("numberFromText","autoIncNrDialog").setText("");
-        ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").setText("");
-        ebiModule.guiRenderer.getTextfield("beginCharText","autoIncNrDialog").setText("");
+        ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").setSelectedIndex(0);
+        ebiModule.gui.getTextfield("numberFromText","autoIncNrDialog").setText("");
+        ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").setText("");
+        ebiModule.gui.getTextfield("beginCharText","autoIncNrDialog").setText("");
         this.id = 0;
         isEdit = false;
         if(isInvoice){
@@ -235,20 +235,20 @@ public class EBIDialogInternalNumberAdministration{
             }else{
                table ="COMPANYNUMBER";
             }
-            ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(true);
-            int cid = retriveIDFromCategory(ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
+            ebiModule.system.getIEBIDatabase().setAutoCommit(true);
+            int cid = retriveIDFromCategory(ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
             String sql = "INSERT INTO "+table+" (CATEGORY,NUMBERFROM,NUMBERTO,BEGINCHAR,CATEGORYID) values(?,?,?,?,?) ";
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement(sql);
-            ps.setString(1, ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
-            ps.setInt(2, Integer.parseInt(ebiModule.guiRenderer.getTextfield("numberFromText","autoIncNrDialog").getText()));
-            ps.setInt(3, Integer.parseInt(ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").getText()));
-            ps.setString(4, ebiModule.guiRenderer.getTextfield("beginCharText","autoIncNrDialog").getText());
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement(sql);
+            ps.setString(1, ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
+            ps.setInt(2, Integer.parseInt(ebiModule.gui.getTextfield("numberFromText","autoIncNrDialog").getText()));
+            ps.setInt(3, Integer.parseInt(ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").getText()));
+            ps.setString(4, ebiModule.gui.getTextfield("beginCharText","autoIncNrDialog").getText());
             ps.setInt(5, cid );
-            ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedStmt(ps);
+            ebiModule.system.getIEBIDatabase().executePreparedStmt(ps);
         } catch (SQLException ex) {
             EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.NEUTRINO_DEBUG_MESSAGE);
         } finally {
-            ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(false);
+            ebiModule.system.getIEBIDatabase().setAutoCommit(false);
         }
         newNumber();
     }
@@ -264,9 +264,9 @@ public class EBIDialogInternalNumberAdministration{
                table ="COMPANYCATEGORY";
             }
             String sql = "SELECT * FROM "+table+" WHERE NAME=?";
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement(sql);
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement(sql);
             ps.setString(1, category);
-            set = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+            set = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
             set.last();
             if (set.getRow() > 0) {
                 set.beforeFirst();
@@ -294,7 +294,7 @@ public class EBIDialogInternalNumberAdministration{
             return;
         }
         try {
-            ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(true);
+            ebiModule.system.getIEBIDatabase().setAutoCommit(true);
             String table;
             if(isInvoice){
                table = "CRMINVOICENUMBER";
@@ -302,20 +302,20 @@ public class EBIDialogInternalNumberAdministration{
                table ="COMPANYNUMBER";
             }
             String sql = "UPDATE "+table+" SET CATEGORY=?,NUMBERFROM=?,NUMBERTO=?, CATEGORYID=?, BEGINCHAR=? where ID=?";
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement(sql);
-            int cid = retriveIDFromCategory(ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
-            ps.setString(1, ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
-            ps.setInt(2, Integer.parseInt(ebiModule.guiRenderer.getTextfield("numberFromText","autoIncNrDialog").getText()));
-            ps.setInt(3, Integer.parseInt(ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").getText()));
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement(sql);
+            int cid = retriveIDFromCategory(ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
+            ps.setString(1, ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").getSelectedItem().toString());
+            ps.setInt(2, Integer.parseInt(ebiModule.gui.getTextfield("numberFromText","autoIncNrDialog").getText()));
+            ps.setInt(3, Integer.parseInt(ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").getText()));
             ps.setInt(4, cid);
-            ps.setString(5, ebiModule.guiRenderer.getTextfield("beginCharText","autoIncNrDialog").getText());
+            ps.setString(5, ebiModule.gui.getTextfield("beginCharText","autoIncNrDialog").getText());
             ps.setInt(6, id);
-            ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedStmt(ps);
+            ebiModule.system.getIEBIDatabase().executePreparedStmt(ps);
 
         } catch (SQLException ex) {
             EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.NEUTRINO_DEBUG_MESSAGE);
         } finally {
-            ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(false);
+            ebiModule.system.getIEBIDatabase().setAutoCommit(false);
         }
         newNumber();
     }
@@ -329,10 +329,10 @@ public class EBIDialogInternalNumberAdministration{
         }
 
         id = Integer.parseInt(tabModel.data[row][0].toString());
-        ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").setSelectedItem(tabModel.data[row][1].toString());
-        ebiModule.guiRenderer.getTextfield("numberFromText","autoIncNrDialog").setText(tabModel.data[row][2].toString());
-        ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").setText(tabModel.data[row][3].toString());
-        ebiModule.guiRenderer.getTextfield("beginCharText","autoIncNrDialog").setText(tabModel.data[row][4].toString());
+        ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").setSelectedItem(tabModel.data[row][1].toString());
+        ebiModule.gui.getTextfield("numberFromText","autoIncNrDialog").setText(tabModel.data[row][2].toString());
+        ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").setText(tabModel.data[row][3].toString());
+        ebiModule.gui.getTextfield("beginCharText","autoIncNrDialog").setText(tabModel.data[row][4].toString());
 
         isEdit = true;
 
@@ -347,30 +347,30 @@ public class EBIDialogInternalNumberAdministration{
         }
 
         try{
-            ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(true);
+            ebiModule.system.getIEBIDatabase().setAutoCommit(true);
             String table;
             if(isInvoice){
                table = "CRMINVOICENUMBER";
             }else{
                table ="COMPANYNUMBER";
             }
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("DELETE FROM "+table+" where ID=? ");
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement("DELETE FROM "+table+" where ID=? ");
             ps.setString(1,tabModel.data[row][0].toString());
 
-            if (!ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedStmt(ps)) {
+            if (!ebiModule.system.getIEBIDatabase().executePreparedStmt(ps)) {
                 EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_ERROR_DELETE_RECORD")).Show(EBIMessage.ERROR_MESSAGE);
             }
 
             newNumber();
        }catch(SQLException ex){ex.printStackTrace();}
         finally{
-            ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(false);
+            ebiModule.system.getIEBIDatabase().setAutoCommit(false);
         }
     }
 
     private void showNumber() {
-        PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT * FROM COMPANYNUMBER ");
-        ResultSet set = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+        PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement("SELECT * FROM COMPANYNUMBER ");
+        ResultSet set = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
         try {
             set.last();
             if (set.getRow() > 0) {
@@ -404,8 +404,8 @@ public class EBIDialogInternalNumberAdministration{
     }
 
     private void showInvoiceNumber() {
-        PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT * FROM CRMINVOICENUMBER ");
-        ResultSet set = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+        PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement("SELECT * FROM CRMINVOICENUMBER ");
+        ResultSet set = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
         try {
             set.last();
             if (set.getRow() > 0) {
@@ -439,26 +439,26 @@ public class EBIDialogInternalNumberAdministration{
     }
 
     private boolean validateInput() {
-        if (ebiModule.guiRenderer.getComboBox("categoryCombo","autoIncNrDialog").getSelectedIndex() == 0) {
+        if (ebiModule.gui.getComboBox("categoryCombo","autoIncNrDialog").getSelectedIndex() == 0) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERROR_INSERT_CATEGORY")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
-        if ("".equals(ebiModule.guiRenderer.getTextfield("numberFromText","autoIncNrDialog").getText())) {
+        if ("".equals(ebiModule.gui.getTextfield("numberFromText","autoIncNrDialog").getText())) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERROR_NUMBER_FROM_IS_NOT_VALID")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
         try {
-            Integer.parseInt(ebiModule.guiRenderer.getTextfield("numberFromText","autoIncNrDialog").getText());
+            Integer.parseInt(ebiModule.gui.getTextfield("numberFromText","autoIncNrDialog").getText());
         } catch (NumberFormatException ex) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERROR_NUMBER_FROM_IS_NOT_VALID")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
-        if ("".equals(ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").getText())) {
+        if ("".equals(ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").getText())) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERORR_NUMBER_TO_IS_NOT_VALID")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
         try {
-            Integer.parseInt(ebiModule.guiRenderer.getTextfield("numberToText","autoIncNrDialog").getText());
+            Integer.parseInt(ebiModule.gui.getTextfield("numberToText","autoIncNrDialog").getText());
         } catch (NumberFormatException ex) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERORR_NUMBER_TO_IS_NOT_VALID")).Show(EBIMessage.ERROR_MESSAGE);
             return false;

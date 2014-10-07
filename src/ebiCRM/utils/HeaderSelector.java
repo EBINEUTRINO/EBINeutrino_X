@@ -35,12 +35,12 @@ public class HeaderSelector extends MouseAdapter{
 	        String oldValue = (String)column.getHeaderValue();  
 	        Object value = editor.showEditor(th, col, oldValue); 
 	        ((EBIAbstractTableModel)table.getModel()).columnNames[col] =value.toString();
-	        ebiModule.guiRenderer.getComboBox("keyText", "csvSetImportDialog").removeAllItems();
-	        ebiModule.guiRenderer.getComboBox("keyText", "csvSetImportDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
+	        ebiModule.gui.getComboBox("keyText", "csvSetImportDialog").removeAllItems();
+	        ebiModule.gui.getComboBox("keyText", "csvSetImportDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
 	        
 	        for(int i =0; i<((EBIAbstractTableModel)table.getModel()).columnNames.length; i++){
 	        	if(i <= ((EBIAbstractTableModel)table.getModel()).columnNames.length){
-	        		ebiModule.guiRenderer.getComboBox("keyText", "csvSetImportDialog").addItem(((EBIAbstractTableModel)table.getModel()).columnNames[i]);
+	        		ebiModule.gui.getComboBox("keyText", "csvSetImportDialog").addItem(((EBIAbstractTableModel)table.getModel()).columnNames[i]);
 	        	}
 	        }
 	        

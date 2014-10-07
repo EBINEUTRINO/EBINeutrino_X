@@ -7,7 +7,7 @@ import java.awt.*;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-public class EBIWinWaiting extends EBIDialogExt {
+public class EBIWinWaiting extends EBIDialog {
 
 		private JPanel jPanel = null;
 		public JProgressBar jProgressBar = null;
@@ -18,7 +18,7 @@ public class EBIWinWaiting extends EBIDialogExt {
 			super(null);
 			initialize();
 		    setAlwaysOnTop(true);
-            setClosable(false);
+            setUndecorated(true);
             setName("EBIWinWaiting");
             jProgressBar.setString(name);
 			Dimension d = Toolkit.getDefaultToolkit().getScreenSize();

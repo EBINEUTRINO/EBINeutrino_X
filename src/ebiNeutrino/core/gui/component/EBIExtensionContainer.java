@@ -34,9 +34,7 @@ public class EBIExtensionContainer implements IEBIContainer {
 
     public EBIExtensionContainer(EBIMain main) {
         ebiMain = main;
-
         myListmodel = new DefaultListModel();
-
     }
 
 
@@ -56,7 +54,7 @@ public class EBIExtensionContainer implements IEBIContainer {
         jListnames.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent e) {
                 int index = jListnames.locationToIndex(e.getPoint());
-                setSelectedListIndex(index);
+                loadSelectedListIndex(index);
             }
         });
         jListnames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -109,14 +107,18 @@ public class EBIExtensionContainer implements IEBIContainer {
 
     /**
      * Add scrollable component to container
-     * @param  title 		: Container title
-     * @param  component : Component instance
-     * @param  icon		: Container Icon
-     * @param  mnemo_key	    : Mnemonic key
+     * @param  title 	   : Container title
+     * @param  component   : Component instance
+     * @param  icon		   : Container Icon
+     * @param  mnemo_key   : Mnemonic key
      * @return index
      */
-    public int addScrollableContainer(String title, final JComponent component, ImageIcon icon, int mnemo_key) {
+
+    public int addScrollableContainer(String title, final JComponent component, ImageIcon icon, int mnemo_key){
         mainPane.removeAll();
+        mainPane.revalidate();
+        mainPane.repaint();
+        splitVerticalPane.repaint();
         component.setPreferredSize(new Dimension(component.getWidth(), component.getHeight()));
         jscrollPane = new JScrollPane();
         jscrollPane.setViewportView(component);
@@ -132,38 +134,12 @@ public class EBIExtensionContainer implements IEBIContainer {
         }
 
         this.registeredTabs.add(0,new String[]{component.getName(),title});
-        mainPane.revalidate();
-        splitVerticalPane.repaint();
+
+
         return 0;
     }
 
-    /**
-     * Add scrollable and closable component to container
-     * @param  title 					: Container title
-     * @param  component 			: Component instance
-     * @param  icon					: Container Icon
-     * @param  mnemo_key	    			: Mnemonic key
-     * @param
-     * @return index
-     */
-    public int addScrollableClosableContainer(String title, JComponent component, ImageIcon icon, int mnemo_key) {
-        mainPane.removeAll();
-        component.setPreferredSize(new Dimension(component.getWidth(), component.getHeight()));
-        jscrollPane = new JScrollPane();
-        jscrollPane.getVerticalScrollBar().setUnitIncrement(150);
-        jscrollPane.setViewportView(component);
-        jscrollPane.setDoubleBuffered(true);
-        jscrollPane.setPreferredSize(new Dimension(component.getWidth(), component.getHeight()));
-        jscrollPane.setBorder(null);
-        mainPane.add(jscrollPane,BorderLayout.CENTER);
-
-        this.registeredTabs.add(0,new String[]{component.getName(),title});
-        mainPane.revalidate();
-        splitVerticalPane.repaint();
-        return 0;
-    }
-
-    public void setSelectedListIndex(int index){
+    public void loadSelectedListIndex(int index){
         EBIListItem itm =  (EBIListItem)myListmodel.get(index);
         if(itm.isApp()) {
             ebiMain.mod_management.loadScript(itm.getModname(), itm.getPath());
@@ -171,6 +147,15 @@ public class EBIExtensionContainer implements IEBIContainer {
             ebiMain.mod_management.loadCRM(itm.getModname(), itm.getPath());
         }
         jListnames.setSelectedIndex(index);
+
+    }
+
+    public void setSelectedModIndex(int index){
+        jListnames.setSelectedIndex(index);
+    }
+
+    public int getSelectedListIndex(){
+        return jListnames.getSelectedIndex();
     }
 
     public void addListItem(EBIListItem itm){
@@ -182,7 +167,7 @@ public class EBIExtensionContainer implements IEBIContainer {
     }
 
 
-    public void removeAllFromContainer() {
+    public void removeAllFromContainer(){
         try{
             this.mainPane.removeAll();
             this.registeredTabs.clear();

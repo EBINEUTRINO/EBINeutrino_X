@@ -12,16 +12,16 @@ import java.util.Map;
 
 import javax.swing.*;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
+import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import org.jdesktop.swingx.JXDatePicker;
 
 import ebiNeutrinoSDK.EBIPGFactory;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIPropertiesRW;
 
-public class EBIDialogReportParamenter extends EBIDialogExt {
+public class EBIDialogReportParamenter extends EBIDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EBIVisualPanelTemplate jContentPane = null;
@@ -280,7 +280,7 @@ public class EBIDialogReportParamenter extends EBIDialogExt {
 			JLabel jLabel1=new JLabel();
 			jLabel1.setBounds(new Rectangle(13, 11, 375, 31));
 			jLabel1.setText(EBIPGFactory.getLANG("EBI_LANG_REPORT_INSERT_PARAMETER"));
-			jContentPane = new EBIVisualPanelTemplate();
+			jContentPane = new EBIVisualPanelTemplate(false);
             jContentPane.setClosable(true);
             jContentPane.setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_REPORT_PARAMETER"));
             jContentPane.setModuleIcon(EBIConstant.ICON_REPORT);

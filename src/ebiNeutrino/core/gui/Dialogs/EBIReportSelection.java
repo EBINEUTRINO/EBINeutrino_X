@@ -16,20 +16,19 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import ebiNeutrino.core.EBIReportSystem;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
+import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.interfaces.IEBIDatabase;
 import ebiNeutrinoSDK.utils.EBIConstant;
 
-public class EBIReportSelection extends EBIDialogExt {
+public class EBIReportSelection extends EBIDialog {
 
 	private EBIVisualPanelTemplate jContentPane = null;
 	private JList jListReports = null;
@@ -179,7 +178,7 @@ public class EBIReportSelection extends EBIDialogExt {
 			JLabel jLabel= new JLabel();
 			jLabel.setBounds(new Rectangle(8, 67, 301, 21));
 			jLabel.setText(EBIPGFactory.getLANG("EBI_REPORT_SELECTION_TEXT"));
-			jContentPane = new EBIVisualPanelTemplate();
+			jContentPane = new EBIVisualPanelTemplate(false);
             jContentPane.setModuleTitle(EBIPGFactory.getLANG("EBI_REPORT_SELECTION"));
             jContentPane.setEnableChangeComponent(false);
             jContentPane.setModuleIcon(EBIConstant.ICON_REPORT);

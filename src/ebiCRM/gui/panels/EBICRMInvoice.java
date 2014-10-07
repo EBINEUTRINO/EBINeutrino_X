@@ -7,14 +7,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Date;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -28,7 +24,6 @@ import ebiCRM.EBICRMModule;
 import ebiCRM.data.control.EBIDataControlInvoice;
 import ebiCRM.gui.dialogs.EBICRMDialogAddProduct;
 import ebiCRM.gui.dialogs.EBIDialogSearchContact;
-import ebiCRM.table.models.MyTableModelCRMProduct;
 import ebiCRM.utils.AbstractTableKeyAction;
 import ebiCRM.utils.JTableActionMaps;
 import ebiNeutrinoSDK.EBIPGFactory;
@@ -40,8 +35,8 @@ import ebiNeutrinoSDK.utils.EBIConstant;
 
 public class EBICRMInvoice {
 
-    public EBICRMModule ebiModule = null;
-    public MyTableModelCRMProduct tabModProduct = null;
+    public EBICRMModule mod = null;
+    public EBIAbstractTableModel tabModProduct = null;
     public boolean isEdit = false;
     public static String[] invoiceStatus = null;
     public static String[] invoiceCategory = null;
@@ -51,108 +46,106 @@ public class EBICRMInvoice {
     public String beginChar = "";
     public int invoiceNr = -1;
     private EBIAbstractTableModel model = null;
+    public String selectedYear = "";
 
     /**
      * This is the default constructor
      */
     public EBICRMInvoice(EBICRMModule ebiMod) {
         isEdit = false;
-        ebiModule = ebiMod;
+        mod = ebiMod;
         try {
-            ebiModule.ebiPGFactory.hibernate.openHibernateSession("EBIINVOICE_SESSION");
+            mod.system.hibernate.openHibernateSession("EBIINVOICE_SESSION");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        tabModProduct = new MyTableModelCRMProduct();
         dataControlInvoice = new EBIDataControlInvoice(this);
+        tabModProduct = (EBIAbstractTableModel) mod.gui.getTable("invoicePositionTable","Invoice").getModel();
+        model = (EBIAbstractTableModel) mod.gui.getTable("tableTotalInvoice","Invoice").getModel();
+        dataControlInvoice.dataShow();
     }
 
     public void initializeAction(){
-        model = (EBIAbstractTableModel)ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getModel();
 
-        ebiModule.guiRenderer.getLabel("filterTable","Invoice").setHorizontalAlignment(SwingUtilities.RIGHT);
-        ebiModule.guiRenderer.getTextfield("filterTableText","Invoice").addKeyListener(new KeyListener(){
+        mod.gui.getLabel("filterTable","Invoice").setHorizontalAlignment(SwingUtilities.RIGHT);
+        mod.gui.getTextfield("filterTableText","Invoice").addKeyListener(new KeyListener(){
             public void keyTyped(KeyEvent e){}
 
             public void keyPressed(KeyEvent e){
-                ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").setRowFilter(RowFilters.regexFilter("(?i)"+ebiModule.guiRenderer.getTextfield("filterTableText","Invoice").getText()));
+                mod.gui.getTable("tableTotalInvoice","Invoice").setRowFilter(RowFilters.regexFilter("(?i)"+ mod.gui.getTextfield("filterTableText","Invoice").getText()));
             }
             public void keyReleased(KeyEvent e){
-                ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").setRowFilter(RowFilters.regexFilter("(?i)"+ebiModule.guiRenderer.getTextfield("filterTableText","Invoice").getText()));
+                mod.gui.getTable("tableTotalInvoice","Invoice").setRowFilter(RowFilters.regexFilter("(?i)"+ mod.gui.getTextfield("filterTableText","Invoice").getText()));
             }
         });
 
-        ebiModule.guiRenderer.getComboBox("invoiceStatusText", "Invoice").setEditable(true);
-        
-
-        ebiModule.guiRenderer.getComboBox("categoryText", "Invoice").addActionListener(new ActionListener() {
+        mod.gui.getComboBox("invoiceStatusText", "Invoice").setEditable(true);
+        mod.gui.getComboBox("categoryText", "Invoice").addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-                    if(!ebiModule.guiRenderer.getComboBox("categoryText","Invoice").getSelectedItem().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))){
-                              if(!isEdit || "-1".equals(ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").getText())){
-                                Object[] obj = ebiModule.dynMethod.getInternNumber(ebiModule.guiRenderer.getComboBox("categoryText","Invoice").getSelectedItem().toString(),true);
+                    if(!mod.gui.getComboBox("categoryText","Invoice").getSelectedItem().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))){
+                              if(!isEdit || "-1".equals(mod.gui.getTextfield("invoiceNrText","Invoice").getText())){
+                                Object[] obj = mod.dynMethod.getInternNumber(mod.gui.getComboBox("categoryText","Invoice").getSelectedItem().toString(),true);
                                 beginChar = obj[1].toString();
                                 invoiceNr = Integer.parseInt(obj[0].toString());
-                                ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setText(obj[1].toString()+obj[0].toString());
+                                mod.gui.getTextfield("invoiceNrText","Invoice").setText(obj[1].toString()+obj[0].toString());
                               }
 				    }
 
                 }
         });
 
-        ebiModule.guiRenderer.getButton("saveInvoice","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("saveInvoice","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                ebiSave();
+            saveInvoice();
             }
         });
 
         /***************************************/
         // Contact Information
         /**************************************/
-
-        ebiModule.guiRenderer.getButton("searchContact","Invoice").setIcon(EBIConstant.ICON_SEARCH);
-        ebiModule.guiRenderer.getButton("searchContact","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("searchContact","Invoice").setIcon(EBIConstant.ICON_SEARCH);
+        mod.gui.getButton("searchContact","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                 EBIDialogSearchContact addCon = new EBIDialogSearchContact(ebiModule,false);
+                 EBIDialogSearchContact addCon = new EBIDialogSearchContact(mod,false);
                 
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getComboBox("genderText","Invoice"), "Gender");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("titleText","Invoice"), "Position");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("surnameText","Invoice"), "Surname");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("nameText","Invoice"), "contact.Name");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("streetNrText","Invoice"), "Street");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("zipText","Invoice"), "Zip");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("locationText","Invoice"), "Location");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("countryText","Invoice"), "Country");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("postCodeText","Invoice"), "PBox");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("emailText","Invoice"), "EMail");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("faxText","Invoice"), "Fax");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("telefonText","Invoice"), "phone");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextarea("recDescription","Invoice"), "contact.description");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("companyNameText","Invoice"), "company.NAME");
-                    addCon.setValueToComponent(ebiModule.guiRenderer.getTextfield("internetText","Invoice"), "company.WEB");
+                    addCon.setValueToComponent(mod.gui.getComboBox("genderText","Invoice"), "Gender");
+                    addCon.setValueToComponent(mod.gui.getTextfield("titleText","Invoice"), "Position");
+                    addCon.setValueToComponent(mod.gui.getTextfield("surnameText","Invoice"), "Surname");
+                    addCon.setValueToComponent(mod.gui.getTextfield("nameText","Invoice"), "contact.Name");
+                    addCon.setValueToComponent(mod.gui.getTextfield("streetNrText","Invoice"), "Street");
+                    addCon.setValueToComponent(mod.gui.getTextfield("zipText","Invoice"), "Zip");
+                    addCon.setValueToComponent(mod.gui.getTextfield("locationText","Invoice"), "Location");
+                    addCon.setValueToComponent(mod.gui.getTextfield("countryText","Invoice"), "Country");
+                    addCon.setValueToComponent(mod.gui.getTextfield("postCodeText","Invoice"), "PBox");
+                    addCon.setValueToComponent(mod.gui.getTextfield("emailText","Invoice"), "EMail");
+                    addCon.setValueToComponent(mod.gui.getTextfield("faxText","Invoice"), "Fax");
+                    addCon.setValueToComponent(mod.gui.getTextfield("telefonText","Invoice"), "phone");
+                    addCon.setValueToComponent(mod.gui.getTextarea("recDescription","Invoice"), "contact.description");
+                    addCon.setValueToComponent(mod.gui.getTextfield("companyNameText","Invoice"), "company.NAME");
+                    addCon.setValueToComponent(mod.gui.getTextfield("internetText","Invoice"), "company.WEB");
 
                     addCon.setVisible();
             }
         });
 
-        ebiModule.guiRenderer.getComboBox("genderText","Invoice").setEditable(true);
+        mod.gui.getComboBox("genderText","Invoice").setEditable(true);
 
 
         /****************************************/
         // Product Information
         /***************************************/
     
-        ebiModule.guiRenderer.getButton("newPosition","Invoice").setIcon(EBIConstant.ICON_NEW);
-        ebiModule.guiRenderer.getButton("newPosition","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("newPosition","Invoice").setIcon(EBIConstant.ICON_NEW);
+        mod.gui.getButton("newPosition","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                  EBICRMDialogAddProduct product = new EBICRMDialogAddProduct(dataControlInvoice.getInvoice(), ebiModule);
+                  EBICRMDialogAddProduct product = new EBICRMDialogAddProduct(dataControlInvoice.getInvoice(), mod);
                   product.setVisible();
                   dataControlInvoice.calculateTotalAmount(); 
             }
         });
 
-        ebiModule.guiRenderer.getButton("deletePosition","Invoice").setIcon(EBIConstant.ICON_DELETE);
-        ebiModule.guiRenderer.getButton("deletePosition","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("deletePosition","Invoice").setIcon(EBIConstant.ICON_DELETE);
+        mod.gui.getButton("deletePosition","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 if (selectedProductRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                                equals(tabModProduct.data[selectedProductRow][0].toString())) {
@@ -165,8 +158,8 @@ public class EBICRMInvoice {
             }
         });
 
-        ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        mod.gui.getTable("invoicePositionTable","Invoice").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        mod.gui.getTable("invoicePositionTable","Invoice").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
                     if (e.getValueIsAdjusting()) {
@@ -176,14 +169,14 @@ public class EBICRMInvoice {
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                     if(lsm.getMinSelectionIndex() != -1){
-                        selectedProductRow = ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                        selectedProductRow = mod.gui.getTable("invoicePositionTable","Invoice").convertRowIndexToModel(lsm.getMinSelectionIndex());
                     }
 
                     if(tabModProduct.data.length > 0){
                         if (lsm.isSelectionEmpty()) {
-                            ebiModule.guiRenderer.getButton("deletePosition","Invoice").setEnabled(false);
+                            mod.gui.getButton("deletePosition","Invoice").setEnabled(false);
                         } else if (!tabModProduct.data[selectedProductRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                            ebiModule.guiRenderer.getButton("deletePosition","Invoice").setEnabled(true);
+                            mod.gui.getButton("deletePosition","Invoice").setEnabled(true);
                         }
                     }
                 }
@@ -193,31 +186,33 @@ public class EBICRMInvoice {
         // Available Invoice
         /*******************************************/
 
-        ebiModule.guiRenderer.getButton("newInvoice","Invoice").setIcon(EBIConstant.ICON_NEW);
-        ebiModule.guiRenderer.getButton("newInvoice","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("newInvoice","Invoice").setIcon(EBIConstant.ICON_NEW);
+        mod.gui.getButton("newInvoice","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                   ebiNew();
+              newInvoice();
             }
         });
 
 
-        ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setIcon(EBIConstant.ICON_DELETE);
-        ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("deleteInvoice","Invoice").setIcon(EBIConstant.ICON_DELETE);
+        mod.gui.getButton("deleteInvoice","Invoice").setEnabled(false);
+        mod.gui.getButton("deleteInvoice","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                             equals(model.data[selectedInvoiceRow][0].toString())) {
                         return;
                 }
 
-                ebiDelete();
+                if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
+                    deleteInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
+                }
             }
         });
 
 
-        ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setIcon(EBIConstant.ICON_REPORT);
-        ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getButton("reportInvoice","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("reportInvoice","Invoice").setIcon(EBIConstant.ICON_REPORT);
+        mod.gui.getButton("reportInvoice","Invoice").setEnabled(false);
+        mod.gui.getButton("reportInvoice","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                             equals(model.data[selectedInvoiceRow][0].toString())) {
@@ -227,9 +222,9 @@ public class EBICRMInvoice {
             }
         });
         
-        ebiModule.guiRenderer.getButton("sendEmail","Invoice").setIcon(EBIConstant.ICON_SEND_MAIL);
-        ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(false);
-        ebiModule.guiRenderer.getButton("sendEmail","Invoice").addActionListener(new ActionListener(){
+        mod.gui.getButton("sendEmail","Invoice").setIcon(EBIConstant.ICON_SEND_MAIL);
+        mod.gui.getButton("sendEmail","Invoice").setEnabled(false);
+        mod.gui.getButton("sendEmail","Invoice").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                                 equals(model.data[selectedInvoiceRow][0].toString())) {
@@ -243,8 +238,8 @@ public class EBICRMInvoice {
 
         });
 
-        ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        mod.gui.getTable("tableTotalInvoice","Invoice").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        mod.gui.getTable("tableTotalInvoice","Invoice").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
                     if (e.getValueIsAdjusting()) {
@@ -253,29 +248,23 @@ public class EBICRMInvoice {
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                     if(lsm.getMinSelectionIndex() != -1){
-                       try{
-                         selectedInvoiceRow = ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(lsm.getMinSelectionIndex());
-                       }catch(IndexOutOfBoundsException ex){}
+                         selectedInvoiceRow = mod.gui.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(lsm.getMinSelectionIndex());
                     }
-                   try{
-                        if (lsm.isSelectionEmpty()) {
-                            ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(false);
-                            ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(false);
-                            ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(false);
-                        }else if (!model.data[selectedInvoiceRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                            ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(true);
-                            ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(true);
-                            ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(true);
-                        }
-                   }catch(ArrayIndexOutOfBoundsException ex){
-                        ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setEnabled(false);
-                        ebiModule.guiRenderer.getButton("reportInvoice","Invoice").setEnabled(false);
-                        ebiModule.guiRenderer.getButton("sendEmail","Invoice").setEnabled(false);
-                   }
+
+                    if (lsm.isSelectionEmpty()) {
+                        mod.gui.getButton("deleteInvoice","Invoice").setEnabled(false);
+                        mod.gui.getButton("reportInvoice","Invoice").setEnabled(false);
+                        mod.gui.getButton("sendEmail","Invoice").setEnabled(false);
+                    }else if (!model.data[selectedInvoiceRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
+                        mod.gui.getButton("deleteInvoice","Invoice").setEnabled(true);
+                        mod.gui.getButton("reportInvoice","Invoice").setEnabled(true);
+                        mod.gui.getButton("sendEmail","Invoice").setEnabled(true);
+                    }
+
                 }
             });
 
-            new JTableActionMaps(ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice")).setTableAction(new AbstractTableKeyAction() {
+            new JTableActionMaps(mod.gui.getTable("tableTotalInvoice","Invoice")).setTableAction(new AbstractTableKeyAction() {
 
                 public void setDownKeyAction(int selRow) {
 
@@ -303,17 +292,17 @@ public class EBICRMInvoice {
                 }
             });
 
-            ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").addMouseListener(new java.awt.event.MouseAdapter() {
+            mod.gui.getTable("tableTotalInvoice","Invoice").addMouseListener(new java.awt.event.MouseAdapter() {
 
                 public void mouseReleased(java.awt.event.MouseEvent e) {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
 
-                        if (ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(model.data[selectedInvoiceRow][0].toString())) {
+                        if (mod.gui.getTable("tableTotalInvoice","Invoice").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(model.data[selectedInvoiceRow][0].toString())) {
                             return;
                         }
-                        selectedInvoiceRow = ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectedRow());
+                        selectedInvoiceRow = mod.gui.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(mod.gui.getTable("tableTotalInvoice","Invoice").getSelectedRow());
                         editInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
                         }
                     });
@@ -321,6 +310,82 @@ public class EBICRMInvoice {
                 }
             });
 
+
+        // Initialize Action for Account years
+        mod.gui.getComboBox("invoiceYearText", "Invoice").addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                if(((JComboBox)e.getSource()).getSelectedIndex() != -1){
+                    selectedYear = ((JComboBox)e.getSource()).getSelectedItem().toString();
+                }
+            }
+        });
+
+        mod.gui.getButton("updateYear","Invoice").addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+
+                if(mod.gui.getComboBox("invoiceYearText","Invoice").getItemCount() >= 1){
+                    boolean isAvailable = false;
+                    if(!"".equals(mod.gui.getComboBox("invoiceYearText","Invoice").getEditor().getItem())){
+                        for(int i = 0; i<= mod.gui.getComboBox("invoiceYearText","Invoice").getItemCount(); i++ ){
+                            if(mod.gui.getComboBox("invoiceYearText","Invoice").getEditor().getItem().equals(mod.gui.getComboBox("invoiceYearText","Invoice").getItemAt(i))){
+                                isAvailable = true;
+                                break;
+                            }
+                        }
+                        if(!isAvailable){
+                            mod.gui.getComboBox("invoiceYearText","Invoice").addItem(mod.gui.getComboBox("invoiceYearText","Invoice").getEditor().getItem().toString());
+                        }
+                    }else{
+                        if(!"".equals(selectedYear)){
+                            mod.gui.getComboBox("invoiceYearText","Invoice").removeItem(selectedYear);
+                        }
+                    }
+                }else{
+                    if(!"".equals(mod.gui.getComboBox("invoiceYearText","Invoice").getEditor().getItem())){
+                        mod.gui.getComboBox("invoiceYearText","Invoice").addItem(mod.gui.getComboBox("invoiceYearText","Invoice").getEditor().getItem().toString());
+                    }
+                }
+
+                // create comma separated value
+                String vSave = "";
+                if(mod.gui.getComboBox("invoiceYearText","Invoice").getItemCount() > 0){
+
+                    for(int i = 0; i< mod.gui.getComboBox("invoiceYearText","Invoice").getItemCount(); i++){
+
+                        if( i < mod.gui.getComboBox("invoiceYearText","Invoice").getItemCount()-1){
+                            vSave +=  mod.gui.getComboBox("invoiceYearText","Invoice").getItemAt(i).toString()+",";
+                        } else {
+                            vSave +=  mod.gui.getComboBox("invoiceYearText","Invoice").getItemAt(i).toString();
+                        }
+                    }
+                }
+
+                //  Sort
+                if(mod.gui.getComboBox("invoiceYearText","Invoice").getItemCount() > 0){
+
+                    final String [] avalItems = vSave.split(",");
+                    Arrays.sort(avalItems);
+                    final String selected = mod.gui.getComboBox("invoiceYearText","Invoice").getSelectedItem().toString();
+                    mod.gui.getComboBox("invoiceYearText","Invoice").removeAllItems();
+                    vSave = "";
+                    for(int i = 0; i< avalItems.length; i++){
+                        mod.gui.getComboBox("invoiceYearText","Invoice").addItem(avalItems[i]);
+                        if( i < avalItems.length-1){
+                            vSave +=  avalItems[i] +",";
+                        } else {
+                            vSave +=  avalItems[i];
+                        }
+                    }
+                    mod.gui.getComboBox("invoiceYearText","Invoice").setSelectedItem(selected);
+                    dataControlInvoice.properties.setValue("SELECTED_SYSTEMYEAR_TEXT",vSave);
+                }
+
+                dataControlInvoice.properties.setValue("SELECTED_SYSTEMYEAR_TEXT", mod.gui.getComboBox("invoiceYearText","Invoice").getEditor().getItem().toString());
+                dataControlInvoice.properties.saveProperties();
+                mod.system.updateSystemYears();
+                dataControlInvoice.dataShow();
+            }
+        });
     }
 
 
@@ -330,46 +395,45 @@ public class EBICRMInvoice {
      * @return void
      */
     public void initialize() {
-
-        tabModProduct = new MyTableModelCRMProduct();
         beginChar = "";
-        ebiModule.guiRenderer.getVisualPanel("Invoice").setCreatedDate(ebiModule.ebiPGFactory.getDateToString(new Date()));
-        ebiModule.guiRenderer.getVisualPanel("Invoice").setCreatedFrom(EBIPGFactory.ebiUser);
-        ebiModule.guiRenderer.getVisualPanel("Invoice").setChangedDate("");
-        ebiModule.guiRenderer.getVisualPanel("Invoice").setChangedFrom("");
-
+        mod.gui.getVisualPanel("Invoice").setCreatedDate(mod.system.getDateToString(new Date()));
+        mod.gui.getVisualPanel("Invoice").setCreatedFrom(EBIPGFactory.ebiUser);
+        mod.gui.getVisualPanel("Invoice").setChangedDate("");
+        mod.gui.getVisualPanel("Invoice").setChangedFrom("");
 
         NumberFormat taxFormat=NumberFormat.getNumberInstance();
         taxFormat.setMinimumFractionDigits(2);
         taxFormat.setMaximumFractionDigits(3);
 
-        ebiModule.guiRenderer.getFormattedTextfield("totalNetAmountText","Invoice").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("totalNetAmountText","Invoice").setEditable(false);
-        ebiModule.guiRenderer.getFormattedTextfield("totalNetAmountText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getFormattedTextfield("totalNetAmountText","Invoice").setForeground(new Color(255,40,40));
-        ebiModule.guiRenderer.getFormattedTextfield("totalNetAmountText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
-        ebiModule.guiRenderer.getFormattedTextfield("taxText","Invoice").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("taxText","Invoice").setEditable(false);
-        ebiModule.guiRenderer.getFormattedTextfield("taxText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setValue(null);
+        mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setEditable(false);
+        mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setForeground(new Color(255, 40, 40));
+        mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
 
-        ebiModule.guiRenderer.getFormattedTextfield("taxText","Invoice").setForeground(new Color(255,40,40));
-        ebiModule.guiRenderer.getFormattedTextfield("taxText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("taxText","Invoice").setValue(null);
+        mod.gui.getFormattedTextfield("taxText","Invoice").setEditable(false);
+        mod.gui.getFormattedTextfield("taxText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("taxText","Invoice").setForeground(new Color(255,40,40));
+        mod.gui.getFormattedTextfield("taxText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("taxText","Invoice").setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
 
-        ebiModule.guiRenderer.getFormattedTextfield("totalGrossAmountText","Invoice").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("totalGrossAmountText","Invoice").setEditable(false);
-        ebiModule.guiRenderer.getFormattedTextfield("totalGrossAmountText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getFormattedTextfield("totalGrossAmountText","Invoice").setForeground(new Color(255,40,40));
-        ebiModule.guiRenderer.getFormattedTextfield("totalGrossAmountText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setValue(null);
+        mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setEditable(false);
+        mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setForeground(new Color(255,40,40));
+        mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
 
-        ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setEditable(false);
-        ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setForeground(new Color(255,40,40));
-        ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("deductionText","Invoice").setValue(null);
+        mod.gui.getFormattedTextfield("deductionText","Invoice").setEditable(false);
+        mod.gui.getFormattedTextfield("deductionText","Invoice").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("deductionText","Invoice").setForeground(new Color(255,40,40));
+        mod.gui.getFormattedTextfield("deductionText","Invoice").setHorizontalAlignment(SwingConstants.RIGHT);
+        mod.gui.getFormattedTextfield("deductionText","Invoice").setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
 
-        ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").setModel(tabModProduct);
-
-        TableColumn col7 = ebiModule.guiRenderer.getTable("invoicePositionTable","Invoice").getColumnModel().getColumn(5);
+        TableColumn col7 = mod.gui.getTable("invoicePositionTable","Invoice").getColumnModel().getColumn(5);
         col7.setCellRenderer(new DefaultTableCellRenderer(){
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
                 JLabel myself = (JLabel)super.getTableCellRendererComponent(table,value, isSelected, hasFocus,row, column);
@@ -379,39 +443,39 @@ public class EBICRMInvoice {
             }
         });
 
-        ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setEditable(false);
+        mod.gui.getTextfield("invoiceNrText","Invoice").setEditable(false);
 
-        ebiModule.guiRenderer.getComboBox("categoryText", "Invoice").setModel(new DefaultComboBoxModel(invoiceCategory));
-        ebiModule.guiRenderer.getComboBox("invoiceStatusText", "Invoice").setModel(new DefaultComboBoxModel(invoiceStatus));
-        ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").setSelectedIndex(0);
-        ebiModule.guiRenderer.getComboBox("categoryText","Invoice").setSelectedIndex(0);
+        mod.gui.getComboBox("categoryText", "Invoice").setModel(new DefaultComboBoxModel(invoiceCategory));
+        mod.gui.getComboBox("invoiceStatusText", "Invoice").setModel(new DefaultComboBoxModel(invoiceStatus));
+        mod.gui.getComboBox("invoiceStatusText","Invoice").setSelectedIndex(0);
+        mod.gui.getComboBox("categoryText","Invoice").setSelectedIndex(0);
 
-        ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("invoiceNameText","Invoice").setText("");
+        mod.gui.getTextfield("invoiceNrText","Invoice").setText("");
+        mod.gui.getTextfield("invoiceNameText","Invoice").setText("");
 
-        ebiModule.guiRenderer.getComboBox("genderText","Invoice").setModel(new DefaultComboBoxModel(EBICRMModule.gendersList));
-        ebiModule.guiRenderer.getComboBox("genderText","Invoice").setSelectedIndex(0);
+        mod.gui.getComboBox("genderText","Invoice").setModel(new DefaultComboBoxModel(EBICRMModule.gendersList));
+        mod.gui.getComboBox("genderText","Invoice").setSelectedIndex(0);
 
-        ebiModule.guiRenderer.getTextfield("titleText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("companyNameText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("nameText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("surnameText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("streetNrText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("zipText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("locationText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("postCodeText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("countryText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("telefonText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("faxText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("emailText","Invoice").setText("");
-        ebiModule.guiRenderer.getTextfield("internetText","Invoice").setText("");
+        mod.gui.getTextfield("titleText","Invoice").setText("");
+        mod.gui.getTextfield("companyNameText","Invoice").setText("");
+        mod.gui.getTextfield("nameText","Invoice").setText("");
+        mod.gui.getTextfield("surnameText","Invoice").setText("");
+        mod.gui.getTextfield("streetNrText","Invoice").setText("");
+        mod.gui.getTextfield("zipText","Invoice").setText("");
+        mod.gui.getTextfield("locationText","Invoice").setText("");
+        mod.gui.getTextfield("postCodeText","Invoice").setText("");
+        mod.gui.getTextfield("countryText","Invoice").setText("");
+        mod.gui.getTextfield("telefonText","Invoice").setText("");
+        mod.gui.getTextfield("faxText","Invoice").setText("");
+        mod.gui.getTextfield("emailText","Invoice").setText("");
+        mod.gui.getTextfield("internetText","Invoice").setText("");
 
-        ebiModule.guiRenderer.getTextarea("recDescription","Invoice").setText("");
-        ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").setDate(new Date());
-        ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").getEditor().setText("");
-        ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").setFormats(EBIPGFactory.DateFormat);
+        mod.gui.getTextarea("recDescription","Invoice").setText("");
+        mod.gui.getTimepicker("invoiceDateText","Invoice").setDate(new Date());
+        mod.gui.getTimepicker("invoiceDateText","Invoice").getEditor().setText("");
+        mod.gui.getTimepicker("invoiceDateText","Invoice").setFormats(EBIPGFactory.DateFormat);
 
-        ebiModule.guiRenderer.getButton("deletePosition","Invoice").setEnabled(false);
+        mod.gui.getButton("deletePosition","Invoice").setEnabled(false);
     }
 
     public void showProduct() {
@@ -426,21 +490,12 @@ public class EBICRMInvoice {
 
     public void saveInvoice() {
       final Runnable run = new Runnable(){ 	
-	       public void run(){	  
+	       public void run(){
 		        if (!validateInput()) {
 		            return;
 		        }
-		        
-		        int row = 0;
-		        if(isEdit){
-		        	row = ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectedRow();
-		        }
-		        
+
 		        dataControlInvoice.dataStore(isEdit);
-		        try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {}
-				ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").changeSelection(row,0,false,false);
 	       }
       };
       
@@ -461,19 +516,21 @@ public class EBICRMInvoice {
 
     private boolean validateInput() {
 
-        if ("".equals(ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").getText())) {
+        if("".equals(mod.gui.getTextfield("invoiceNrText", "Invoice").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERROR_SELECT_INVOICE_NR")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
-        if (ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").getSelectedIndex() == 0) {
+        if(mod.gui.getComboBox("invoiceStatusText","Invoice").getSelectedIndex() == 0){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_SELECT_STATUS")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
-
-        if (isEdit == false) {
-            EBIAbstractTableModel tabModel = (EBIAbstractTableModel)ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getModel();
-            for (int i = 0; i < tabModel.data.length; i++) {
-                if (tabModel.data[i][0].equals(ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").getText())) {
+        if("".equals(mod.gui.getTextfield("invoiceName", "Invoice").getText())){
+            EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_NAME")).Show(EBIMessage.ERROR_MESSAGE);
+            return false;
+        }
+        if (isEdit == false){
+            for (int i = 0; i < model.data.length; i++) {
+                if (model.data[i][0].equals(mod.gui.getTextfield("invoiceNrText", "Invoice").getText())) {
                     EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERROR_INVOICE_EXIST_WITH_SAME_NAME")).Show(EBIMessage.ERROR_MESSAGE);
                     return false;
                 }
@@ -488,20 +545,6 @@ public class EBICRMInvoice {
 
     public void mailInvoice(final int id){
        dataControlInvoice.dataShowAndMailReport(id, false);
-    }
-
-    public void ebiNew(){
-        newInvoice();
-    }
-
-    public void ebiSave(){
-        saveInvoice();
-    }
-
-    public void ebiDelete(){
-        if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
-            deleteInvoice(Integer.parseInt(model.data[selectedInvoiceRow][9].toString()));
-        }
     }
 
 }

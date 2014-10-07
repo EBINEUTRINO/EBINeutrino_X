@@ -28,7 +28,7 @@ public class EBITestContainerMain {
 
    
     public static void main(String[] args) throws Exception {
-        EBIVisualPanel panel = new EBIVisualPanel();
+        EBIVisualPanel panel = new EBIVisualPanel(false);
         panel.setModuleTitle("Titolo");
         panel.showLockIcon(false);
         JFrame frame = new JFrame();

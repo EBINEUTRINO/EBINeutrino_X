@@ -13,15 +13,14 @@ import javax.swing.JTabbedPane;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
 import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIConstant;
 
 
-public class EBISetup extends EBIDialogExt {
+public class EBISetup extends EBIDialog{
 
-	private EBIVisualPanelTemplate jContentPane      	  = null;
+	private EBIVisualPanelTemplate jContentPane = null;
 	private JMenuBar jJMenuBar            = null;
 	private JMenu fileMenu           	  = null;
 	private JMenu helpMenu           	  = null;
@@ -39,7 +38,6 @@ public class EBISetup extends EBIDialogExt {
         super(null);
 		storeLocation(true);
 		storeSize(true);
-        setClosable(true);
 		setModal(true);
 		setResizable(false);
         setName("EBISetup");
@@ -68,7 +66,7 @@ public class EBISetup extends EBIDialogExt {
 	 */
 	private EBIVisualPanelTemplate getJContentPane() {
 		if (jContentPane == null) { 
-			jContentPane = new EBIVisualPanelTemplate();
+			jContentPane = new EBIVisualPanelTemplate(false);
             jContentPane.setClosable(true);
             jContentPane.setEnableChangeComponent(false);
 			jContentPane.getPanel().setLayout(new BorderLayout());

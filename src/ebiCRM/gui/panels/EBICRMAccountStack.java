@@ -2,7 +2,6 @@ package ebiCRM.gui.panels;
 
 
 import java.awt.event.*;
-import java.sql.ResultSet;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -14,14 +13,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
+import ebiNeutrinoSDK.utils.EBIAbstractTableModel;
 import org.jdesktop.swingx.sort.RowFilters;
-import org.jdesktop.swingx.table.TableColumnExt;
-
 import ebiCRM.EBICRMModule;
 import ebiCRM.data.control.EBIDataControlAccountStack;
-import ebiCRM.table.models.MyTableModelCRMAccount;
-import ebiCRM.table.models.MyTableModelCreditDebit;
-import ebiCRM.table.models.MyTableModelDoc;
 import ebiCRM.utils.AbstractTableKeyAction;
 import ebiCRM.utils.JTableActionMaps;
 import ebiNeutrinoSDK.EBIPGFactory;
@@ -33,13 +28,13 @@ public class EBICRMAccountStack {
 
     public EBICRMModule ebiModule = null;
     public EBIDataControlAccountStack dataControlAccount = null;
-    public MyTableModelCRMAccount tabModAccount = null;
+    public EBIAbstractTableModel tabModAccount = null;
     public boolean isEdit = false;
     public int selectedInvoiceRow = -1;
     public int selectedCDRow = -1;
     public int selectedCDDialogRow = -1;
-    public MyTableModelDoc tabModDoc = null;
-    public MyTableModelCreditDebit creditDebitMod = null;
+    public EBIAbstractTableModel tabModDoc = null;
+    public EBIAbstractTableModel creditDebitMod = null;
     public int selectedDocRow = -1;
     private String[] selCreditDebitType = null;
     private String[] creditDebitType = null;
@@ -56,7 +51,7 @@ public class EBICRMAccountStack {
         ebiModule=modul;
         isEdit = false;
         try {
-            ebiModule.ebiPGFactory.hibernate.openHibernateSession("EBIACCOUNT_SESSION");
+            ebiModule.system.hibernate.openHibernateSession("EBIACCOUNT_SESSION");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,32 +65,30 @@ public class EBICRMAccountStack {
                                                     EBIPGFactory.getLANG("EBI_LANG_CREDIT")};
 
         dataControlAccount = new EBIDataControlAccountStack(this);
-        tabModAccount = new MyTableModelCRMAccount();
-        creditDebitMod = new MyTableModelCreditDebit();
-        tabModAccount = new MyTableModelCRMAccount();
-        tabModDoc = new MyTableModelDoc();
-
+        tabModAccount = (EBIAbstractTableModel)ebiModule.gui.getTable("accountTable","Account").getModel();
+        tabModDoc = (EBIAbstractTableModel)ebiModule.gui.getTable("tableAccountDoc","Account").getModel();
+        creditDebitMod = (EBIAbstractTableModel)ebiModule.gui.getTable("debCreditTable","Account").getModel();
+        tabModDoc = (EBIAbstractTableModel)ebiModule.gui.getTable("tableAccountDoc","Account").getModel();
         dataControlAccount.dataShowCreditDebit(0);
-
     }
 
     public void initializeAction() {
 
         //AVAILABLE TABLE AND BUTTONS
-        ebiModule.guiRenderer.getLabel("filterTable","Account").setHorizontalAlignment(SwingUtilities.RIGHT);
-        ebiModule.guiRenderer.getTextfield("filterTableText","Account").addKeyListener(new KeyListener(){
+        ebiModule.gui.getLabel("filterTable","Account").setHorizontalAlignment(SwingUtilities.RIGHT);
+        ebiModule.gui.getTextfield("filterTableText","Account").addKeyListener(new KeyListener(){
             public void keyTyped(KeyEvent e){}
 
             public void keyPressed(KeyEvent e){
-                ebiModule.guiRenderer.getTable("accountTable","Account").setRowFilter(RowFilters.regexFilter("(?i)" + ebiModule.guiRenderer.getTextfield("filterTableText", "Account").getText()));
+                ebiModule.gui.getTable("accountTable","Account").setRowFilter(RowFilters.regexFilter("(?i)" + ebiModule.gui.getTextfield("filterTableText", "Account").getText()));
             }
             public void keyReleased(KeyEvent e){
-                ebiModule.guiRenderer.getTable("accountTable","Account").setRowFilter(RowFilters.regexFilter("(?i)"+ebiModule.guiRenderer.getTextfield("filterTableText","Account").getText()));
+                ebiModule.gui.getTable("accountTable","Account").setRowFilter(RowFilters.regexFilter("(?i)"+ebiModule.gui.getTextfield("filterTableText","Account").getText()));
             }
         });
 
 
-        ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").addFocusListener(new FocusListener() {
+        ebiModule.gui.getFormattedTextfield("amountText","Account").addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {}
 
@@ -106,39 +99,39 @@ public class EBICRMAccountStack {
             }
         });
 
-       ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").addKeyListener(new KeyListener() {
+       ebiModule.gui.getFormattedTextfield("amountText","Account").addKeyListener(new KeyListener() {
            public void keyTyped(KeyEvent e) { }
 
            public void keyPressed(KeyEvent e) {}
 
            public void keyReleased(KeyEvent e) {
                try {
-                   ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").commitEdit();
+                   ebiModule.gui.getFormattedTextfield("amountText","Account").commitEdit();
                } catch (ParseException e1) {}
                dataControlAccount.dataCalculateTax(showDebitID);
                dataControlAccount.dataCalculateTax(showCreditID);
            }
        });
 
-       ebiModule.guiRenderer.getTextfield("debitText","Account").addKeyListener(new KeyListener() {
+       ebiModule.gui.getTextfield("debitText","Account").addKeyListener(new KeyListener() {
             int idx=-1;
             public void keyTyped(KeyEvent e) {}
 
             public void keyPressed(KeyEvent e) { }
 
             public void keyReleased(KeyEvent e) {
-                idx = dataControlAccount.getIDFromNumber(ebiModule.guiRenderer.getTextfield("debitText","Account").getText(),false);
+                idx = dataControlAccount.getIDFromNumber(ebiModule.gui.getTextfield("debitText","Account").getText(),false);
                 if(idx != -1){
                      showDebitCreditToList(idx);
                 }else{
-                  ebiModule.guiRenderer.getTextfield("descriptionDebit","Account").setText("");
-                  ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").setText("");
-                  ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").setValue(0.0);
+                  ebiModule.gui.getTextfield("descriptionDebit","Account").setText("");
+                  ebiModule.gui.getFormattedTextfield("debitCal","Account").setText("");
+                  ebiModule.gui.getFormattedTextfield("debitCal","Account").setValue(0.0);
                 }
             }
        });
 
-       ebiModule.guiRenderer.getTextfield("creditText", "Account").addKeyListener(new KeyListener() {
+       ebiModule.gui.getTextfield("creditText", "Account").addKeyListener(new KeyListener() {
            int idx = -1;
 
            public void keyTyped(KeyEvent e) {
@@ -148,40 +141,39 @@ public class EBICRMAccountStack {
            }
 
            public void keyReleased(KeyEvent e) {
-               idx = dataControlAccount.getIDFromNumber(ebiModule.guiRenderer.getTextfield("creditText", "Account").getText(), true);
+               idx = dataControlAccount.getIDFromNumber(ebiModule.gui.getTextfield("creditText", "Account").getText(), true);
                if (idx != -1) {
                    showDebitCreditToList(idx);
                } else {
-                   ebiModule.guiRenderer.getTextfield("descriptionCredit", "Account").setText("");
-                   ebiModule.guiRenderer.getFormattedTextfield("creditCal", "Account").setText("");
-                   ebiModule.guiRenderer.getFormattedTextfield("creditCal", "Account").setValue(0.0);
+                   ebiModule.gui.getTextfield("descriptionCredit", "Account").setText("");
+                   ebiModule.gui.getFormattedTextfield("creditCal", "Account").setText("");
+                   ebiModule.gui.getFormattedTextfield("creditCal", "Account").setValue(0.0);
                }
            }
        });
 
-       ebiModule.guiRenderer.getButton("selectDebit","Account").setIcon(EBIConstant.ICON_SEARCH);
-       ebiModule.guiRenderer.getButton("selectDebit","Account").addActionListener(new ActionListener() {
+       ebiModule.gui.getButton("selectDebit","Account").setIcon(EBIConstant.ICON_SEARCH);
+       ebiModule.gui.getButton("selectDebit","Account").addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent event) {
                showCreditDebitListDialog(2);
            }
        });
 
-       ebiModule.guiRenderer.getButton("selectCredit","Account").setIcon(EBIConstant.ICON_SEARCH);
-       ebiModule.guiRenderer.getButton("selectCredit","Account").addActionListener(new ActionListener() {
+       ebiModule.gui.getButton("selectCredit","Account").setIcon(EBIConstant.ICON_SEARCH);
+       ebiModule.gui.getButton("selectCredit","Account").addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent event) {
                showCreditDebitListDialog(3);
            }
        });
 
-       ebiModule.guiRenderer.getButton("saveAccount", "Account").addActionListener(new ActionListener() {
+       ebiModule.gui.getButton("saveAccount", "Account").addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent event) {
                ebiSave();
            }
        });
 
-       ebiModule.guiRenderer.getTable("accountTable","Account").setModel(tabModAccount);
-       ebiModule.guiRenderer.getTable("accountTable", "Account").setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-       ebiModule.guiRenderer.getTable("accountTable","Account").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+       ebiModule.gui.getTable("accountTable", "Account").setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+       ebiModule.gui.getTable("accountTable","Account").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
            public void valueChanged(ListSelectionEvent e) {
                if (e.getValueIsAdjusting()) {
@@ -189,19 +181,19 @@ public class EBICRMAccountStack {
                }
                ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
-               if (lsm.getMinSelectionIndex() != -1) {
-                   selectedInvoiceRow = ebiModule.guiRenderer.getTable("accountTable", "Account").convertRowIndexToModel(lsm.getMinSelectionIndex());
+               if (lsm.getMinSelectionIndex() < 0) {
+                  return;
                }
-
+               selectedInvoiceRow = ebiModule.gui.getTable("accountTable", "Account").convertRowIndexToModel(lsm.getMinSelectionIndex());
                if (lsm.isSelectionEmpty()) {
-                   ebiModule.guiRenderer.getButton("deleteAccount", "Account").setEnabled(false);
-               } else if (!tabModAccount.data[selectedInvoiceRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                   ebiModule.guiRenderer.getButton("deleteAccount", "Account").setEnabled(true);
+                   ebiModule.gui.getButton("deleteAccount", "Account").setEnabled(false);
+               } else if (tabModAccount.data[selectedInvoiceRow][0] != null && !EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(tabModAccount.data[selectedInvoiceRow][0])) {
+                   ebiModule.gui.getButton("deleteAccount", "Account").setEnabled(true);
                }
            }
        });
 
-       new JTableActionMaps(ebiModule.guiRenderer.getTable("accountTable","Account")).setTableAction(new AbstractTableKeyAction() {
+       new JTableActionMaps(ebiModule.gui.getTable("accountTable","Account")).setTableAction(new AbstractTableKeyAction() {
 
                 public void setDownKeyAction(int selRow) {
                     selectedInvoiceRow = selRow;
@@ -224,17 +216,17 @@ public class EBICRMAccountStack {
                 public void setEnterKeyAction(int selRow) { }
         });
 
-        ebiModule.guiRenderer.getTable("accountTable", "Account").addMouseListener(new java.awt.event.MouseAdapter() {
+        ebiModule.gui.getTable("accountTable", "Account").addMouseListener(new java.awt.event.MouseAdapter() {
 
             public void mouseReleased(java.awt.event.MouseEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
 
-                        if (ebiModule.guiRenderer.getTable("accountTable", "Account").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(tabModAccount.data[selectedInvoiceRow][0].toString())) {
+                        if (ebiModule.gui.getTable("accountTable", "Account").getSelectedRow() < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(tabModAccount.data[selectedInvoiceRow][0].toString())) {
                             return;
                         }
-                        selectedInvoiceRow = ebiModule.guiRenderer.getTable("accountTable", "Account").convertRowIndexToModel(ebiModule.guiRenderer.getTable("accountTable", "Account").getSelectedRow());
+                        selectedInvoiceRow = ebiModule.gui.getTable("accountTable", "Account").convertRowIndexToModel(ebiModule.gui.getTable("accountTable", "Account").getSelectedRow());
                         editAccount(Integer.parseInt(tabModAccount.data[selectedInvoiceRow][7].toString()));
                     }
                 });
@@ -242,17 +234,16 @@ public class EBICRMAccountStack {
             }
         });
 
-
-        ebiModule.guiRenderer.getButton("newAccount","Account").setIcon(EBIConstant.ICON_NEW);
-        ebiModule.guiRenderer.getButton("newAccount","Account").addActionListener(new ActionListener() {
+        ebiModule.gui.getButton("newAccount","Account").setIcon(EBIConstant.ICON_NEW);
+        ebiModule.gui.getButton("newAccount","Account").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 newAccount();
             }
         });
 
-        ebiModule.guiRenderer.getButton("deleteAccount","Account").setIcon(EBIConstant.ICON_DELETE);
-        ebiModule.guiRenderer.getButton("deleteAccount","Account").setEnabled(false);
-        ebiModule.guiRenderer.getButton("deleteAccount","Account").addActionListener(new ActionListener() {
+        ebiModule.gui.getButton("deleteAccount","Account").setIcon(EBIConstant.ICON_DELETE);
+        ebiModule.gui.getButton("deleteAccount","Account").setEnabled(false);
+        ebiModule.gui.getButton("deleteAccount","Account").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 if (selectedInvoiceRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                         equals(tabModAccount.data[selectedInvoiceRow][0].toString())) {
@@ -262,25 +253,24 @@ public class EBICRMAccountStack {
             }
         });
 
-        ebiModule.guiRenderer.getButton("reportAccount","Account").setIcon(EBIConstant.ICON_REPORT);
-        ebiModule.guiRenderer.getButton("reportAccount","Account").addActionListener(new ActionListener() {
+        ebiModule.gui.getButton("reportAccount","Account").setIcon(EBIConstant.ICON_REPORT);
+        ebiModule.gui.getButton("reportAccount","Account").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 showAccountReport();
             }
         });
 
-        ebiModule.guiRenderer.getButton("importInvoices","Account").setIcon(EBIConstant.ICON_EXPORT);
-        ebiModule.guiRenderer.getButton("importInvoices","Account").addActionListener(new ActionListener(){
+        ebiModule.gui.getButton("importInvoices","Account").setIcon(EBIConstant.ICON_EXPORT);
+        ebiModule.gui.getButton("importInvoices","Account").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                dataControlAccount.imporInvoicetoAccout(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
+                dataControlAccount.imporInvoicetoAccout(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
             }
         });
 
 
-        //ACCOUNT DOCUMENTS
-         ebiModule.guiRenderer.getTable("tableAccountDoc","Account").setModel(tabModDoc);
-         ebiModule.guiRenderer.getTable("tableAccountDoc", "Account").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-         ebiModule.guiRenderer.getTable("tableAccountDoc","Account").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+         //ACCOUNT DOCUMENTS
+         ebiModule.gui.getTable("tableAccountDoc", "Account").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+         ebiModule.gui.getTable("tableAccountDoc","Account").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
              public void valueChanged(ListSelectionEvent e) {
                  if (e.getValueIsAdjusting()) {
@@ -290,30 +280,29 @@ public class EBICRMAccountStack {
                  ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                  if (lsm.getMinSelectionIndex() != -1) {
-                     selectedDocRow = ebiModule.guiRenderer.getTable("tableAccountDoc", "Account").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                     selectedDocRow = ebiModule.gui.getTable("tableAccountDoc", "Account").convertRowIndexToModel(lsm.getMinSelectionIndex());
                  }
 
                  if (lsm.isSelectionEmpty()) {
-                     ebiModule.guiRenderer.getButton("showAccountDoc", "Account").setEnabled(false);
-                     ebiModule.guiRenderer.getButton("deleteAccountDoc", "Account").setEnabled(false);
+                     ebiModule.gui.getButton("showAccountDoc", "Account").setEnabled(false);
+                     ebiModule.gui.getButton("deleteAccountDoc", "Account").setEnabled(false);
                  } else if (!tabModDoc.data[selectedDocRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                     ebiModule.guiRenderer.getButton("showAccountDoc", "Account").setEnabled(true);
-                     ebiModule.guiRenderer.getButton("deleteAccountDoc", "Account").setEnabled(true);
+                     ebiModule.gui.getButton("showAccountDoc", "Account").setEnabled(true);
+                     ebiModule.gui.getButton("deleteAccountDoc", "Account").setEnabled(true);
                  }
              }
          });
 
-        ebiModule.guiRenderer.getButton("newAccountDoc","Account").setIcon(EBIConstant.ICON_NEW);
-        ebiModule.guiRenderer.getButton("newAccountDoc","Account").addActionListener(new java.awt.event.ActionListener() {
-
+        ebiModule.gui.getButton("newAccountDoc","Account").setIcon(EBIConstant.ICON_NEW);
+        ebiModule.gui.getButton("newAccountDoc","Account").addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 newDocs();
             }
         });
 
-        ebiModule.guiRenderer.getButton("showAccountDoc","Account").setIcon(EBIConstant.ICON_EXPORT);
-        ebiModule.guiRenderer.getButton("showAccountDoc","Account").setEnabled(false);
-        ebiModule.guiRenderer.getButton("showAccountDoc","Account").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("showAccountDoc","Account").setIcon(EBIConstant.ICON_EXPORT);
+        ebiModule.gui.getButton("showAccountDoc","Account").setEnabled(false);
+        ebiModule.gui.getButton("showAccountDoc","Account").addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 if (selectedDocRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
@@ -325,10 +314,9 @@ public class EBICRMAccountStack {
             }
         });
 
-       ebiModule.guiRenderer.getButton("deleteAccountDoc","Account").setIcon(EBIConstant.ICON_DELETE);
-       ebiModule.guiRenderer.getButton("deleteAccountDoc","Account").setEnabled(false);
-       ebiModule.guiRenderer.getButton("deleteAccountDoc","Account").addActionListener(new java.awt.event.ActionListener() {
-
+       ebiModule.gui.getButton("deleteAccountDoc","Account").setIcon(EBIConstant.ICON_DELETE);
+       ebiModule.gui.getButton("deleteAccountDoc","Account").setEnabled(false);
+       ebiModule.gui.getButton("deleteAccountDoc","Account").addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     if (selectedDocRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
                             equals(tabModDoc.data[selectedDocRow][0].toString())) {
@@ -337,22 +325,20 @@ public class EBICRMAccountStack {
                     if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
                         deleteDocs(Integer.parseInt(tabModDoc.data[selectedDocRow][3].toString()));
                     }
-
                 }
        });
 
         //CREDIT DEBIT PANEL
-
-       ebiModule.guiRenderer.getComboBox("selectCreditDebitText","Account").setModel(new DefaultComboBoxModel(creditDebitType));
-       ebiModule.guiRenderer.getComboBox("selectCreditDebitText", "Account").addActionListener(new ActionListener() {
+       ebiModule.gui.getComboBox("selectCreditDebitText","Account").setModel(new DefaultComboBoxModel(creditDebitType));
+       ebiModule.gui.getComboBox("selectCreditDebitText", "Account").addActionListener(new ActionListener() {
 
            public void actionPerformed(ActionEvent e) {
                dataControlAccount.dataShowCreditDebitExt(((JComboBox) e.getSource()).getSelectedIndex());
            }
        });
 
-       ebiModule.guiRenderer.getTable("debCreditTable", "Account").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-       ebiModule.guiRenderer.getTable("debCreditTable","Account").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+       ebiModule.gui.getTable("debCreditTable", "Account").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+       ebiModule.gui.getTable("debCreditTable","Account").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
            public void valueChanged(ListSelectionEvent e) {
                if (e.getValueIsAdjusting()) {
@@ -362,30 +348,30 @@ public class EBICRMAccountStack {
                ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                if (lsm.getMinSelectionIndex() != -1) {
-                   selectedCDRow = ebiModule.guiRenderer.getTable("debCreditTable", "Account").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                   selectedCDRow = ebiModule.gui.getTable("debCreditTable", "Account").convertRowIndexToModel(lsm.getMinSelectionIndex());
                }
 
                if (lsm.isSelectionEmpty()) {
-                   ebiModule.guiRenderer.getButton("editCreditDebit", "Account").setEnabled(false);
-                   ebiModule.guiRenderer.getButton("deleteCreditDebit", "Account").setEnabled(false);
+                   ebiModule.gui.getButton("editCreditDebit", "Account").setEnabled(false);
+                   ebiModule.gui.getButton("deleteCreditDebit", "Account").setEnabled(false);
                } else if (!creditDebitMod.data[selectedCDRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                   ebiModule.guiRenderer.getButton("editCreditDebit", "Account").setEnabled(true);
-                   ebiModule.guiRenderer.getButton("deleteCreditDebit", "Account").setEnabled(true);
+                   ebiModule.gui.getButton("editCreditDebit", "Account").setEnabled(true);
+                   ebiModule.gui.getButton("deleteCreditDebit", "Account").setEnabled(true);
                }
            }
        });
 
-        ebiModule.guiRenderer.getButton("newCreditDebit","Account").setIcon(EBIConstant.ICON_NEW);
-        ebiModule.guiRenderer.getButton("newCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("newCreditDebit","Account").setIcon(EBIConstant.ICON_NEW);
+        ebiModule.gui.getButton("newCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 newCreditDebit(-1);
             }
         });
 
-        ebiModule.guiRenderer.getButton("editCreditDebit","Account").setIcon(EBIConstant.ICON_EDIT);
-        ebiModule.guiRenderer.getButton("editCreditDebit","Account").setEnabled(false);
-        ebiModule.guiRenderer.getButton("editCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("editCreditDebit","Account").setIcon(EBIConstant.ICON_EDIT);
+        ebiModule.gui.getButton("editCreditDebit","Account").setEnabled(false);
+        ebiModule.gui.getButton("editCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 if (selectedCDRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
@@ -397,9 +383,9 @@ public class EBICRMAccountStack {
             }
         });
 
-        ebiModule.guiRenderer.getButton("deleteCreditDebit","Account").setIcon(EBIConstant.ICON_DELETE);
-        ebiModule.guiRenderer.getButton("deleteCreditDebit","Account").setEnabled(false);
-        ebiModule.guiRenderer.getButton("deleteCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("deleteCreditDebit","Account").setIcon(EBIConstant.ICON_DELETE);
+        ebiModule.gui.getButton("deleteCreditDebit","Account").setEnabled(false);
+        ebiModule.gui.getButton("deleteCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     if (selectedCDRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
@@ -413,10 +399,8 @@ public class EBICRMAccountStack {
                 }
          });
 
-
         // Initialize Action for Account years
-
-        ebiModule.guiRenderer.getComboBox("invoiceYearText", "Account").addActionListener(new ActionListener(){
+        ebiModule.gui.getComboBox("invoiceYearText", "Account").addActionListener(new ActionListener(){
              public void actionPerformed(ActionEvent e){
                 if(((JComboBox)e.getSource()).getSelectedIndex() != -1){
                   selectedYear = ((JComboBox)e.getSource()).getSelectedItem().toString();
@@ -424,144 +408,121 @@ public class EBICRMAccountStack {
              }
          });
 
-         ebiModule.guiRenderer.getButton("updateYear","Account").addActionListener(new ActionListener(){
+         ebiModule.gui.getButton("updateYear","Account").addActionListener(new ActionListener(){
              public void actionPerformed(ActionEvent e){
 
-                if(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemCount() >= 1){
+                if(ebiModule.gui.getComboBox("invoiceYearText","Account").getItemCount() >= 1){
                     boolean isAvailable = false;
-                    if(!"".equals(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem())){
-                        for(int i = 0; i<=ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemCount(); i++ ){
-                           if(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem().equals(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemAt(i))){
+                    if(!"".equals(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem())){
+                        for(int i = 0; i<=ebiModule.gui.getComboBox("invoiceYearText","Account").getItemCount(); i++ ){
+                           if(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem().equals(ebiModule.gui.getComboBox("invoiceYearText","Account").getItemAt(i))){
                                isAvailable = true;
                                break;
                            }
                         }
                         if(!isAvailable){
-                           ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").addItem(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
+                           ebiModule.gui.getComboBox("invoiceYearText","Account").addItem(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
                         }
                     }else{
                         if(!"".equals(selectedYear)){
-                            ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").removeItem(selectedYear);
+                            ebiModule.gui.getComboBox("invoiceYearText","Account").removeItem(selectedYear);
                         }
                     }
                 }else{
-                  if(!"".equals(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem())){
-                    ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").addItem(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
+                  if(!"".equals(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem())){
+                    ebiModule.gui.getComboBox("invoiceYearText","Account").addItem(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
                   }
                 }
 
                 // create comma separated value
                 String vSave = "";
-                if(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemCount() > 0){
+                if(ebiModule.gui.getComboBox("invoiceYearText","Account").getItemCount() > 0){
 
-                    for(int i = 0; i<ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemCount(); i++){
+                    for(int i = 0; i<ebiModule.gui.getComboBox("invoiceYearText","Account").getItemCount(); i++){
 
-                        if( i < ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemCount()-1){
-                            vSave +=  ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemAt(i).toString()+",";
+                        if( i < ebiModule.gui.getComboBox("invoiceYearText","Account").getItemCount()-1){
+                            vSave +=  ebiModule.gui.getComboBox("invoiceYearText","Account").getItemAt(i).toString()+",";
                         } else {
-                            vSave +=  ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemAt(i).toString();
+                            vSave +=  ebiModule.gui.getComboBox("invoiceYearText","Account").getItemAt(i).toString();
                         }
                     }
                 }
 
                  //  Sort
-                if(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getItemCount() > 0){
+                if(ebiModule.gui.getComboBox("invoiceYearText","Account").getItemCount() > 0){
 
                     String [] avalItems = vSave.split(",");
                     Arrays.sort(avalItems);
-                    String selected = ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getSelectedItem().toString();
-                    ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").removeAllItems();
+                    String selected = ebiModule.gui.getComboBox("invoiceYearText","Account").getSelectedItem().toString();
+                    ebiModule.gui.getComboBox("invoiceYearText","Account").removeAllItems();
                     vSave = "";
                     for(int i = 0; i< avalItems.length; i++){
-                        ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").addItem(avalItems[i]);
+                        ebiModule.gui.getComboBox("invoiceYearText","Account").addItem(avalItems[i]);
                         if( i < avalItems.length-1){
                             vSave +=  avalItems[i] +",";
                         } else {
                             vSave +=  avalItems[i];
                         }
                     }
-                    ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").setSelectedItem(selected);
+                    ebiModule.gui.getComboBox("invoiceYearText","Account").setSelectedItem(selected);
                     dataControlAccount.properties.setValue("ACCOUNTYEAR_TEXT",vSave);
                 }
 
-
-                dataControlAccount.properties.setValue("SELECTED_ACCOUNTYEAR_TEXT",ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
+                dataControlAccount.properties.setValue("SELECTED_ACCOUNTYEAR_TEXT",ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
                 dataControlAccount.properties.saveProperties();
-
-                dataControlAccount.dataShow(ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
-
+                dataControlAccount.dataShow(ebiModule.gui.getComboBox("invoiceYearText","Account").getEditor().getItem().toString());
              }
          });
 
-       new Thread(new Runnable() {
-           @Override
-           public void run() {
-               for(int i = 0; i<ebiModule.guiRenderer.getTable("debCreditTable","Account").getColumnCount(); i++){
-                   TableColumnExt col = ebiModule.guiRenderer.getTable("debCreditTable","Account").getColumnExt(i);
-                   if(i != 1){
-                       col.setWidth(40);
-                       col.setPreferredWidth(40);
-                   }else{
-                       col.setWidth(500);
-                       col.setPreferredWidth(500);
-                   }
-               }
-           }
-       }).start();
-
     }
-  
+
 
     public void initialize() {
 
-        ebiModule.guiRenderer.getTable("debCreditTable","Account").setModel(creditDebitMod);
-        ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").setEditable(true);
-        ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").removeAllItems();
+        ebiModule.gui.getComboBox("invoiceYearText","Account").setEditable(true);
+        ebiModule.gui.getComboBox("invoiceYearText","Account").removeAllItems();
 
-        ebiModule.guiRenderer.getVisualPanel("Account").setCreatedDate(ebiModule.ebiPGFactory.getDateToString(new Date()));
-        ebiModule.guiRenderer.getVisualPanel("Account").setCreatedFrom(EBIPGFactory.ebiUser);
-        ebiModule.guiRenderer.getVisualPanel("Account").setChangedDate("");
-        ebiModule.guiRenderer.getVisualPanel("Account").setChangedFrom("");
+        ebiModule.gui.getVisualPanel("Account").setCreatedDate(ebiModule.system.getDateToString(new Date()));
+        ebiModule.gui.getVisualPanel("Account").setCreatedFrom(EBIPGFactory.ebiUser);
+        ebiModule.gui.getVisualPanel("Account").setChangedDate("");
+        ebiModule.gui.getVisualPanel("Account").setChangedFrom("");
 
-        ebiModule.guiRenderer.getTable("accountTable","Account").setModel(tabModAccount);
-        ebiModule.guiRenderer.getTable("tableAccountDoc","Account").setModel(tabModDoc);
+        ebiModule.gui.getTextfield("numberText","Account").setText("");
+        ebiModule.gui.getTextfield("nameText","Account").setText("");
+        ebiModule.gui.getTextfield("numberText","Account").setHorizontalAlignment(JTextField.RIGHT);
+        ebiModule.gui.getTextfield("descriptionDebit","Account").setText("");
+        ebiModule.gui.getTextfield("descriptionDebit","Account").setEditable(false);
 
-        ebiModule.guiRenderer.getTextfield("numberText","Account").setText("");
-        ebiModule.guiRenderer.getTextfield("nameText","Account").setText("");
-        ebiModule.guiRenderer.getTextfield("numberText","Account").setHorizontalAlignment(JTextField.RIGHT);
-        ebiModule.guiRenderer.getTextfield("descriptionDebit","Account").setText("");
-        ebiModule.guiRenderer.getTextfield("descriptionDebit","Account").setEditable(false);
+        ebiModule.gui.getTextfield("descriptionCredit","Account").setText("");
+        ebiModule.gui.getTextfield("descriptionCredit","Account").setEditable(false);
 
-        ebiModule.guiRenderer.getTextfield("descriptionCredit","Account").setText("");
-        ebiModule.guiRenderer.getTextfield("descriptionCredit","Account").setEditable(false);
+        ebiModule.gui.getTextfield("debitText","Account").setText("");
+        ebiModule.gui.getTextfield("creditText","Account").setText("");
 
-        ebiModule.guiRenderer.getTextfield("debitText","Account").setText("");
-        ebiModule.guiRenderer.getTextfield("creditText","Account").setText("");
-
-        ebiModule.guiRenderer.getTextarea("descriptionText","Account").setText("");
+        ebiModule.gui.getTextarea("descriptionText","Account").setText("");
 
         taxFormat=NumberFormat.getNumberInstance();
         taxFormat.setMinimumFractionDigits(2);
         taxFormat.setMaximumFractionDigits(2);
 
-        ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").setHorizontalAlignment(SwingConstants.RIGHT);
+        ebiModule.gui.getFormattedTextfield("amountText","Account").setValue(null);
+        ebiModule.gui.getFormattedTextfield("amountText","Account").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        ebiModule.gui.getFormattedTextfield("amountText","Account").setHorizontalAlignment(SwingConstants.RIGHT);
 
-        ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").setHorizontalAlignment(SwingConstants.RIGHT);
-        ebiModule.guiRenderer.getFormattedTextfield("debitCal","Account").setEditable(false);
+        ebiModule.gui.getFormattedTextfield("debitCal","Account").setValue(null);
+        ebiModule.gui.getFormattedTextfield("debitCal","Account").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        ebiModule.gui.getFormattedTextfield("debitCal","Account").setHorizontalAlignment(SwingConstants.RIGHT);
+        ebiModule.gui.getFormattedTextfield("debitCal","Account").setEditable(false);
 
-        ebiModule.guiRenderer.getFormattedTextfield("creditCal","Account").setValue(null);
-        ebiModule.guiRenderer.getFormattedTextfield("creditCal","Account").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getFormattedTextfield("creditCal","Account").setHorizontalAlignment(SwingConstants.RIGHT);
-        ebiModule.guiRenderer.getFormattedTextfield("creditCal","Account").setEditable(false);
+        ebiModule.gui.getFormattedTextfield("creditCal","Account").setValue(null);
+        ebiModule.gui.getFormattedTextfield("creditCal","Account").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        ebiModule.gui.getFormattedTextfield("creditCal","Account").setHorizontalAlignment(SwingConstants.RIGHT);
+        ebiModule.gui.getFormattedTextfield("creditCal","Account").setEditable(false);
 
         try {
 
              if(!"null".equals(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT")) && !"".equals(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT"))){
-                 ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").setSelectedItem(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT"));
+                 ebiModule.gui.getComboBox("invoiceYearText","Account").setSelectedItem(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT"));
                  dataControlAccount.dataShow(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT"));
              }else{
                 dataControlAccount.dataShow("");
@@ -573,7 +534,7 @@ public class EBICRMAccountStack {
                  if(years != null){
                      for(int i = 0; i< years.length; i++){
                        if(years[i] != null){
-                            ebiModule.guiRenderer.getComboBox("invoiceYearText","Account").insertItemAt(years[i],i);
+                            ebiModule.gui.getComboBox("invoiceYearText","Account").insertItemAt(years[i],i);
                        }
                      }
                  }
@@ -622,41 +583,41 @@ public class EBICRMAccountStack {
     }
 
     private void newCreditDebit(final int id) {
-        ebiModule.guiRenderer.loadGUI("CRMDialog/creditDebitDialog.xml");
-        ebiModule.guiRenderer.getFormattedTextfield("valueText","creditDebitDialog").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-        ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").addActionListener(new ActionListener() {
+        ebiModule.gui.loadGUI("CRMDialog/creditDebitDialog.xml");
+        ebiModule.gui.getFormattedTextfield("valueText","creditDebitDialog").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                    if(((JComboBox)e.getSource()).getSelectedIndex() == 3){
-                        ebiModule.guiRenderer.getLabel("vale","creditDebitDialog").setVisible(true);
-                        ebiModule.guiRenderer.getLabel("taxType","creditDebitDialog").setVisible(false);
-                        ebiModule.guiRenderer.getLabel("vale", "creditDebitDialog").setLocation(10, 69);
-                        ebiModule.guiRenderer.getFormattedTextfield("valueText", "creditDebitDialog").setVisible(true);
-                        ebiModule.guiRenderer.getFormattedTextfield("valueText", "creditDebitDialog").setLocation(110, 69);
-                        ebiModule.guiRenderer.getComboBox("taxTypeText", "creditDebitDialog").setVisible(false);
-                        ebiModule.guiRenderer.getLabel("taxValue", "creditDebitDialog").setVisible(false);
-                    }else{
-                        ebiModule.guiRenderer.getLabel("vale","creditDebitDialog").setVisible(false);
-                        ebiModule.guiRenderer.getLabel("taxType","creditDebitDialog").setVisible(true);
-                        ebiModule.guiRenderer.getFormattedTextfield("valueText","creditDebitDialog").setVisible(false);
-                        ebiModule.guiRenderer.getComboBox("taxTypeText","creditDebitDialog").setVisible(true);
-                        ebiModule.guiRenderer.getLabel("taxValue","creditDebitDialog").setVisible(true);
-                    }
-            }
-        });
-
-        ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").setModel(new DefaultComboBoxModel(creditDebitType));
-        ebiModule.guiRenderer.getComboBox("taxTypeText","creditDebitDialog").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
-        ebiModule.guiRenderer.getComboBox("taxTypeText","creditDebitDialog").addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if(((JComboBox)e.getSource()).getSelectedItem() != null){
-                    ebiModule.guiRenderer.getLabel("taxValue","creditDebitDialog").setText(dataControlAccount.getTaxValue(((JComboBox)e.getSource()).getSelectedItem().toString())+"%");
+                if(((JComboBox)e.getSource()).getSelectedIndex() == 3){
+                    ebiModule.gui.getLabel("vale","creditDebitDialog").setVisible(true);
+                    ebiModule.gui.getLabel("taxType","creditDebitDialog").setVisible(false);
+                    ebiModule.gui.getLabel("vale", "creditDebitDialog").setLocation(10, 69);
+                    ebiModule.gui.getFormattedTextfield("valueText", "creditDebitDialog").setVisible(true);
+                    ebiModule.gui.getFormattedTextfield("valueText", "creditDebitDialog").setLocation(110, 69);
+                    ebiModule.gui.getComboBox("taxTypeText", "creditDebitDialog").setVisible(false);
+                    ebiModule.gui.getLabel("taxValue", "creditDebitDialog").setVisible(false);
+                }else{
+                    ebiModule.gui.getLabel("vale","creditDebitDialog").setVisible(false);
+                    ebiModule.gui.getLabel("taxType","creditDebitDialog").setVisible(true);
+                    ebiModule.gui.getFormattedTextfield("valueText","creditDebitDialog").setVisible(false);
+                    ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").setVisible(true);
+                    ebiModule.gui.getLabel("taxValue","creditDebitDialog").setVisible(true);
                 }
             }
         });
 
-        ebiModule.guiRenderer.getButton("saveValue","creditDebitDialog").addActionListener(new ActionListener() {
+        ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").setModel(new DefaultComboBoxModel(creditDebitType));
+        ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
+        ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if(((JComboBox)e.getSource()).getSelectedItem() != null){
+                    ebiModule.gui.getLabel("taxValue","creditDebitDialog").setText(dataControlAccount.getTaxValue(((JComboBox)e.getSource()).getSelectedItem().toString())+"%");
+                }
+            }
+        });
+
+        ebiModule.gui.getButton("saveValue","creditDebitDialog").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(!validateInputDialog()){
                     return;
@@ -666,9 +627,9 @@ public class EBICRMAccountStack {
             }
         });
 
-        ebiModule.guiRenderer.getButton("closeDialog","creditDebitDialog").addActionListener(new ActionListener() {
+        ebiModule.gui.getButton("closeDialog","creditDebitDialog").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               ebiModule.guiRenderer.getEBIDialog("creditDebitDialog").setVisible(false);
+               ebiModule.gui.getEBIDialog("creditDebitDialog").setVisible(false);
             }
         });
 
@@ -676,19 +637,18 @@ public class EBICRMAccountStack {
             dataControlAccount.dataEditCreditDebit(id);
         }
 
-        ebiModule.guiRenderer.showGUI();
+        ebiModule.gui.showGUI();
     }
 
 
     private void showCreditDebitListDialog(int type){
 
        if(type == 3){
-           ebiModule.guiRenderer.loadGUI("CRMDialog/crmSelectionDialog.xml");
+           ebiModule.gui.loadGUI("CRMDialog/crmSelectionDialog.xml");
        }else{
-           ebiModule.guiRenderer.loadGUI("CRMDialog/crmAccountingSelectionDialog.xml");
-           ebiModule.guiRenderer.getComboBox("accoutingType","abstractSelectionDialog").setModel(new DefaultComboBoxModel(selCreditDebitType));
-           ebiModule.guiRenderer.getComboBox("accoutingType","abstractSelectionDialog").addActionListener(new ActionListener() {
-
+           ebiModule.gui.loadGUI("CRMDialog/crmAccountingSelectionDialog.xml");
+           ebiModule.gui.getComboBox("accoutingType","abstractSelectionDialog").setModel(new DefaultComboBoxModel(selCreditDebitType));
+           ebiModule.gui.getComboBox("accoutingType","abstractSelectionDialog").addActionListener(new ActionListener() {
                public void actionPerformed(ActionEvent e) {
                    dataControlAccount.dataShowCreditDebitExt(((JComboBox) e.getSource()).getSelectedIndex());
                }
@@ -696,23 +656,22 @@ public class EBICRMAccountStack {
        }
 
        dataControlAccount.dataShowCreditDebit(type);
-       ebiModule.guiRenderer.getEBIDialog("abstractSelectionDialog").setTitle(EBIPGFactory.getLANG("EBI_LANG_DEBIT_CREDIT_LIST"));
+       ebiModule.gui.getEBIDialog("abstractSelectionDialog").setTitle(EBIPGFactory.getLANG("EBI_LANG_DEBIT_CREDIT_LIST"));
 
-            ebiModule.guiRenderer.getTextfield("filterTableText","abstractSelectionDialog").addKeyListener(new KeyListener(){
+            ebiModule.gui.getTextfield("filterTableText","abstractSelectionDialog").addKeyListener(new KeyListener(){
                 public void keyTyped(KeyEvent e){}
 
                 public void keyPressed(KeyEvent e){
-                    ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").setRowFilter(RowFilters.regexFilter("(?i)" + ebiModule.guiRenderer.getTextfield("filterTableText", "abstractSelectionDialog").getText()));
+                    ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").setRowFilter(RowFilters.regexFilter("(?i)" + ebiModule.gui.getTextfield("filterTableText", "abstractSelectionDialog").getText()));
                 }
                 public void keyReleased(KeyEvent e){
-                    ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").setRowFilter(RowFilters.regexFilter("(?i)"+ebiModule.guiRenderer.getTextfield("filterTableText","abstractSelectionDialog").getText()));
+                    ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").setRowFilter(RowFilters.regexFilter("(?i)"+ebiModule.gui.getTextfield("filterTableText","abstractSelectionDialog").getText()));
                 }
             });
 
-
-            ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").setModel(creditDebitMod);
-            ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").setModel(creditDebitMod);
+            ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
                     if (e.getValueIsAdjusting()) {
@@ -722,13 +681,13 @@ public class EBICRMAccountStack {
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                     if(lsm.getMinSelectionIndex() != -1){
-                        selectedCDDialogRow = ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                        selectedCDDialogRow = ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").convertRowIndexToModel(lsm.getMinSelectionIndex());
                     }
 
                 }
             });
 
-            new JTableActionMaps(ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog")).setTableAction(new AbstractTableKeyAction() {
+            new JTableActionMaps(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog")).setTableAction(new AbstractTableKeyAction() {
 
                 public void setDownKeyAction(int selRow) {
                     selectedCDDialogRow = selRow;
@@ -750,12 +709,12 @@ public class EBICRMAccountStack {
                 }
             });
 
-            ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").addMouseListener(new java.awt.event.MouseAdapter() {
+            ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").addMouseListener(new java.awt.event.MouseAdapter() {
 
                 public void mouseClicked(java.awt.event.MouseEvent e) {
 
-                    if(ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()) != -1){
-                        selectedCDDialogRow = ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").convertRowIndexToModel(ebiModule.guiRenderer.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()));
+                    if(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()) != -1){
+                        selectedCDDialogRow = ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").convertRowIndexToModel(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()));
                     }
 
                     if (e.getClickCount() == 2) {
@@ -770,14 +729,14 @@ public class EBICRMAccountStack {
                 }
             });
 
-            ebiModule.guiRenderer.getButton("closeButton","abstractSelectionDialog").addActionListener(new ActionListener() {
+            ebiModule.gui.getButton("closeButton","abstractSelectionDialog").addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                 ebiModule.guiRenderer.getEBIDialog("abstractSelectionDialog").setVisible(false);
+                 ebiModule.gui.getEBIDialog("abstractSelectionDialog").setVisible(false);
                 }
             });
 
-            ebiModule.guiRenderer.getButton("applyButton","abstractSelectionDialog").addActionListener(new ActionListener() {
+            ebiModule.gui.getButton("applyButton","abstractSelectionDialog").addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                         if (selectedCDDialogRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
@@ -789,7 +748,7 @@ public class EBICRMAccountStack {
             });
 
 
-        ebiModule.guiRenderer.showGUI();
+        ebiModule.gui.showGUI();
 
     }
 
@@ -811,14 +770,14 @@ public class EBICRMAccountStack {
     		  int row = 0;
     		  
     		  if(isEdit){
-    			  row = ebiModule.guiRenderer.getTable("accountTable","Account").getSelectedRow();
+    			  row = ebiModule.gui.getTable("accountTable","Account").getSelectedRow();
     		  }
     		  dataControlAccount.dataStore(isEdit);
     		  
     		  try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}
-    		  ebiModule.guiRenderer.getTable("accountTable","Account").changeSelection(row,0,false,false);
+    		  ebiModule.gui.getTable("accountTable","Account").changeSelection(row,0,false,false);
     	  }
       };
     	
@@ -828,13 +787,13 @@ public class EBICRMAccountStack {
 
     private boolean validateInputDialog(){
 
-        if("".equals(ebiModule.guiRenderer.getTextfield("numberText","creditDebitDialog").getText())){
+        if("".equals(ebiModule.gui.getTextfield("numberText","creditDebitDialog").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_ERROR_INSERT_NUMBER")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        }else if("".equals(ebiModule.guiRenderer.getTextfield("nameText","creditDebitDialog").getText())){
+        }else if("".equals(ebiModule.gui.getTextfield("nameText","creditDebitDialog").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_NAME")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        }else if(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(ebiModule.guiRenderer.getComboBox("creditDebitTypeText","creditDebitDialog").getSelectedItem().toString())){
+        }else if(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").getSelectedItem().toString())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_ERROR_SELECT_TYPE")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
@@ -845,22 +804,22 @@ public class EBICRMAccountStack {
 
     private boolean validateInput(){
 
-        if("".equals(ebiModule.guiRenderer.getTimepicker("dateText","Account").getEditor().getText())){
+        if("".equals(ebiModule.gui.getTimepicker("dateText","Account").getEditor().getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_ILLEGAL_DATE")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        } else if("".equals(ebiModule.guiRenderer.getTextfield("numberText","Account").getText())){
+        } else if("".equals(ebiModule.gui.getTextfield("numberText","Account").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_ERROR_INSERT_NUMBER")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        } else if("".equals(ebiModule.guiRenderer.getTextfield("nameText","Account").getText())){
+        } else if("".equals(ebiModule.gui.getTextfield("nameText","Account").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_NAME")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        } else if("".equals(ebiModule.guiRenderer.getFormattedTextfield("amountText","Account").getText())){
+        } else if("".equals(ebiModule.gui.getFormattedTextfield("amountText","Account").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_AMOUNT")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        }else if("".equals(ebiModule.guiRenderer.getTextfield("debitText","Account").getText())){
+        }else if("".equals(ebiModule.gui.getTextfield("debitText","Account").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_DEBIT")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
-        }else if("".equals(ebiModule.guiRenderer.getTextfield("creditText","Account").getText())){
+        }else if("".equals(ebiModule.gui.getTextfield("creditText","Account").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_CREDIT")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }

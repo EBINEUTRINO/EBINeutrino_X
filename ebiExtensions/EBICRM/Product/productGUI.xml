@@ -24,20 +24,36 @@
 		<button name="newProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_PROPERTIES" Location="8,138" Size="35,35"/>
 		<button name="editProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_EDIT_RECORD" Location="41,138" Size="35,35"/>
 		<button name="deleteProperties" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="76,138" Size="35,35"/>
-		<table name="ProductPropertiesTable" Location="9,175" Size="355,120"/>
+		<table name="ProductPropertiesTable" Location="9,175" Size="355,120">
+            <column name="" title="EBI_LANG_NAME" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_VALUE" Location="0,0" Size="0,0"/>
+        </table>
 		<label name="productPropertiesLabel" title="EBI_LANG_PROPERTIES" Location="120,149" Size="113,20"/>
 		<button name="newRelation" i18ntooltip="EBI_LANG_C_TOOL_TIP_NEW_RELATION" Location="10,300" Size="35,35"/>
 		<button name="deleteRelation" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="44,300" Size="35,35"/>
-		<table name="ProductRelationTable" Location="9,337" Size="355,120"/>
+		<table name="ProductRelationTable" Location="9,337" Size="355,120">
+            <column name="" title="EBI_LANG_C_PRODUCT_NUMBER" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_NAME" Location="0,0" Size="0,0"/>
+        </table>
 		<label name="productRelationLabel" title="EBI_LANG_PRODUCT_DEPENDENCY" Location="90,310" Size="113,20"/>
 		<button name="saveProduct" tabindex="10" title="EBI_LANG_SAVE" Location="390,422" Size="160,35"/>
-		<table name="productDoc" Location="392,175" Size="100%,241"/>
+		<table name="productDoc" Location="392,175" Size="100%,241">
+            <column name="" title="EBI_LANG_FILENAME" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_C_ADDED_DATE" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_ADDED_FROM" Location="0,0" Size="0,0"/>
+        </table>
 		<button name="newProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_ADD_NEW_DOC" Location="393,138" Size="35,35"/>
 		<button name="showProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_SHOW_DOC" Location="430,138" Size="35,35"/>
 		<button name="deleteProductDoc" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_DOC" Location="467,138" Size="35,35"/>
 </panel>
 <panel name="avProduct" title="EBI_LANG_C_AVAILABLE_PRODUCT" Location="6,647" Size="100%,100%">
-		<table name="companyProductTable" Location="8,52" Size="100%,100%"/>
+		<table name="companyProductTable" Location="8,52" Size="100%,100%">
+            <column name="" title="EBI_LANG_C_PRODUCT_NUMBER" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_NAME" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_CATEGORY" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_TYPE" Location="0,0" Size="0,0"/>
+            <column name="" title="EBI_LANG_DESCRIPTION" Location="0,0" Size="0,0"/>
+        </table>
 		<button name="newProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_RESET_FORM" Location="9,15" Size="35,35"/>
 		<button name="copyProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_COPY_RECORD" Location="44,15"  Size="35,35"/>
 		<button name="deleteProduct" i18ntooltip="EBI_LANG_C_TOOL_TIP_DELETE_RECORD" Location="79,15" Size="35,35"/>

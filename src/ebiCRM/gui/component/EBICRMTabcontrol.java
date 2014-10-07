@@ -21,23 +21,23 @@ public class EBICRMTabcontrol {
 
           public synchronized void run(){
 
-                if(ebiModule.guiRenderer.getVisualPanel(name) != null){
+                if(ebiModule.gui.getVisualPanel(name) != null){
                   if(show){
                 	  if(oldIcon == null){
-                		  oldIcon = ebiModule.guiRenderer.getVisualPanel(name).getModuleIcon();
+                		  oldIcon = ebiModule.gui.getVisualPanel(name).getModuleIcon();
                 	  }
-                      ebiModule.guiRenderer.getVisualPanel(name).setModuleIcon(newIcon);
-                      ebiModule.guiRenderer.getVisualPanel(name).updateUI();
+                      ebiModule.gui.getVisualPanel(name).setModuleIcon(newIcon);
+                      ebiModule.gui.getVisualPanel(name).updateUI();
                            
                   }else{
                 	 
                 	  try {
-  						Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-  						e.printStackTrace();
-                        }
-                      ebiModule.guiRenderer.getVisualPanel(name).setModuleIcon(oldIcon);
-                      ebiModule.guiRenderer.getVisualPanel(name).updateUI();
+  						    Thread.sleep(1000);
+                      } catch (InterruptedException e) {
+  						    e.printStackTrace();
+                      }
+                      ebiModule.gui.getVisualPanel(name).setModuleIcon(oldIcon);
+                      ebiModule.gui.getVisualPanel(name).updateUI();
                   }
                 }
             }
@@ -45,8 +45,6 @@ public class EBICRMTabcontrol {
 
         Thread tr = new Thread(run,"Save Module");
         tr.start();
-
-
     }
 
 }

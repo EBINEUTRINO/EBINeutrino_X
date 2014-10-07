@@ -11,18 +11,15 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
+import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import ebiNeutrinoSDK.utils.EBIPropertiesRW;
 
-public class EBILanguageSetup extends EBIDialogExt {
+public class EBILanguageSetup extends EBIDialog {
 
 	private EBIVisualPanelTemplate jContentPane = null;
 	private JComboBox jComboBoxLanguage = null;
@@ -30,7 +27,6 @@ public class EBILanguageSetup extends EBIDialogExt {
 
 	public EBILanguageSetup() {
 		super(null);
-        setClosable(true);
 		storeLocation(true);
 		storeSize(true);
 		initialize();
@@ -68,7 +64,7 @@ public class EBILanguageSetup extends EBIDialogExt {
 			jLabel.setBounds(new Rectangle(10, 4, 372, 42));
 			jLabel.setFont(new Font("Dialog", Font.BOLD, 14));
 			jLabel.setText("EBI Neutrino R1 Language Setup");
-			jContentPane = new EBIVisualPanelTemplate();
+			jContentPane = new EBIVisualPanelTemplate(false);
             jContentPane.setEnableChangeComponent(false);
             jContentPane.setClosable(true);
 			jContentPane.setLayout(null);

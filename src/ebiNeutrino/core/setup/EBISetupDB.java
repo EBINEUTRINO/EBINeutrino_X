@@ -101,7 +101,6 @@ public class EBISetupDB extends JPanel {
 
         JLabel jLabel5=new JLabel();
 		jLabel5.setBounds(new Rectangle(19, 2, 81, 51));
-		jLabel5.setIcon(new ImageIcon(getClass().getResource("/Icon/spire.png")));
 		jLabel5.setText("");
 
         JLabel jLabel4=new JLabel();
@@ -206,7 +205,6 @@ public class EBISetupDB extends JPanel {
 		if (jButtonAbbrechen == null) {
 			jButtonAbbrechen = new JButton();
 			jButtonAbbrechen.setBounds(new Rectangle(436, 314, 123, 25));
-			jButtonAbbrechen.setIcon(new ImageIcon(getClass().getResource("/Icon/button_cancel.png")));
 			jButtonAbbrechen.setText("Exit");
 			jButtonAbbrechen.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -228,7 +226,6 @@ public class EBISetupDB extends JPanel {
 		if (jButtonGenerating == null) {
 			jButtonGenerating = new JButton();
 			jButtonGenerating.setBounds(new Rectangle(191, 250, 133, 25));
-			jButtonGenerating.setIcon(new ImageIcon(getClass().getResource("/Icon/button_ok.png")));
 			jButtonGenerating.setText("Generating");
 			jButtonGenerating.setEnabled(false);
 			jButtonGenerating.addActionListener(new java.awt.event.ActionListener() {
@@ -391,7 +388,6 @@ public class EBISetupDB extends JPanel {
 		if (jButtonTest == null) {
 			jButtonTest = new JButton();
 			jButtonTest.setBounds(new Rectangle(16, 250, 169, 24));
-			jButtonTest.setIcon(new ImageIcon(getClass().getResource("/Icon/connect_established.png")));
 			jButtonTest.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 			jButtonTest.setText("Test Connection");
 			jButtonTest.addActionListener(new java.awt.event.ActionListener() {
@@ -443,7 +439,6 @@ public class EBISetupDB extends JPanel {
 		if (jButtonO == null) {
 			jButtonO = new JButton();
 			jButtonO.setBounds(new Rectangle(308, 314, 123, 25));
-			jButtonO.setIcon(new ImageIcon(getClass().getResource("/Icon/button_ok.png")));
 			jButtonO.setText("Ok");
 			jButtonO.setEnabled(false);
 			jButtonO.addActionListener(new java.awt.event.ActionListener() {

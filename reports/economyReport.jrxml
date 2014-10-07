@@ -297,7 +297,7 @@ FROM COMPANY as comp WHERE comp.ISACTUAL = 1]]>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{income} == null ?
-    NumberFormat.getCurrencyInstance().format(($V{cost} == null ? 0.0 : $V{cost}))
+    NumberFormat.getCurrencyInstance().format(($V{cost} == null ? 0.0 : $V{cost} * -1))
     :
     NumberFormat.getCurrencyInstance().format(($V{income} - $V{cost}))]]></textFieldExpression>
 			</textField>

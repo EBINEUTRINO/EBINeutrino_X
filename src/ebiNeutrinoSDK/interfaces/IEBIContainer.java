@@ -14,25 +14,24 @@ public interface IEBIContainer {
 	
 	/**
 	 * Add a component to the EBINeutrino Container
-	 * @param  String title 		: Title for the container
-	 * @param  JComponent component : Component instance
-	 * @param  ImageIcon icon		: Container Icon 
-	 * @param  int mnemo_key	    : Mnemonic key 
+	 * @param  title 		: Title for the container
+	 * @param  component : Component instance
+	 * @param  icon		: Container Icon
+	 * @param  mnemo_key	    : Mnemonic key
 	 * @return : void
 	 */
 	public int addContainer(String title,JComponent component,ImageIcon icon,int mnemo_key);
 	
 	/**
 	 * Add scrollable component to the EBINeutrino Container
-	 * @param  String title 		: Container Title
-	 * @param  JComponent component : Component instance
-	 * @param  ImageIcon icon		: Container Icon 
-	 * @param  int mnemo_key	    : Mnemonic key 
+	 * @param  title 		: Container Title
+	 * @param  component : Component instance
+	 * @param  icon		: Container Icon
+	 * @param  mnemo_key	    : Mnemonic key
 	 * @return index
 	 */
 	            
 	public int addScrollableContainer(String title,JComponent component,ImageIcon icon,int mnemo_key);
-	
 
 	/**
 	 * Remove all from Container
@@ -41,7 +40,6 @@ public interface IEBIContainer {
 	
 	public void removeAllFromContainer();
 
-	
 	/**
 	 * get the mainPane instance
 	 * @return  JTabbedPane
@@ -49,8 +47,10 @@ public interface IEBIContainer {
 	
 	public JXPanel getMainPaneInstance();
 
+    public void loadSelectedListIndex(int index);
 
-    public void setSelectedListIndex(int index);
+    public int getSelectedListIndex();
 
+    public void setSelectedModIndex(int index);
 
 }

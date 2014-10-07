@@ -36,7 +36,7 @@ public class EBIDialogTaxAdministration  {
         ebiModule = module;
 
         tabModel = new MyTableModelTaxAdministration();
-        ebiModule.guiRenderer.loadGUI("CRMDialog/taxAdminDialog.xml");
+        ebiModule.gui.loadGUI("CRMDialog/taxAdminDialog.xml");
         
         initialize();
         setProductTax();
@@ -46,7 +46,7 @@ public class EBIDialogTaxAdministration  {
    
     private void initialize() {
         try {
-            ebiModule.ebiPGFactory.hibernate.openHibernateSession("EBITAX_SESSION");
+            ebiModule.system.hibernate.openHibernateSession("EBITAX_SESSION");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,13 +57,13 @@ public class EBIDialogTaxAdministration  {
 
     public void setVisible(){
         
-       ebiModule.guiRenderer.getEBIDialog("taxAdminDialog").setTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_TAX_ADMINISTRATION"));
-       ebiModule.guiRenderer.getVisualPanel("taxAdminDialog").setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_TAX_ADMINISTRATION"));
-       ebiModule.guiRenderer.getLabel("tax","taxAdminDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE"));
-       ebiModule.guiRenderer.getLabel("value","taxAdminDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TAX_VALUE"));
+       ebiModule.gui.getEBIDialog("taxAdminDialog").setTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_TAX_ADMINISTRATION"));
+       ebiModule.gui.getVisualPanel("taxAdminDialog").setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_C_CRM_TAX_ADMINISTRATION"));
+       ebiModule.gui.getLabel("tax","taxAdminDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TAX_TYPE"));
+       ebiModule.gui.getLabel("value","taxAdminDialog").setText(EBIPGFactory.getLANG("EBI_LANG_TAX_VALUE"));
 
-       ebiModule.guiRenderer.getButton("saveValue","taxAdminDialog").setText(EBIPGFactory.getLANG("EBI_LANG_SAVE"));
-       ebiModule.guiRenderer.getButton("saveValue","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
+       ebiModule.gui.getButton("saveValue","taxAdminDialog").setText(EBIPGFactory.getLANG("EBI_LANG_SAVE"));
+       ebiModule.gui.getButton("saveValue","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     if (!validateInput()) {
@@ -73,36 +73,36 @@ public class EBIDialogTaxAdministration  {
                 }
        });
         
-       ebiModule.guiRenderer.getButton("newBnt","taxAdminDialog").setIcon(EBIConstant.ICON_NEW);
-       ebiModule.guiRenderer.getButton("newBnt","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
+       ebiModule.gui.getButton("newBnt","taxAdminDialog").setIcon(EBIConstant.ICON_NEW);
+       ebiModule.gui.getButton("newBnt","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     newTax();
                 }
        });
         
-       ebiModule.guiRenderer.getButton("editBnt","taxAdminDialog").setEnabled(false);
-       ebiModule.guiRenderer.getButton("editBnt","taxAdminDialog").setIcon(EBIConstant.ICON_EDIT);
-       ebiModule.guiRenderer.getButton("editBnt","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
+       ebiModule.gui.getButton("editBnt","taxAdminDialog").setEnabled(false);
+       ebiModule.gui.getButton("editBnt","taxAdminDialog").setIcon(EBIConstant.ICON_EDIT);
+       ebiModule.gui.getButton("editBnt","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    editTax(ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").getSelectedRow());
+                    editTax(ebiModule.gui.getTable("taxValueTable","taxAdminDialog").getSelectedRow());
                 }
        });
 
-       ebiModule.guiRenderer.getButton("deleteBnt","taxAdminDialog").setEnabled(false);
-       ebiModule.guiRenderer.getButton("deleteBnt","taxAdminDialog").setIcon(EBIConstant.ICON_DELETE);
-       ebiModule.guiRenderer.getButton("deleteBnt","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
+       ebiModule.gui.getButton("deleteBnt","taxAdminDialog").setEnabled(false);
+       ebiModule.gui.getButton("deleteBnt","taxAdminDialog").setIcon(EBIConstant.ICON_DELETE);
+       ebiModule.gui.getButton("deleteBnt","taxAdminDialog").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    deleteTax(ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").getSelectedRow());
+                    deleteTax(ebiModule.gui.getTable("taxValueTable","taxAdminDialog").getSelectedRow());
                 }
         });
 
-       ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
+       ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
 
-       ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").setModel(tabModel);
-       ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+       ebiModule.gui.getTable("taxValueTable","taxAdminDialog").setModel(tabModel);
+       ebiModule.gui.getTable("taxValueTable","taxAdminDialog").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
                 public void valueChanged(ListSelectionEvent e) {
                     if (e.getValueIsAdjusting()) {
@@ -111,23 +111,23 @@ public class EBIDialogTaxAdministration  {
 
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
                     if(lsm.getMinSelectionIndex() != -1){
-                        selRow = ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                        selRow = ebiModule.gui.getTable("taxValueTable","taxAdminDialog").convertRowIndexToModel(lsm.getMinSelectionIndex());
                     }
                     if (lsm.isSelectionEmpty()) {
-                        ebiModule.guiRenderer.getButton("editBnt","taxAdminDialog").setEnabled(false);
-                        ebiModule.guiRenderer.getButton("deleteBnt","taxAdminDialog").setEnabled(false);
-                    } else if (!tabModel.getRow(ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").getSelectedRow())[0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                        ebiModule.guiRenderer.getButton("editBnt","taxAdminDialog").setEnabled(true);
-                        ebiModule.guiRenderer.getButton("deleteBnt","taxAdminDialog").setEnabled(true);
+                        ebiModule.gui.getButton("editBnt","taxAdminDialog").setEnabled(false);
+                        ebiModule.gui.getButton("deleteBnt","taxAdminDialog").setEnabled(false);
+                    } else if (!tabModel.getRow(ebiModule.gui.getTable("taxValueTable","taxAdminDialog").getSelectedRow())[0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
+                        ebiModule.gui.getButton("editBnt","taxAdminDialog").setEnabled(true);
+                        ebiModule.gui.getButton("deleteBnt","taxAdminDialog").setEnabled(true);
                     }
                 }
         });
 
-        ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").addMouseListener(new java.awt.event.MouseAdapter() {
+        ebiModule.gui.getTable("taxValueTable","taxAdminDialog").addMouseListener(new java.awt.event.MouseAdapter() {
 
                 public void mouseClicked(java.awt.event.MouseEvent e) {
 
-                    selRow = ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").convertRowIndexToModel(ebiModule.guiRenderer.getTable("taxValueTable","taxAdminDialog").rowAtPoint(e.getPoint()));
+                    selRow = ebiModule.gui.getTable("taxValueTable","taxAdminDialog").convertRowIndexToModel(ebiModule.gui.getTable("taxValueTable","taxAdminDialog").rowAtPoint(e.getPoint()));
 
                     if (e.getClickCount() == 2) {
 
@@ -138,7 +138,7 @@ public class EBIDialogTaxAdministration  {
                 }
         });
 
-       ebiModule.guiRenderer.getTextfield("taxValue","taxAdminDialog").addKeyListener(new java.awt.event.KeyAdapter() {
+       ebiModule.gui.getTextfield("taxValue","taxAdminDialog").addKeyListener(new java.awt.event.KeyAdapter() {
 
                 public void keyPressed(KeyEvent e) {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -150,24 +150,24 @@ public class EBIDialogTaxAdministration  {
                 }
        });
         
-     ebiModule.guiRenderer.showGUI();
+     ebiModule.gui.showGUI();
     }
 
     private void setProductTax() {
         try {
-            ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").removeAllItems();
-            ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
+            ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").removeAllItems();
+            ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
 
-            Query query = ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("FROM Companyproducttaxvalue");
+            Query query = ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("FROM Companyproducttaxvalue");
             Iterator it = query.iterate();
             int i = 1;
 
 
-            ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
+            ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").addItem(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"));
             while (it.hasNext()) {
                 Companyproducttaxvalue compofst = (Companyproducttaxvalue) it.next();
-                ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").refresh(compofst);
-                ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").addItem(compofst.getName());
+                ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").refresh(compofst);
+                ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").addItem(compofst.getName());
                 i++;
             }
         } catch (org.hibernate.HibernateException ex) {
@@ -179,21 +179,21 @@ public class EBIDialogTaxAdministration  {
     }
 
     private boolean validateInput() {
-        if (EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").getSelectedItem().toString())) {
+        if (EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").getSelectedItem().toString())) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT_TAX_TYPE")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
 
         if(!isEdit){
             for(int i=0; i<tabModel.data.length; i++){
-                if(tabModel.data[i][0].toString().toLowerCase().equals(ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").getSelectedItem().toString().toLowerCase())){
+                if(tabModel.data[i][0].toString().toLowerCase().equals(ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").getSelectedItem().toString().toLowerCase())){
                     EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_ERROR_SAME_RECORD_EXSIST")).Show(EBIMessage.ERROR_MESSAGE);
                     return false;
                 }
             }
         }
 
-        if ("".equals(ebiModule.guiRenderer.getTextfield("taxValue","taxAdminDialog").getText())) {
+        if ("".equals(ebiModule.gui.getTextfield("taxValue","taxAdminDialog").getText())) {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_PLEASE_INSERT_TAX_VALUE")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
@@ -203,8 +203,8 @@ public class EBIDialogTaxAdministration  {
     private void newTax() {
         isEdit = false;
         this.crmTax = new Companyproducttax();
-        ebiModule.guiRenderer.getTextfield("taxValue","taxAdminDialog").setText("");
-        ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").setSelectedIndex(0);
+        ebiModule.gui.getTextfield("taxValue","taxAdminDialog").setText("");
+        ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").setSelectedIndex(0);
         showTax();
     }
 
@@ -212,8 +212,8 @@ public class EBIDialogTaxAdministration  {
 
         try {
 
-            if (!ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").isActive()) {
-                ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
+            if (!ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").isActive()) {
+                ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
             }
 
             if (!isEdit) {
@@ -225,14 +225,14 @@ public class EBIDialogTaxAdministration  {
                 crmTax.setChangedfrom(EBIPGFactory.ebiUser);
             }
 
-            crmTax.setName(ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").getSelectedItem().toString());
-            crmTax.setTaxvalue(Double.parseDouble(ebiModule.guiRenderer.getTextfield("taxValue","taxAdminDialog").getText()));
-            ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").saveOrUpdate(this.crmTax);
-            ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").commit();
+            crmTax.setName(ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").getSelectedItem().toString());
+            crmTax.setTaxvalue(Double.parseDouble(ebiModule.gui.getTextfield("taxValue","taxAdminDialog").getText()));
+            ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").saveOrUpdate(this.crmTax);
+            ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").commit();
 
         } catch (org.hibernate.HibernateException ex) {
             try {
-                ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").rollback();
+                ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").rollback();
             } catch (HibernateException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -254,21 +254,21 @@ public class EBIDialogTaxAdministration  {
             return;
         }
         try {
-            ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
+            ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
 
-            Query query = ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("from Companyproducttax where id=? ").setString(0, tabModel.data[row][2].toString());
+            Query query = ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("from Companyproducttax where id=? ").setString(0, tabModel.data[row][2].toString());
 
             Iterator iter = query.iterate();
             if (iter.hasNext()) {
                 this.crmTax = (Companyproducttax) iter.next();
-                ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").refresh(crmTax);
-                ebiModule.guiRenderer.getComboBox("taxCombo","taxAdminDialog").setSelectedItem(crmTax.getName());
-                ebiModule.guiRenderer.getTextfield("taxValue","taxAdminDialog").setText(String.valueOf(crmTax.getTaxvalue()));
+                ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").refresh(crmTax);
+                ebiModule.gui.getComboBox("taxCombo","taxAdminDialog").setSelectedItem(crmTax.getName());
+                ebiModule.gui.getTextfield("taxValue","taxAdminDialog").setText(String.valueOf(crmTax.getTaxvalue()));
             }
 
         } catch (org.hibernate.HibernateException ex) {
             try {
-                ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").rollback();
+                ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").rollback();
             } catch (HibernateException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -293,20 +293,20 @@ public class EBIDialogTaxAdministration  {
 
 
             try {
-                ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
+                ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
 
-                Query query = ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("from Companyproducttax where id=? ").setString(0, tabModel.data[row][2].toString());
+                Query query = ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("from Companyproducttax where id=? ").setString(0, tabModel.data[row][2].toString());
 
                 Iterator iter = query.iterate();
                 if (iter.hasNext()) {
                     this.crmTax = (Companyproducttax) iter.next();
-                    ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").delete(this.crmTax);
-                    ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").commit();
+                    ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").delete(this.crmTax);
+                    ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").commit();
                 }
 
             } catch (org.hibernate.HibernateException ex) {
                 try {
-                    ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").rollback();
+                    ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").rollback();
                 } catch (HibernateException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -323,8 +323,8 @@ public class EBIDialogTaxAdministration  {
 
     private void showTax() {
         try {
-            ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
-            Query query = ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("from Companyproducttax ");
+            ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").begin();
+            Query query = ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").createQuery("from Companyproducttax ");
 
             if (query.list().size() > 0) {
                 tabModel.data = new Object[query.list().size()][3];
@@ -333,13 +333,13 @@ public class EBIDialogTaxAdministration  {
                 int i = 0;
                 while (iter.hasNext()) {
                     Companyproducttax comtax = (Companyproducttax) iter.next();
-                    ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBITAX_SESSION").refresh(comtax);
+                    ebiModule.system.hibernate.getHibernateSession("EBITAX_SESSION").refresh(comtax);
                     tabModel.data[i][0] = comtax.getName();
                     tabModel.data[i][1] = comtax.getTaxvalue();
                     tabModel.data[i][2] = comtax.getId();
                     i++;
                 }
-                ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBITAX_SESSION").commit();
+                ebiModule.system.hibernate.getHibernateTransaction("EBITAX_SESSION").commit();
             } else {
                 tabModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), ""}};
             }

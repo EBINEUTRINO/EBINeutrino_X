@@ -44,28 +44,28 @@ public class EBIDialogSearchContact {
         loadCompleteCompany = load;
         jSetterFieldName = new ArrayList<String>();
         jSetterComponent = new ArrayList<JComponent>();
-        ebiModule.guiRenderer.loadGUI("CRMDialog/crmContactSearch.xml");
+        ebiModule.gui.loadGUI("CRMDialog/crmContactSearch.xml");
         tabModel = new MyTableModelContactSearch();
-        ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").setModel(tabModel);
-        ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        ebiModule.gui.getTable("searchContactTable","searchCRMContact").setModel(tabModel);
+        ebiModule.gui.getTable("searchContactTable","searchCRMContact").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
     
     public void setVisible(){
 
-       ebiModule.guiRenderer.getEBIDialog("searchCRMContact").setTitle(EBIPGFactory.getLANG("EBI_LANG_C_SEARCH_CONTACT"));
-       ebiModule.guiRenderer.getVisualPanel("searchCRMContact").setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_C_SEARCH_CONTACT"));
+       ebiModule.gui.getEBIDialog("searchCRMContact").setTitle(EBIPGFactory.getLANG("EBI_LANG_C_SEARCH_CONTACT"));
+       ebiModule.gui.getVisualPanel("searchCRMContact").setModuleTitle(EBIPGFactory.getLANG("EBI_LANG_C_SEARCH_CONTACT"));
 
-       KeyAdapter adapt = new java.awt.event.KeyAdapter() {
-				public void keyPressed(java.awt.event.KeyEvent e) {
-				   if(e.getKeyCode() == KeyEvent.VK_ENTER){
-					   createContactBySearchView();
-				   }
-				}
+       KeyAdapter adapt = new java.awt.event.KeyAdapter(){
+            public void keyPressed(java.awt.event.KeyEvent e){
+               if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                   createContactBySearchView();
+               }
+            }
 	  };
-	  ebiModule.guiRenderer.getTextfield("filterTableText", "searchCRMContact").requestFocus();
-      ebiModule.guiRenderer.getTextfield("filterTableText", "searchCRMContact").addKeyListener(adapt);
+	  ebiModule.gui.getTextfield("filterTableText", "searchCRMContact").requestFocus();
+      ebiModule.gui.getTextfield("filterTableText", "searchCRMContact").addKeyListener(adapt);
 
-      ListSelectionModel rowSM = ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").getSelectionModel();
+      ListSelectionModel rowSM = ebiModule.gui.getTable("searchContactTable","searchCRMContact").getSelectionModel();
       rowSM.addListSelectionListener(new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent e) {
@@ -76,23 +76,23 @@ public class EBIDialogSearchContact {
 
                 ListSelectionModel lsm = (ListSelectionModel) e.getSource();
                 if (lsm.isSelectionEmpty()) {
-                    ebiModule.guiRenderer.getButton("applyButton","searchCRMContact").setEnabled(false);
+                    ebiModule.gui.getButton("applyButton","searchCRMContact").setEnabled(false);
                 } else {
                     if(lsm.getMinSelectionIndex() >= 0){
                     	if(lsm.getMinSelectionIndex() > 0){
-                    		selRowContact = ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").convertRowIndexToModel(lsm.getMinSelectionIndex());
+                    		selRowContact = ebiModule.gui.getTable("searchContactTable","searchCRMContact").convertRowIndexToModel(lsm.getMinSelectionIndex());
                     	}else{
                     		selRowContact = 0;
                     	}
                         if (tabModel.data[selRowContact][0] != null && !tabModel.data[selRowContact][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                            ebiModule.guiRenderer.getButton("applyButton","searchCRMContact").setEnabled(true);
+                            ebiModule.gui.getButton("applyButton","searchCRMContact").setEnabled(true);
                         }
                     }
                 }
             }
         });
 
-        new JTableActionMaps(ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact")).setTableAction(new AbstractTableKeyAction() {
+        new JTableActionMaps(ebiModule.gui.getTable("searchContactTable","searchCRMContact")).setTableAction(new AbstractTableKeyAction() {
 
                 public void setDownKeyAction(int selRow) {
                      selRowContact = selRow;
@@ -113,12 +113,12 @@ public class EBIDialogSearchContact {
                 }
          });
 
-        ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").addMouseListener(new java.awt.event.MouseAdapter() {
+        ebiModule.gui.getTable("searchContactTable","searchCRMContact").addMouseListener(new java.awt.event.MouseAdapter() {
 
                 public void mouseClicked(java.awt.event.MouseEvent e) {
 
-                    if(ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").rowAtPoint(e.getPoint()) > -1){
-                        selRowContact = ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").convertRowIndexToModel(ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").rowAtPoint(e.getPoint()));
+                    if(ebiModule.gui.getTable("searchContactTable","searchCRMContact").rowAtPoint(e.getPoint()) > -1){
+                        selRowContact = ebiModule.gui.getTable("searchContactTable","searchCRMContact").convertRowIndexToModel(ebiModule.gui.getTable("searchContactTable","searchCRMContact").rowAtPoint(e.getPoint()));
                     }
 
                     if (e.getClickCount() == 2) {
@@ -127,50 +127,47 @@ public class EBIDialogSearchContact {
                 }
         });
 
-        ebiModule.guiRenderer.getButton("searchButton","searchCRMContact").setText(EBIPGFactory.getLANG("EBI_LANG_SEARCH"));
-        ebiModule.guiRenderer.getButton("searchButton","searchCRMContact").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("searchButton","searchCRMContact").setText(EBIPGFactory.getLANG("EBI_LANG_SEARCH"));
+        ebiModule.gui.getButton("searchButton","searchCRMContact").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     createContactBySearchView();
-                    ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").changeSelection(0, 0, false, false);
-                    ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").requestFocus();
+                    ebiModule.gui.getTable("searchContactTable","searchCRMContact").changeSelection(0, 0, false, false);
+                    ebiModule.gui.getTable("searchContactTable","searchCRMContact").requestFocus();
                 }
         });
 
-        ebiModule.guiRenderer.getButton("cancelButton","searchCRMContact").setText(EBIPGFactory.getLANG("EBI_LANG_CANCEL"));
-        ebiModule.guiRenderer.getButton("cancelButton","searchCRMContact").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("cancelButton","searchCRMContact").setText(EBIPGFactory.getLANG("EBI_LANG_CANCEL"));
+        ebiModule.gui.getButton("cancelButton","searchCRMContact").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    ebiModule.guiRenderer.getEBIDialog("searchCRMContact").setVisible(false);
+                    ebiModule.gui.getEBIDialog("searchCRMContact").setVisible(false);
                 }
        });
 
-        ebiModule.guiRenderer.getButton("applyButton","searchCRMContact").setText(EBIPGFactory.getLANG("EBI_LANG_APPLY"));
-        ebiModule.guiRenderer.getButton("applyButton","searchCRMContact").setEnabled(false);
-        ebiModule.guiRenderer.getButton("applyButton","searchCRMContact").addActionListener(new java.awt.event.ActionListener() {
+        ebiModule.gui.getButton("applyButton","searchCRMContact").setText(EBIPGFactory.getLANG("EBI_LANG_APPLY"));
+        ebiModule.gui.getButton("applyButton","searchCRMContact").setEnabled(false);
+        ebiModule.gui.getButton("applyButton","searchCRMContact").addActionListener(new java.awt.event.ActionListener(){
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                 	loadData();
                 }
         });
         
-        ebiModule.guiRenderer.showGUI();
-
+        ebiModule.gui.showGUI();
     }
 
     public void createContactBySearchView() {
 
-
         try {
-            ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").setRowFilter(RowFilters.regexFilter("(?i)" + ebiModule.guiRenderer.getTextfield("filterTableText", "searchCRMContact").getText()));
+            ebiModule.gui.getTable("searchContactTable","searchCRMContact").setRowFilter(RowFilters.regexFilter("(?i)" + ebiModule.gui.getTextfield("filterTableText", "searchCRMContact").getText()));
 
             String query = " SELECT * FROM COMPANYCONTACTS LEFT JOIN COMPANY ON " +
                     " COMPANYCONTACTS.COMPANYID=COMPANY.COMPANYID " +
                     " LEFT JOIN COMPANYCONTACTADDRESS ON COMPANYCONTACTADDRESS.CONTACTID = COMPANYCONTACTS.CONTACTID ";
 
-
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement(query);
-            ResultSet rs = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement(query);
+            ResultSet rs = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
 
             int i = 0;
             rs.last();
@@ -178,7 +175,6 @@ public class EBIDialogSearchContact {
                 Object[][] da = new Object[rs.getRow()][10];
                 rs.beforeFirst();
                 while (rs.next()) {
-
                     da[i][0] = rs.getString("COMPANY.NAME") == null ? "" : rs.getString("COMPANY.NAME");
                     da[i][1] = rs.getString("POSITION") == null ? "" : rs.getString("POSITION");
                     da[i][2] = rs.getString("GENDER") == null ? "" : rs.getString("GENDER");
@@ -200,8 +196,8 @@ public class EBIDialogSearchContact {
             }
            
             tabModel.fireTableDataChanged();
-            ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").requestFocus();
-            ebiModule.guiRenderer.getTable("searchContactTable","searchCRMContact").changeSelection(0, 0, false, false);
+            ebiModule.gui.getTable("searchContactTable","searchCRMContact").requestFocus();
+            ebiModule.gui.getTable("searchContactTable","searchCRMContact").changeSelection(0, 0, false, false);
             rs.close();
         } catch (SQLException ex) {
             EBIExceptionDialog.getInstance(EBIPGFactory.printStackTrace(ex)).Show(EBIMessage.ERROR_MESSAGE);
@@ -224,7 +220,7 @@ public class EBIDialogSearchContact {
     	final Runnable load = new Runnable(){
     		
     		public  void run(){
-                ebiModule.guiRenderer.getEBIDialog("searchCRMContact").setVisible(false);
+                ebiModule.gui.getEBIDialog("searchCRMContact").setVisible(false);
     			EBIWinWaiting wait = new EBIWinWaiting(EBIPGFactory.getLANG("EBI_LANG_LOAD_COMPANY_DATA"));
     			try{ 
     				wait.setVisible(true);
@@ -249,9 +245,9 @@ public class EBIDialogSearchContact {
 
     /**
      * 
-     * @param String rownr
-     * @param List<String> nof
-     * @param List<JComponent> jcp
+     * @param rownr
+     * @param nof
+     * @param jcp
      * @return boolean
      */
     public  boolean setContactData(String rownr, List<String> nof, List<JComponent> jcp) {
@@ -262,9 +258,9 @@ public class EBIDialogSearchContact {
                            " LEFT JOIN COMPANY as company on company.COMPANYID=contact.COMPANYID " +
                              "LEFT JOIN COMPANYCONTACTADDRESS as contactAddess ON contact.CONTACTID= contactAddess.CONTACTID WHERE contact.CONTACTID=? ";
             
-            PreparedStatement ps = ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement(query);
+            PreparedStatement ps = ebiModule.system.getIEBIDatabase().initPreparedStatement(query);
             ps.setString(1, rownr);
-            ResultSet rs = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+            ResultSet rs = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
 
             rs.last();
             if(rs.getRow() > 0){

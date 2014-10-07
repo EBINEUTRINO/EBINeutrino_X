@@ -11,11 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,8 +53,8 @@ public class EBIDataControlProduct {
     public boolean dataStore(boolean isEdit){
 
         try {
-            productPane.ebiModule.ebiContainer.showInActionStatus("Product",true);
-            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
+            productPane.mod.ebiContainer.showInActionStatus("Product",true);
+            productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
             if (!isEdit) {
                 this.product.setCreateddate(new Date());
                 this.product.setCreatedfrom(EBIPGFactory.ebiUser);
@@ -66,25 +64,25 @@ public class EBIDataControlProduct {
                 this.product.setChangedfrom(EBIPGFactory.ebiUser);
             }
 
-            product.setProductnr(productPane.ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").getText());
-            product.setProductname(productPane.ebiModule.guiRenderer.getTextfield("ProductNameText","Product").getText());
+            product.setProductnr(productPane.mod.gui.getTextfield("ProductNrTex","Product").getText());
+            product.setProductname(productPane.mod.gui.getTextfield("ProductNameText","Product").getText());
 
-            if(productPane.ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").getSelectedItem() != null){
-               product.setCategory(productPane.ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").getSelectedItem().toString());
+            if(productPane.mod.gui.getComboBox("ProductCategoryText","Product").getSelectedItem() != null){
+               product.setCategory(productPane.mod.gui.getComboBox("ProductCategoryText","Product").getSelectedItem().toString());
             }
-            if(productPane.ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").getSelectedItem() != null){
-                product.setType(productPane.ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").getSelectedItem().toString());
-            }
-
-            if(productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").getSelectedItem() != null){
-                product.setTaxtype(productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
+            if(productPane.mod.gui.getComboBox("ProductTypeText","Product").getSelectedItem() != null){
+                product.setType(productPane.mod.gui.getComboBox("ProductTypeText","Product").getSelectedItem().toString());
             }
 
-            product.setPretax(Double.parseDouble(productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").getValue() == null ? "0.0" : productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").getValue().toString()));
-            product.setNetamount(Double.parseDouble(productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").getValue() == null ? "0.0" : productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").getValue().toString()));
-            product.setSaleprice(Double.parseDouble(productPane.ebiModule.guiRenderer.getFormattedTextfield("salePriceText","Product").getValue() == null ? "0.0" : productPane.ebiModule.guiRenderer.getFormattedTextfield("salePriceText","Product").getValue().toString()));
+            if(productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem() != null){
+                product.setTaxtype(productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
+            }
 
-            product.setDescription(productPane.ebiModule.guiRenderer.getTextarea("productDescription","Product").getText());
+            product.setPretax(Double.parseDouble(productPane.mod.gui.getFormattedTextfield("productGrossText","Product").getValue() == null ? "0.0" : productPane.mod.gui.getFormattedTextfield("productGrossText","Product").getValue().toString()));
+            product.setNetamount(Double.parseDouble(productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").getValue() == null ? "0.0" : productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").getValue().toString()));
+            product.setSaleprice(Double.parseDouble(productPane.mod.gui.getFormattedTextfield("salePriceText","Product").getValue() == null ? "0.0" : productPane.mod.gui.getFormattedTextfield("salePriceText","Product").getValue().toString()));
+
+            product.setDescription(productPane.mod.gui.getTextarea("productDescription","Product").getText());
 
 
             if(!product.getCrmproductdimensions().isEmpty()){
@@ -93,7 +91,7 @@ public class EBIDataControlProduct {
                     Crmproductdimension dimx = (Crmproductdimension)itdim.next();
                     dimx.setCrmproduct(product);
                     if(dimx.getDimensionid() < 0){ dimx.setDimensionid(null);}
-                    productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(dimx);
+                    productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(dimx);
                 }
             }
             
@@ -103,7 +101,7 @@ public class EBIDataControlProduct {
                     Crmproductdependency cdip = (Crmproductdependency) itdip.next();
                     cdip.setCrmproduct(product);
                     if(cdip.getDependencyid() < 0){ cdip.setDependencyid(null);}
-                    productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(cdip);
+                    productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(cdip);
                 }
             }
 
@@ -113,20 +111,20 @@ public class EBIDataControlProduct {
                     Crmproductdocs cdocs = (Crmproductdocs) itdip.next();
                     cdocs.setCrmproduct(product);
                     if(cdocs.getProductdocid() < 0){ cdocs.setProductdocid(null);}
-                    productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(cdocs);
+                    productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(cdocs);
                 }
             }
 
-            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(product);
-            productPane.ebiModule.ebiPGFactory.getDataStore("Product","ebiSave",true);
-            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
+            productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(product);
+            productPane.mod.system.getDataStore("Product","ebiSave",true);
+            productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
             
             if(!isEdit){
-            	productPane.ebiModule.guiRenderer.getVisualPanel("Product").setID(product.getProductid());
+            	productPane.mod.gui.getVisualPanel("Product").setID(product.getProductid());
             }
             dataNew();
 
-            productPane.ebiModule.ebiContainer.showInActionStatus("Product", false);
+            productPane.mod.ebiContainer.showInActionStatus("Product", false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,9 +136,9 @@ public class EBIDataControlProduct {
     	 Query query;
          try {
 
-             productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
+             productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
 
-             query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
+             query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
                      "from Crmproduct where productid=? ").setInteger(0, id);
 
              Iterator iter = query.list().iterator();
@@ -148,7 +146,7 @@ public class EBIDataControlProduct {
              if (iter.hasNext()) {
 
             	 Crmproduct pro = (Crmproduct) iter.next();
-            	 productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(pro);
+            	 productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(pro);
             	 
             	 Crmproduct pnew = new Crmproduct();
             	 pnew.setCreateddate(new Date());
@@ -179,7 +177,7 @@ public class EBIDataControlProduct {
                          nd.setName(dimx.getName());
                          nd.setValue(dimx.getValue());
                          
-                         productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(nd);
+                         productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(nd);
                      }
                  }
                  
@@ -195,18 +193,15 @@ public class EBIDataControlProduct {
                          d.setProductname(cdip.getProductname());
                          d.setProductnr(cdip.getProductnr());
                
-                         productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(d);
+                         productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(d);
                      }
                  }
                  
-                 productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(pnew);
-                 productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
+                 productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").saveOrUpdate(pnew);
+                 productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
                  
                  dataShow();
-                 productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").
- 					changeSelection(productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").
- 						convertRowIndexToView(productPane.ebiModule.dynMethod.
- 								getIdIndexFormArrayInATable(productPane.productModel.data,5 , pnew.getProductid())),0,false,false);
+
                  
              }
          } catch (Exception e) {
@@ -219,11 +214,11 @@ public class EBIDataControlProduct {
 
 
         try {
-            productPane.ebiModule.guiRenderer.getVisualPanel("Product").setCursor(new Cursor(Cursor.WAIT_CURSOR));
+            productPane.mod.gui.getVisualPanel("Product").setCursor(new Cursor(Cursor.WAIT_CURSOR));
             dataNew();
 
             Query query;
-            query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
+            query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
                     "from Crmproduct where productid=? ").setInteger(0, id);
 
             Iterator iter = query.list().iterator();
@@ -232,48 +227,43 @@ public class EBIDataControlProduct {
                 this.id = id;
 
                 this.product = (Crmproduct) iter.next();
-                productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(product);
-                productPane.ebiModule.guiRenderer.getVisualPanel("Product").setID(product.getProductid());
-                productPane.ebiModule.guiRenderer.getVisualPanel("Product").setCreatedDate(productPane.ebiModule.ebiPGFactory.getDateToString(product.getCreateddate() == null ? new Date() : product.getCreateddate()));
-                productPane.ebiModule.guiRenderer.getVisualPanel("Product").setCreatedFrom(product.getCreatedfrom() == null ? EBIPGFactory.ebiUser : product.getCreatedfrom());
+                productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(product);
+                productPane.mod.gui.getVisualPanel("Product").setID(product.getProductid());
+                productPane.mod.gui.getVisualPanel("Product").setCreatedDate(productPane.mod.system.getDateToString(product.getCreateddate() == null ? new Date() : product.getCreateddate()));
+                productPane.mod.gui.getVisualPanel("Product").setCreatedFrom(product.getCreatedfrom() == null ? EBIPGFactory.ebiUser : product.getCreatedfrom());
 
                 if (product.getChangeddate() != null) {
-                    productPane.ebiModule.guiRenderer.getVisualPanel("Product").setChangedDate(productPane.ebiModule.ebiPGFactory.getDateToString(product.getChangeddate()));
-                    productPane.ebiModule.guiRenderer.getVisualPanel("Product").setChangedFrom(product.getChangedfrom());
+                    productPane.mod.gui.getVisualPanel("Product").setChangedDate(productPane.mod.system.getDateToString(product.getChangeddate()));
+                    productPane.mod.gui.getVisualPanel("Product").setChangedFrom(product.getChangedfrom());
                 }
-                productPane.ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").setText(product.getProductnr());
-                productPane.ebiModule.guiRenderer.getTextfield("ProductNameText","Product").setText(product.getProductname());
+                productPane.mod.gui.getTextfield("ProductNrTex","Product").setText(product.getProductnr());
+                productPane.mod.gui.getTextfield("ProductNameText","Product").setText(product.getProductname());
 
                 if(product.getCategory() != null){
-                    productPane.ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").setSelectedItem(product.getCategory());
+                    productPane.mod.gui.getComboBox("ProductCategoryText","Product").setSelectedItem(product.getCategory());
                 }
 
                 if(product.getCategory() != null){
-                    productPane.ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").setSelectedItem(product.getCategory());
+                    productPane.mod.gui.getComboBox("ProductCategoryText","Product").setSelectedItem(product.getCategory());
                 }
 
                 if(product.getType() != null){
-                    productPane.ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").setSelectedItem(product.getType());
+                    productPane.mod.gui.getComboBox("ProductTypeText","Product").setSelectedItem(product.getType());
                 }
 
                 if(product.getTaxtype() != null){
-                    productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").setSelectedItem(product.getTaxtype());
+                    productPane.mod.gui.getComboBox("productTaxTypeTex","Product").setSelectedItem(product.getTaxtype());
                 }
 
-                productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").setValue(product.getPretax() == null ? 0 : product.getPretax());
-                productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").setValue(product.getNetamount() == null ? 0 : product.getNetamount());
-                productPane.ebiModule.guiRenderer.getFormattedTextfield("salePriceText","Product").setValue(product.getSaleprice() == null ? 0 :  product.getSaleprice());
-                productPane.ebiModule.guiRenderer.getTextarea("productDescription","Product").setText(product.getDescription() == null ? "" : product.getDescription());
+                productPane.mod.gui.getFormattedTextfield("productGrossText","Product").setValue(product.getPretax() == null ? 0 : product.getPretax());
+                productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").setValue(product.getNetamount() == null ? 0 : product.getNetamount());
+                productPane.mod.gui.getFormattedTextfield("salePriceText","Product").setValue(product.getSaleprice() == null ? 0 :  product.getSaleprice());
+                productPane.mod.gui.getTextarea("productDescription","Product").setText(product.getDescription() == null ? "" : product.getDescription());
 
-                productPane.ebiModule.ebiPGFactory.getDataStore("Product","ebiEdit",true);
+                productPane.mod.system.getDataStore("Product","ebiEdit",true);
                 dataShowDependency();
                 dataShowDimension();
                 dataShowDoc();
-
-                productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").
-					changeSelection(productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").
-							convertRowIndexToView(productPane.ebiModule.dynMethod.
-									getIdIndexFormArrayInATable(productPane.productModel.data, 5, id)),0,false,false);
                 
             }else{
                 EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_RECORD_NOT_FOUND")).Show(EBIMessage.INFO_MESSAGE);
@@ -285,24 +275,24 @@ public class EBIDataControlProduct {
             e.printStackTrace();
         }
         productPane.isEdit = true;
-        productPane.ebiModule.guiRenderer.getVisualPanel("Product").setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        productPane.mod.gui.getVisualPanel("Product").setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     public void dataDelete(int id) {
         try {
 
-            Query query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
+            Query query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
                     "from Crmproduct where productid=? ").setInteger(0, id);
 
             Iterator iter = query.iterate();
 
             if (iter.hasNext()) {
                 Crmproduct prd = (Crmproduct) iter.next();
-                productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
-                productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").delete(prd);
+                productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
+                productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").delete(prd);
 
-                productPane.ebiModule.ebiPGFactory.getDataStore("Product","ebiDelete",true);
-                productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
+                productPane.mod.system.getDataStore("Product","ebiDelete",true);
+                productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
             }
             dataNew();
             dataShow();
@@ -316,16 +306,16 @@ public class EBIDataControlProduct {
         Thread thr = new Thread(new Runnable() {
             @Override
             public void run() {
-                productPane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                productPane.mod.system.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         ResultSet set = null;
 
                         try {
-                            int srow = productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").getSelectedRow();
-                            PreparedStatement ps = productPane.ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT PRODUCTID,PRODUCTNR,PRODUCTNAME,CATEGORY,TYPE,DESCRIPTION FROM CRMPRODUCT ORDER BY CREATEDDATE DESC");
-                            set = productPane.ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+
+                            PreparedStatement ps = productPane.mod.system.getIEBIDatabase().initPreparedStatement("SELECT PRODUCTID,PRODUCTNR,PRODUCTNAME,CATEGORY,TYPE,DESCRIPTION FROM CRMPRODUCT ORDER BY CREATEDDATE DESC");
+                            set = productPane.mod.system.getIEBIDatabase().executePreparedQuery(ps);
 
                             if (set != null) {
                                 set.last();
@@ -352,7 +342,7 @@ public class EBIDataControlProduct {
                             } else {
                                 productPane.productModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
                             }
-                            productPane.ebiModule.guiRenderer.getTable("companyProductTable","Product").changeSelection(srow,0,false,false);
+
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         } catch (Exception ex) {
@@ -366,7 +356,7 @@ public class EBIDataControlProduct {
                                 }
                             }
                             productPane.productModel.fireTableDataChanged();
-                            productPane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            productPane.mod.system.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
                     }
                 });
@@ -381,9 +371,9 @@ public class EBIDataControlProduct {
       try{
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("ID", id);
-        productPane.ebiModule.ebiPGFactory.getIEBIReportSystemInstance().
+        productPane.mod.system.getIEBIReportSystemInstance().
                 useReportSystem(map,
-                productPane.ebiModule.ebiPGFactory.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_C_PRODUCT")),
+                productPane.mod.system.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_C_PRODUCT")),
                 getProductNamefromId(id));
       }catch (Exception ex){}
     }
@@ -398,28 +388,28 @@ public class EBIDataControlProduct {
         lockTime =  null;
         id=-1;
 
-        productPane.ebiModule.guiRenderer.getVisualPanel("Product").setCreatedDate(productPane.ebiModule.ebiPGFactory.getDateToString(new java.util.Date()));
-        productPane.ebiModule.guiRenderer.getVisualPanel("Product").setCreatedFrom(EBIPGFactory.ebiUser);
-        productPane.ebiModule.guiRenderer.getVisualPanel("Product").setChangedDate("");
-        productPane.ebiModule.guiRenderer.getVisualPanel("Product").setChangedFrom("");
-        productPane.ebiModule.guiRenderer.getTextfield("ProductNrTex","Product").setText("");
-        productPane.ebiModule.guiRenderer.getTextfield("ProductNameText","Product").setText("");
-        productPane.ebiModule.guiRenderer.getTextarea("productDescription","Product").setText("");
-        productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").setText("");
-        productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").setText("");
-        productPane.ebiModule.guiRenderer.getFormattedTextfield("salePriceText","Product").setText("");
-        productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").setValue(null);
-        productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").setValue(null);
-        productPane.ebiModule.guiRenderer.getFormattedTextfield("salePriceText","Product").setValue(null);
-        productPane.ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").setSelectedIndex(0);
-        productPane.ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").setSelectedIndex(0);
-        productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").setSelectedIndex(0);
-        productPane.ebiModule.guiRenderer.getButton("deleteProperties","Product").setEnabled(false);
-        productPane.ebiModule.guiRenderer.getButton("editProperties","Product").setEnabled(false);
-        productPane.ebiModule.guiRenderer.getButton("deleteRelation","Product").setEnabled(false);
+        productPane.mod.gui.getVisualPanel("Product").setCreatedDate(productPane.mod.system.getDateToString(new java.util.Date()));
+        productPane.mod.gui.getVisualPanel("Product").setCreatedFrom(EBIPGFactory.ebiUser);
+        productPane.mod.gui.getVisualPanel("Product").setChangedDate("");
+        productPane.mod.gui.getVisualPanel("Product").setChangedFrom("");
+        productPane.mod.gui.getTextfield("ProductNrTex","Product").setText("");
+        productPane.mod.gui.getTextfield("ProductNameText","Product").setText("");
+        productPane.mod.gui.getTextarea("productDescription","Product").setText("");
+        productPane.mod.gui.getFormattedTextfield("productGrossText","Product").setText("");
+        productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").setText("");
+        productPane.mod.gui.getFormattedTextfield("salePriceText","Product").setText("");
+        productPane.mod.gui.getFormattedTextfield("productGrossText","Product").setValue(null);
+        productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").setValue(null);
+        productPane.mod.gui.getFormattedTextfield("salePriceText","Product").setValue(null);
+        productPane.mod.gui.getComboBox("ProductCategoryText","Product").setSelectedIndex(0);
+        productPane.mod.gui.getComboBox("ProductTypeText","Product").setSelectedIndex(0);
+        productPane.mod.gui.getComboBox("productTaxTypeTex","Product").setSelectedIndex(0);
+        productPane.mod.gui.getButton("deleteProperties","Product").setEnabled(false);
+        productPane.mod.gui.getButton("editProperties","Product").setEnabled(false);
+        productPane.mod.gui.getButton("deleteRelation","Product").setEnabled(false);
         product = new Crmproduct();
-        productPane.ebiModule.guiRenderer.getVisualPanel("Product").setID(-1);
-        productPane.ebiModule.ebiPGFactory.getDataStore("Product","ebiNew",true);
+        productPane.mod.gui.getVisualPanel("Product").setID(-1);
+        productPane.mod.system.getDataStore("Product","ebiNew",true);
         dataShowDependency();
         dataShowDimension();
         dataShowDoc();
@@ -431,9 +421,9 @@ public class EBIDataControlProduct {
 
         try {
 
-            File fs = productPane.ebiModule.ebiPGFactory.getOpenDialog(JFileChooser.FILES_ONLY);
+            File fs = productPane.mod.system.getOpenDialog(JFileChooser.FILES_ONLY);
             if (fs != null) {
-                byte[] file = productPane.ebiModule.ebiPGFactory.readFileToByte(fs);
+                byte[] file = productPane.mod.system.readFileToByte(fs);
                 if (file != null) {
                     Crmproductdocs docs = new Crmproductdocs();
     //			    java.sql.Blob blb = Hibernate.createBlob(file);
@@ -482,7 +472,7 @@ public class EBIDataControlProduct {
                     fos.write(buffer, 0, buffer.length);
 
                     fos.close();
-                    productPane.ebiModule.ebiPGFactory.resolverType(FileName, FileType);
+                    productPane.mod.system.resolverType(FileName, FileType);
                     break;
                 }
             }
@@ -506,7 +496,7 @@ public class EBIDataControlProduct {
                     Crmproductdocs obj = (Crmproductdocs) itr.next();
 
                     productPane.tabModDoc.data[i][0] = obj.getName() == null ? "" : obj.getName();
-                    productPane.tabModDoc.data[i][1] = productPane.ebiModule.ebiPGFactory.getDateToString(obj.getCreateddate()) == null ? "" : productPane.ebiModule.ebiPGFactory.getDateToString(obj.getCreateddate());
+                    productPane.tabModDoc.data[i][1] = productPane.mod.system.getDateToString(obj.getCreateddate()) == null ? "" : productPane.mod.system.getDateToString(obj.getCreateddate());
                     productPane.tabModDoc.data[i][2] = obj.getCreatedfrom() == null ? "" : obj.getCreatedfrom();
                     if(obj.getProductdocid() == null || obj.getProductdocid() < 0){ obj.setProductdocid(((i + 1) * (-1)));}
                     productPane.tabModDoc.data[i][3] = obj.getProductdocid();
@@ -532,9 +522,9 @@ public class EBIDataControlProduct {
                 if (doc.getProductdocid() == id) {
                     if(id >= 0){
                         try {
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBICRM_SESSION").delete(doc);
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBICRM_SESSION").commit();
+                            productPane.mod.system.hibernate.getHibernateTransaction("EBICRM_SESSION").begin();
+                            productPane.mod.system.hibernate.getHibernateSession("EBICRM_SESSION").delete(doc);
+                            productPane.mod.system.hibernate.getHibernateTransaction("EBICRM_SESSION").commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -554,7 +544,7 @@ public class EBIDataControlProduct {
     public void dataNewDependency() {
         
         try {
-            EBICRMDialogSearchProduct prod = new EBICRMDialogSearchProduct(productPane.ebiModule, product.getCrmproductdependencies());
+            EBICRMDialogSearchProduct prod = new EBICRMDialogSearchProduct(productPane.mod, product.getCrmproductdependencies());
             prod.setVisible();
         } catch (Exception e) {
             e.printStackTrace();
@@ -573,9 +563,9 @@ public class EBIDataControlProduct {
                 if (id == this.dependency.getDependencyid()){
                       if(id >=0){
                         try {
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").delete(this.dependency);
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
+                            productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
+                            productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").delete(this.dependency);
+                            productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -658,9 +648,9 @@ public class EBIDataControlProduct {
                 if (id == dimension.getDimensionid()) {
                       if(id >= 0){
                         try {
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").delete(dimension);
-                            productPane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
+                            productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").begin();
+                            productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").delete(dimension);
+                            productPane.mod.system.hibernate.getHibernateTransaction("EBIPRODUCT_SESSION").commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -704,9 +694,9 @@ public class EBIDataControlProduct {
 
         try {
 
-            query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
+            query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
                     createQuery("from Companyproducttax where name=? ").setString(0,
-                    productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
+                    productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
 
 
             Iterator it = query.iterate();
@@ -714,8 +704,8 @@ public class EBIDataControlProduct {
             if (it.hasNext()) {
 
                 Companyproducttax tax = (Companyproducttax) it.next();
-                productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
-                double pre = new Double(productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").getValue().toString());
+                productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
+                double pre = new Double(productPane.mod.gui.getFormattedTextfield("productGrossText","Product").getValue().toString());
 
                 double mwst = (tax.getTaxvalue() / 100 ) + 1.0;
 
@@ -723,7 +713,7 @@ public class EBIDataControlProduct {
 
                 BigDecimal bd = new BigDecimal(clear);
                 BigDecimal bd_round = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-                productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").setValue(new Double(bd_round.doubleValue()));
+                productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").setValue(new Double(bd_round.doubleValue()));
 
             }
             
@@ -738,23 +728,23 @@ public class EBIDataControlProduct {
 
         Query query;
         try {
-            query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
+            query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
                     createQuery("from Companyproducttax where name=? ").setString(0,
-                    productPane.ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
+                    productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
 
                     Iterator it = query.iterate();
 
                     if (it.hasNext()) {
 
                         Companyproducttax tax = (Companyproducttax) it.next();
-                        productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
-                        double clear = new Double(productPane.ebiModule.guiRenderer.getFormattedTextfield("productNetamoutText","Product").getValue().toString());
+                        productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
+                        double clear = new Double(productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").getValue().toString());
 
                         double pre = (clear + ((clear * tax.getTaxvalue()) / 100));
 
                         BigDecimal bd = new BigDecimal(pre);
                         BigDecimal bd_round = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-                        productPane.ebiModule.guiRenderer.getFormattedTextfield("productGrossText","Product").setValue(new Double(bd_round.doubleValue()));
+                        productPane.mod.gui.getFormattedTextfield("productGrossText","Product").setValue(new Double(bd_round.doubleValue()));
                     }
             
         } catch (HibernateException e) {
@@ -796,14 +786,14 @@ public class EBIDataControlProduct {
 
         String name = "";
         try{
-            Query query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
+            Query query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
                         "from Crmproduct where productid=? ").setInteger(0, id);
 
             Iterator iter = query.iterate();
 
             while (iter.hasNext()) {
                 Crmproduct pr = (Crmproduct) iter.next();
-                productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(pr);
+                productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(pr);
                 if (pr.getProductid() == id) {
                     name = pr.getProductname();
                     break;
@@ -817,7 +807,7 @@ public class EBIDataControlProduct {
 
         boolean exist = false;
         try{
-            Query query = productPane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
+            Query query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").createQuery(
                         "from Crmproduct where productnr=? ").setString(0, ProductNr);
 
             if(query.list().size() > 0){

@@ -18,14 +18,10 @@ import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.model.hibernate.Company;
-import ebiNeutrinoSDK.model.hibernate.Companyactivitystatus;
-import ebiNeutrinoSDK.model.hibernate.Companyactivitytype;
 import ebiNeutrinoSDK.model.hibernate.Companycategory;
 import ebiNeutrinoSDK.model.hibernate.Companyclassification;
 import ebiNeutrinoSDK.model.hibernate.Companycooperation;
 import ebiNeutrinoSDK.model.hibernate.Companynumber;
-import ebiNeutrinoSDK.model.hibernate.Companyofferstatus;
-import ebiNeutrinoSDK.model.hibernate.Companyorderstatus;
 import ebiNeutrinoSDK.model.hibernate.Companyproductcategory;
 import ebiNeutrinoSDK.model.hibernate.Companyproducttaxvalue;
 import ebiNeutrinoSDK.model.hibernate.Companyproducttype;
@@ -41,7 +37,7 @@ public class EBICRMDynamicFunctionalityMethods {
 
     public EBICRMDynamicFunctionalityMethods(EBICRMModule module) {
         ebiModule = module;
-        ebiPGFactory = module.ebiPGFactory;
+        ebiPGFactory = module.system;
     }
 
     public Object[] getInternNumber(String category, boolean isInvoice) {
@@ -147,35 +143,35 @@ public class EBICRMDynamicFunctionalityMethods {
             if (isloaded == true) {
 
 
-                if(ebiModule.guiRenderer.existPackage("Leads")){
-                    String ldobj = ebiModule.guiRenderer.getComboBox("classificationText","Leads").getSelectedItem().toString();
-                    ebiModule.guiRenderer.getComboBox("classificationText","Leads").setModel(new DefaultComboBoxModel(EBICRMModule.classification));
-                    ebiModule.guiRenderer.getComboBox("classificationText","Leads").setSelectedItem(ldobj);
+                if(ebiModule.gui.existPackage("Leads")){
+                    String ldobj = ebiModule.gui.getComboBox("classificationText","Leads").getSelectedItem().toString();
+                    ebiModule.gui.getComboBox("classificationText","Leads").setModel(new DefaultComboBoxModel(EBICRMModule.classification));
+                    ebiModule.gui.getComboBox("classificationText","Leads").setSelectedItem(ldobj);
                 }
 
-                if (ebiModule.guiRenderer.existPackage("Product")) {
-                    String protax = ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString();
-                    ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
-                    ebiModule.guiRenderer.getComboBox("productTaxTypeTex","Product").setSelectedItem(protax);
+                if (ebiModule.gui.existPackage("Product")) {
+                    String protax = ebiModule.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString();
+                    ebiModule.gui.getComboBox("productTaxTypeTex","Product").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
+                    ebiModule.gui.getComboBox("productTaxTypeTex","Product").setSelectedItem(protax);
 
-                    String protype = ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").getSelectedItem().toString();
-                    ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").setModel(new DefaultComboBoxModel(EBICRMProduct.type));
-                    ebiModule.guiRenderer.getComboBox("ProductTypeText","Product").setSelectedItem(protype);
+                    String protype = ebiModule.gui.getComboBox("ProductTypeText","Product").getSelectedItem().toString();
+                    ebiModule.gui.getComboBox("ProductTypeText","Product").setModel(new DefaultComboBoxModel(EBICRMProduct.type));
+                    ebiModule.gui.getComboBox("ProductTypeText","Product").setSelectedItem(protype);
 
-                    String procat = ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").getSelectedItem().toString();
-                    ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").setModel(new DefaultComboBoxModel(EBICRMProduct.category));
-                    ebiModule.guiRenderer.getComboBox("ProductCategoryText","Product").setSelectedItem(procat);
+                    String procat = ebiModule.gui.getComboBox("ProductCategoryText","Product").getSelectedItem().toString();
+                    ebiModule.gui.getComboBox("ProductCategoryText","Product").setModel(new DefaultComboBoxModel(EBICRMProduct.category));
+                    ebiModule.gui.getComboBox("ProductCategoryText","Product").setSelectedItem(procat);
 
                 }
 
-                if(ebiModule.guiRenderer.existPackage("Invoice")){
-                   String invStatus = ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").getSelectedItem().toString();
-                   ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").setModel(new DefaultComboBoxModel(EBICRMInvoice.invoiceStatus));
-                   ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").setSelectedItem(invStatus);
+                if(ebiModule.gui.existPackage("Invoice")){
+                   String invStatus = ebiModule.gui.getComboBox("invoiceStatusText","Invoice").getSelectedItem().toString();
+                   ebiModule.gui.getComboBox("invoiceStatusText","Invoice").setModel(new DefaultComboBoxModel(EBICRMInvoice.invoiceStatus));
+                   ebiModule.gui.getComboBox("invoiceStatusText","Invoice").setSelectedItem(invStatus);
 
-                   String invCategory = ebiModule.guiRenderer.getComboBox("categoryText","Invoice").getSelectedItem().toString();
-                   ebiModule.guiRenderer.getComboBox("categoryText","Invoice").setModel(new DefaultComboBoxModel(EBICRMInvoice.invoiceCategory));
-                   ebiModule.guiRenderer.getComboBox("categoryText","Invoice").setSelectedItem(invCategory);
+                   String invCategory = ebiModule.gui.getComboBox("categoryText","Invoice").getSelectedItem().toString();
+                   ebiModule.gui.getComboBox("categoryText","Invoice").setModel(new DefaultComboBoxModel(EBICRMInvoice.invoiceCategory));
+                   ebiModule.gui.getComboBox("categoryText","Invoice").setSelectedItem(invCategory);
                 }
 
             }
@@ -416,11 +412,11 @@ public class EBICRMDynamicFunctionalityMethods {
         
         ResultSet set = null;
         try{
-        	ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(true);
-        	PreparedStatement ps =ebiModule.ebiPGFactory.getIEBIDatabase().initPreparedStatement("SELECT NAME,TAXVALUE FROM COMPANYPRODUCTTAX WHERE NAME=?");
+        	ebiModule.system.getIEBIDatabase().setAutoCommit(true);
+        	PreparedStatement ps =ebiModule.system.getIEBIDatabase().initPreparedStatement("SELECT NAME,TAXVALUE FROM COMPANYPRODUCTTAX WHERE NAME=?");
         	ps.setString(1, cat);
         	
-            set = ebiModule.ebiPGFactory.getIEBIDatabase().executePreparedQuery(ps);
+            set = ebiModule.system.getIEBIDatabase().executePreparedQuery(ps);
         	set.last();
         	if(set.getRow() > 0){
         		set.beforeFirst();
@@ -437,7 +433,7 @@ public class EBICRMDynamicFunctionalityMethods {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	ebiModule.ebiPGFactory.getIEBIDatabase().setAutoCommit(false);
+        	ebiModule.system.getIEBIDatabase().setAutoCommit(false);
         }
         
       return val;

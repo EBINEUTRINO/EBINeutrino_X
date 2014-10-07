@@ -19,7 +19,7 @@ public class EBISystemSetting extends EBIVisualPanelTemplate {
 
 
     public EBISystemSetting(EBIMain main) {
-        super();
+        super(false);
         ebiMain = main;
         cpanel = new JPanel();
         cpanel.setLayout(new BorderLayout());

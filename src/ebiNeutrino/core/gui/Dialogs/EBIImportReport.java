@@ -11,18 +11,18 @@ import javax.swing.JProgressBar;
 import ebiNeutrino.core.EBIMain;
 import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt;
+import ebiNeutrinoSDK.gui.dialogs.EBIDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIExceptionDialog;
 import ebiNeutrinoSDK.gui.dialogs.EBIMessage;
 import ebiNeutrinoSDK.utils.EBIConstant;
 
 
-public class EBIImportReport extends EBIDialogExt {
+public class EBIImportReport extends EBIDialog {
 
     private EBIMain ebiMain = null;
     private JProgressBar progress = new JProgressBar();
     private JLabel title = new JLabel();
-    private EBIVisualPanelTemplate pane = new EBIVisualPanelTemplate();
+    private EBIVisualPanelTemplate pane = new EBIVisualPanelTemplate(false);
 
 
     public EBIImportReport(EBIMain main){

@@ -1,12 +1,5 @@
-import ebiNeutrinoSDK.gui.dialogs.EBIDialogExt
-
-import javax.swing.*
-import java.awt.BorderLayout
 import ebiNeutrinoSDK.model.hibernate.*
-import java.util.Hashtable
-import java.util.Iterator
 import java.text.NumberFormat
-import org.hibernate.HibernateException
 import org.hibernate.Query
 
 

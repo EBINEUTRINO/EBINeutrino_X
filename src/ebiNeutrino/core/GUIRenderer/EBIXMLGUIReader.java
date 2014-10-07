@@ -69,14 +69,14 @@ public class EBIXMLGUIReader {
 
     }
 
-    private boolean readXMLGUI(Element el){
+    private final boolean readXMLGUI(Element el){
 		//Read from xml file
 
          if(!parseXMLGUI(el)){
              return false;
          }
 
-         Iterator children = el.getChildren().iterator();
+        final Iterator children = el.getChildren().iterator();
 
 		 while(children.hasNext()){
 		 	readXMLGUI((Element)children.next());
@@ -86,15 +86,16 @@ public class EBIXMLGUIReader {
     }
 
 
-	private boolean parseXMLGUI(Element el){
+	private final boolean parseXMLGUI(Element el){
              try{
-              Iterator atts = el.getAttributes().iterator();
-              EBIGUIWidgetsBean widg = new EBIGUIWidgetsBean();
+
+             final Iterator atts = el.getAttributes().iterator();
+             final EBIGUIWidgetsBean widg = new EBIGUIWidgetsBean();
 
               while(atts.hasNext()){
 
-				 Attribute att = (Attribute) atts.next();
-                 String attName = att.getName().trim().toLowerCase();
+                 final Attribute att = (Attribute) atts.next();
+                 final String attName = att.getName().trim().toLowerCase();
 
                  if("name".equals(attName) ){
                     widg.setName(att.getValue());
@@ -294,7 +295,7 @@ public class EBIXMLGUIReader {
         return true;
 	}
 
-    private String getAttName(Element el) {
+    private final String getAttName(Element el) {
         String retStr = "";
         List list = el.getParentElement().getAttributes();
         Iterator iter = list.iterator();
@@ -310,7 +311,7 @@ public class EBIXMLGUIReader {
         return retStr;
     }
 
-    private Point parsePoint(String value) {
+    private final Point parsePoint(String value) {
         Point pt  ;
         try{
             String[] val = value.trim().split(",");
@@ -323,10 +324,10 @@ public class EBIXMLGUIReader {
         return pt;
     }
 
-    private void parseDimension(EBIGUIWidgetsBean widg,String value) {
+    private final void parseDimension(EBIGUIWidgetsBean widg,String value) {
 
-        String[] val = value.trim().split(",");
-        Dimension dim = new Dimension();
+        final String[] val = value.trim().split(",");
+        final Dimension dim = new Dimension();
         
         try{
             
@@ -349,7 +350,7 @@ public class EBIXMLGUIReader {
 
     }
 
-    private void setParentComponent(String name,EBIGUIWidgetsBean runBean, EBIGUIWidgetsBean toSet) {
+    private final void setParentComponent(String name,EBIGUIWidgetsBean runBean, EBIGUIWidgetsBean toSet) {
 
         if(name.equals(runBean.getName())){
           runBean.getSubWidgets().add(toSet);
@@ -377,7 +378,6 @@ public class EBIXMLGUIReader {
 	public File getXmlPath() {
 		return xmlPath;
 	}
-
 
 	public void setXmlPath(File xmlPath) {
 		this.xmlPath = xmlPath;

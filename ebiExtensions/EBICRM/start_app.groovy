@@ -1,1 +1,1 @@
-core.mod_management.loadCRM("New_app","dashGUI.xml");
+core.mod_management.loadCRM("New_app","CRMDialog/crmSettingDialog.xml");

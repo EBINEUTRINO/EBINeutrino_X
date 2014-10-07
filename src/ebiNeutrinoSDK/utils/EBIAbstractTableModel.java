@@ -8,10 +8,7 @@ import ebiNeutrinoSDK.EBIPGFactory;
 
 public class EBIAbstractTableModel extends AbstractTableModel {
 
-		public String[] columnNames = {
-				EBIPGFactory.getLANG("EBI_LANG_EMPTY")
-	    };
-
+		public String[] columnNames = {EBIPGFactory.getLANG("EBI_LANG_EMPTY")};
 		public Object[][] data = {{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"),""}};
 
 		public Object[] getRow(int row){

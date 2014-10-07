@@ -42,7 +42,6 @@ public class EBIDialog extends JDialog {
         ebiMain = owner;
 		initialize();
         properties = EBIPropertiesRW.getPropertiesInstance(new File("./config/dialogstore.properties"),true,true);
-        setUndecorated(true);
     }
 
     /**
@@ -65,39 +64,39 @@ public class EBIDialog extends JDialog {
     private void dialogIn(){
 
 	   try{
-               originalDimension.setSize(this.getWidth(),this.getHeight());
-		       if(isResizable()){
-                    Dimension dim = new Dimension();
-                    try{
+           originalDimension.setSize(this.getWidth(),this.getHeight());
+           if(isResizable()){
+                Dimension dim = new Dimension();
+                try{
 
-                        dim.width  = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_WIDTH"));
-                        dim.height = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_HEIGHT"));
-                        this.setSize(dim);
+                    dim.width  = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_WIDTH"));
+                    dim.height = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_HEIGHT"));
+                    this.setSize(dim);
 
-                    }catch(java.lang.NumberFormatException ex){
-                        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-                        Dimension frameSize = getSize();
-                        this.setLocation((d.width - frameSize.width) / 2, ((d.height-150) - frameSize.height) / 2);
-                    }
-               }
-			    try{
-		            Point pt = new Point();
-					pt.x = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_X"));
-					pt.y = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_Y"));
-					
-                    if(pt.x > 0 && pt.y > 0){
-					    this.setLocation(pt);
-                    }else{
-                        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-                        Dimension frameSize = getSize();
-                        this.setLocation((d.width - frameSize.width) / 2, ((d.height-150) - frameSize.height) / 2);
-                    }
-					
-			    }catch(java.lang.NumberFormatException ex){
-			    	Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-			    	Dimension frameSize = getSize();
-			    	this.setLocation((d.width - frameSize.width) / 2, ((d.height-150) - frameSize.height) / 2);
-			    }
+                }catch(java.lang.NumberFormatException ex){
+                    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                    Dimension frameSize = getSize();
+                    this.setLocation((d.width - frameSize.width) / 2, ((d.height-150) - frameSize.height) / 2);
+                }
+           }
+           try{
+                Point pt = new Point();
+                pt.x = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_X"));
+                pt.y = (int)Double.parseDouble(properties.getValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_Y"));
+
+                if(pt.x > 0 && pt.y > 0){
+                    this.setLocation(pt);
+                }else{
+                    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                    Dimension frameSize = getSize();
+                    this.setLocation((d.width - frameSize.width) / 2, ((d.height-150) - frameSize.height) / 2);
+                }
+
+           }catch(java.lang.NumberFormatException ex){
+                Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                Dimension frameSize = getSize();
+                this.setLocation((d.width - frameSize.width) / 2, ((d.height-150) - frameSize.height) / 2);
+           }
 
 	   }catch(NullPointerException ex){
 		   Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -108,18 +107,18 @@ public class EBIDialog extends JDialog {
 
    protected void dialogOut(){
 	   try{
-			   if(this.storeSize == true){
-				    Dimension dim = this.getSize();
-					properties.setValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_WIDTH", ""+dim.getWidth());
-					properties.setValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_HEIGHT", ""+dim.getHeight());
-					properties.saveProperties();
-			   }
-			   if(this.storeLocation == true){
-				    Point pt = this.getLocation();
-					properties.setValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_X", ""+pt.getX());
-					properties.setValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_Y", ""+pt.getY());
-					properties.saveProperties();
-			   }
+           if(this.storeSize == true){
+                Dimension dim = this.getSize();
+                properties.setValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_WIDTH", ""+dim.getWidth());
+                properties.setValue("EBI_DIALOG_SIZE_"+this.getName().toUpperCase()+"_HEIGHT", ""+dim.getHeight());
+                properties.saveProperties();
+           }
+           if(this.storeLocation == true){
+                Point pt = this.getLocation();
+                properties.setValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_X", ""+pt.getX());
+                properties.setValue("EBI_DIALOG_LOCATION_"+this.getName().toUpperCase()+"_Y", ""+pt.getY());
+                properties.saveProperties();
+           }
 	   }catch(NullPointerException ex){ex.printStackTrace();}
    }
 
@@ -139,7 +138,7 @@ public class EBIDialog extends JDialog {
           setFocusableWindowState(true);
           setFocusable(true);
 
-          Action closeAction = new AbstractAction() {
+          Action closeAction = new AbstractAction(){
               public void actionPerformed(ActionEvent e) {
                  
                  setVisible(false);
@@ -152,7 +151,6 @@ public class EBIDialog extends JDialog {
        }
 
        super.setVisible(isVisible);
-       
    }
 
     /**
@@ -200,11 +198,11 @@ public class EBIDialog extends JDialog {
         return closableEscape;
   }
 
-  public boolean isHaveSerial() {
+  public boolean isHaveSerial(){
         return haveSerial;
   }
 
-  public void setHaveSerial(boolean haveSerial) {
+  public void setHaveSerial(boolean haveSerial){
         this.haveSerial = haveSerial;
   }
 }

@@ -1,19 +1,13 @@
 package ebiCRM.data.control;
 
 import java.awt.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import com.sun.xml.internal.bind.v2.model.annotation.RuntimeAnnotationReader;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
@@ -36,11 +30,6 @@ public class EBIDataControlInvoice {
     public Crminvoice invoice = null;
     private EBICRMInvoice invoicePane = null;
     public int id = -1;
-    public Timestamp lockTime = null;
-    public String lockUser ="";
-    public String lockModuleName = "";
-    public int lockStatus=0;
-    public int lockId =-1;
     public final EBIPropertiesRW properties = EBIPropertiesRW.getPropertiesInstance();
 
     public EBIDataControlInvoice(EBICRMInvoice invoicePane) {
@@ -51,15 +40,9 @@ public class EBIDataControlInvoice {
     public boolean dataStore(boolean isEdit) {
 
         try {
-            invoicePane.ebiModule.ebiContainer.showInActionStatus("Invoice", true);
-            if(id != -1){
-                if(checkIslocked(id,true)){
-                 return false;
-                }
-            }
-
-            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
-            if (isEdit == false) {
+            invoicePane.mod.ebiContainer.showInActionStatus("Invoice", true);
+            invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+            if (isEdit == false){
                 invoice.setCreateddate(new Date());
             } else {
                 invoice.setChangeddate(new Date());
@@ -67,74 +50,71 @@ public class EBIDataControlInvoice {
             }
 
             // Invoice main data
-            invoice.setCreatedfrom(invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").getCreatedFrom());
+            invoice.setCreatedfrom(invoicePane.mod.gui.getVisualPanel("Invoice").getCreatedFrom());
             invoice.setInvoicenr(invoicePane.invoiceNr);
             invoice.setBeginchar(invoicePane.beginChar);
-            invoice.setName(invoicePane.ebiModule.guiRenderer.getTextfield("invoiceNameText","Invoice").getText());
+            invoice.setName(invoicePane.mod.gui.getTextfield("invoiceNameText","Invoice").getText());
 
-            if(invoicePane.ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").getSelectedItem() != null){
-                invoice.setStatus(invoicePane.ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").getSelectedItem().toString());
+            if(invoicePane.mod.gui.getComboBox("invoiceStatusText","Invoice").getSelectedItem() != null){
+                invoice.setStatus(invoicePane.mod.gui.getComboBox("invoiceStatusText","Invoice").getSelectedItem().toString());
             }
 
             if(!isEdit){
-                if(invoicePane.ebiModule.guiRenderer.getComboBox("categoryText","Invoice").getSelectedItem() != null){
-                    invoice.setCategory(invoicePane.ebiModule.guiRenderer.getComboBox("categoryText","Invoice").getSelectedItem().toString());
+                if(invoicePane.mod.gui.getComboBox("categoryText","Invoice").getSelectedItem() != null){
+                    invoice.setCategory(invoicePane.mod.gui.getComboBox("categoryText","Invoice").getSelectedItem().toString());
                 }
                 invoicePane.isEdit = true;
             }
 
-            if(invoicePane.ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").getDate() != null){
-                invoice.setDate(invoicePane.ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").getDate());
+            if(invoicePane.mod.gui.getTimepicker("invoiceDateText","Invoice").getDate() != null){
+                invoice.setDate(invoicePane.mod.gui.getTimepicker("invoiceDateText","Invoice").getDate());
             }else {
                invoice.setDate(new Date()); 
             }
-            
-            if(!"".equals(invoicePane.ebiModule.guiRenderer.getTextfield("orderText","Invoice").getText())){
-                invoice.setAssosiation(invoicePane.ebiModule.guiRenderer.getTextfield("orderText","Invoice").getText());
-            }
+
             // Invoice rec
-            if(invoicePane.ebiModule.guiRenderer.getComboBox("genderText","Invoice").getSelectedItem() != null){
-            	invoice.setGender(invoicePane.ebiModule.guiRenderer.getComboBox("genderText","Invoice").getSelectedItem().toString());
+            if(invoicePane.mod.gui.getComboBox("genderText","Invoice").getSelectedItem() != null){
+            	invoice.setGender(invoicePane.mod.gui.getComboBox("genderText","Invoice").getSelectedItem().toString());
             }
-            invoice.setPosition(invoicePane.ebiModule.guiRenderer.getTextfield("titleText","Invoice").getText());
-            invoice.setCompanyname(invoicePane.ebiModule.guiRenderer.getTextfield("companyNameText","Invoice").getText());
-            invoice.setContactname(invoicePane.ebiModule.guiRenderer.getTextfield("nameText","Invoice").getText());
-            invoice.setContactsurname(invoicePane.ebiModule.guiRenderer.getTextfield("surnameText","Invoice").getText());
-            invoice.setContactstreet(invoicePane.ebiModule.guiRenderer.getTextfield("streetNrText","Invoice").getText());
-            invoice.setContactzip(invoicePane.ebiModule.guiRenderer.getTextfield("zipText","Invoice").getText());
-            invoice.setContactlocation(invoicePane.ebiModule.guiRenderer.getTextfield("locationText","Invoice").getText());
-            invoice.setContactpostcode(invoicePane.ebiModule.guiRenderer.getTextfield("postCodeText","Invoice").getText());
-            invoice.setContactcountry(invoicePane.ebiModule.guiRenderer.getTextfield("countryText","Invoice").getText());
-            invoice.setContacttelephone(invoicePane.ebiModule.guiRenderer.getTextfield("telefonText","Invoice").getText());
-            invoice.setContactfax(invoicePane.ebiModule.guiRenderer.getTextfield("faxText","Invoice").getText());
-            invoice.setContactemail(invoicePane.ebiModule.guiRenderer.getTextfield("emailText","Invoice").getText());
-            invoice.setContactweb(invoicePane.ebiModule.guiRenderer.getTextfield("internetText","Invoice").getText());
-            invoice.setContactdescription(invoicePane.ebiModule.guiRenderer.getTextarea("recDescription","Invoice").getText());
+            invoice.setPosition(invoicePane.mod.gui.getTextfield("titleText","Invoice").getText());
+            invoice.setCompanyname(invoicePane.mod.gui.getTextfield("companyNameText","Invoice").getText());
+            invoice.setContactname(invoicePane.mod.gui.getTextfield("nameText","Invoice").getText());
+            invoice.setContactsurname(invoicePane.mod.gui.getTextfield("surnameText","Invoice").getText());
+            invoice.setContactstreet(invoicePane.mod.gui.getTextfield("streetNrText","Invoice").getText());
+            invoice.setContactzip(invoicePane.mod.gui.getTextfield("zipText","Invoice").getText());
+            invoice.setContactlocation(invoicePane.mod.gui.getTextfield("locationText","Invoice").getText());
+            invoice.setContactpostcode(invoicePane.mod.gui.getTextfield("postCodeText","Invoice").getText());
+            invoice.setContactcountry(invoicePane.mod.gui.getTextfield("countryText","Invoice").getText());
+            invoice.setContacttelephone(invoicePane.mod.gui.getTextfield("telefonText","Invoice").getText());
+            invoice.setContactfax(invoicePane.mod.gui.getTextfield("faxText","Invoice").getText());
+            invoice.setContactemail(invoicePane.mod.gui.getTextfield("emailText","Invoice").getText());
+            invoice.setContactweb(invoicePane.mod.gui.getTextfield("internetText","Invoice").getText());
+            invoice.setContactdescription(invoicePane.mod.gui.getTextarea("recDescription","Invoice").getText());
 
             // Position save
-            if (!invoice.getCrminvoicepositions().isEmpty()) {
+            if (!invoice.getCrminvoicepositions().isEmpty()){
                 Iterator iter = invoice.getCrminvoicepositions().iterator();
                 while(iter.hasNext()){
                    Crminvoiceposition pos = (Crminvoiceposition)iter.next();
                    pos.setCrminvoice(invoice);
                    if(pos.getPositionid() < 0){ pos.setPositionid(null);}
-                   invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").saveOrUpdate(pos);
+                   invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").saveOrUpdate(pos);
                 }
             }
 
-            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").saveOrUpdate(invoice);
+            invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").saveOrUpdate(invoice);
 
-            invoicePane.ebiModule.ebiPGFactory.getDataStore("Invoice","ebiSave",true);
-            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
+            invoicePane.mod.system.getDataStore("Invoice","ebiSave",true);
+            invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
 
-            this.dataShow(-1);
+            this.dataShow();
             dataShowProduct();
             
             if(!isEdit){
-            	invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setID(invoice.getInvoiceid());
+            	invoicePane.mod.gui.getVisualPanel("Invoice").setID(invoice.getInvoiceid());
             }
             
-            invoicePane.ebiModule.ebiContainer.showInActionStatus("Invoice", false);
+            invoicePane.mod.ebiContainer.showInActionStatus("Invoice", false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,9 +130,9 @@ public class EBIDataControlInvoice {
             if(!invoicePane.isEdit){
             	invoicePane.isEdit = true;
             }
-            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+            invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
             
-            query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
+            query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
                     "from Crminvoice where invoiceId=? ").setInteger(0, id);
 
             Iterator iter =  query.iterate();
@@ -161,71 +141,70 @@ public class EBIDataControlInvoice {
                 this.id = id;
 
                 invoice = (Crminvoice) iter.next();
-                invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setID(invoice.getInvoiceid());
-                invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(invoice);
+                invoicePane.mod.gui.getVisualPanel("Invoice").setID(invoice.getInvoiceid());
+                invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(invoice);
 
-                invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setCreatedDate(invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getCreateddate() == null ? new Date() : invoice.getCreateddate()  ));
-                invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setCreatedFrom(invoice.getCreatedfrom() == null ? EBIPGFactory.ebiUser : invoice.getCreatedfrom());
+                invoicePane.mod.gui.getVisualPanel("Invoice").setCreatedDate(invoicePane.mod.system.getDateToString(invoice.getCreateddate() == null ? new Date() : invoice.getCreateddate()  ));
+                invoicePane.mod.gui.getVisualPanel("Invoice").setCreatedFrom(invoice.getCreatedfrom() == null ? EBIPGFactory.ebiUser : invoice.getCreatedfrom());
 
                 if (invoice.getChangeddate() != null) {
-                    invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setChangedDate(invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getChangeddate()));
-                    invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setChangedFrom(invoice.getChangedfrom());
+                    invoicePane.mod.gui.getVisualPanel("Invoice").setChangedDate(invoicePane.mod.system.getDateToString(invoice.getChangeddate()));
+                    invoicePane.mod.gui.getVisualPanel("Invoice").setChangedFrom(invoice.getChangedfrom());
                 } else {
-                    invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setChangedDate("");
-                    invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setChangedFrom("");
+                    invoicePane.mod.gui.getVisualPanel("Invoice").setChangedDate("");
+                    invoicePane.mod.gui.getVisualPanel("Invoice").setChangedFrom("");
                 }
 
                  invoicePane.invoiceNr = invoice.getInvoicenr() == null ? 0 :  invoice.getInvoicenr();
                  invoicePane.beginChar = invoice.getBeginchar() == null ? "" : invoice.getBeginchar();
-                 invoicePane.ebiModule.guiRenderer.getTextfield("invoiceNrText","Invoice").setText(invoice.getBeginchar()+invoice.getInvoicenr());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("invoiceNameText","Invoice").setText(invoice.getName());
+                 invoicePane.mod.gui.getTextfield("invoiceNrText","Invoice").setText(invoice.getBeginchar()+invoice.getInvoicenr());
+                 invoicePane.mod.gui.getTextfield("invoiceNameText","Invoice").setText(invoice.getName());
 
                  if(invoice.getStatus() != null){
-                    invoicePane.ebiModule.guiRenderer.getComboBox("invoiceStatusText","Invoice").setSelectedItem(invoice.getStatus());
+                    invoicePane.mod.gui.getComboBox("invoiceStatusText","Invoice").setSelectedItem(invoice.getStatus());
                  }
 
                  if(invoice.getCategory() != null){
-                    invoicePane.ebiModule.guiRenderer.getComboBox("categoryText","Invoice").setSelectedItem(invoice.getCategory());
+                    invoicePane.mod.gui.getComboBox("categoryText","Invoice").setSelectedItem(invoice.getCategory());
                  }
 
                  if(invoice.getDate() != null){
-                    invoicePane.ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").setDate(invoice.getDate());
-                    invoicePane.ebiModule.guiRenderer.getTimepicker("invoiceDateText","Invoice").getEditor().setText(invoicePane.ebiModule.ebiPGFactory.getDateToString(invoice.getDate()));
+                    invoicePane.mod.gui.getTimepicker("invoiceDateText","Invoice").setDate(invoice.getDate());
+                    invoicePane.mod.gui.getTimepicker("invoiceDateText","Invoice").getEditor().setText(invoicePane.mod.system.getDateToString(invoice.getDate()));
                  }
                  if(invoice.getAssosiation() != null && !"".equals(invoice.getAssosiation().toString())){
-                    invoicePane.ebiModule.guiRenderer.getTextfield("orderText","Invoice").setText(invoice.getAssosiation());
-                    invoicePane.ebiModule.guiRenderer.getButton("selectOrder","Invoice").setEnabled(true); 
+                    invoicePane.mod.gui.getTextfield("orderText","Invoice").setText(invoice.getAssosiation());
+                    invoicePane.mod.gui.getButton("selectOrder","Invoice").setEnabled(true);
                  }
                  // Invoice rec
                  if(invoice.getGender() != null){
-                    invoicePane.ebiModule.guiRenderer.getComboBox("genderText","Invoice").setSelectedItem(invoice.getGender());
+                    invoicePane.mod.gui.getComboBox("genderText","Invoice").setSelectedItem(invoice.getGender());
                  }
 
-                 invoicePane.ebiModule.guiRenderer.getTextfield("titleText","Invoice").setText(invoice.getPosition());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("companyNameText","Invoice").setText(invoice.getCompanyname());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("nameText","Invoice").setText(invoice.getContactname());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("surnameText","Invoice").setText(invoice.getContactsurname());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("streetNrText","Invoice").setText(invoice.getContactstreet());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("zipText","Invoice").setText(invoice.getContactzip());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("locationText","Invoice").setText(invoice.getContactlocation());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("postCodeText","Invoice").setText(invoice.getContactpostcode());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("countryText","Invoice").setText(invoice.getContactcountry());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("telefonText","Invoice").setText(invoice.getContacttelephone());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("faxText","Invoice").setText(invoice.getContactfax());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("emailText","Invoice").setText(invoice.getContactemail());
-                 invoicePane.ebiModule.guiRenderer.getTextfield("internetText","Invoice").setText(invoice.getContactweb());
-                 invoicePane.ebiModule.guiRenderer.getTextarea("recDescription","Invoice").setText(invoice.getContactdescription());
+                 invoicePane.mod.gui.getTextfield("titleText","Invoice").setText(invoice.getPosition());
+                 invoicePane.mod.gui.getTextfield("companyNameText","Invoice").setText(invoice.getCompanyname());
+                 invoicePane.mod.gui.getTextfield("nameText","Invoice").setText(invoice.getContactname());
+                 invoicePane.mod.gui.getTextfield("surnameText","Invoice").setText(invoice.getContactsurname());
+                 invoicePane.mod.gui.getTextfield("streetNrText","Invoice").setText(invoice.getContactstreet());
+                 invoicePane.mod.gui.getTextfield("zipText","Invoice").setText(invoice.getContactzip());
+                 invoicePane.mod.gui.getTextfield("locationText","Invoice").setText(invoice.getContactlocation());
+                 invoicePane.mod.gui.getTextfield("postCodeText","Invoice").setText(invoice.getContactpostcode());
+                 invoicePane.mod.gui.getTextfield("countryText","Invoice").setText(invoice.getContactcountry());
+                 invoicePane.mod.gui.getTextfield("telefonText","Invoice").setText(invoice.getContacttelephone());
+                 invoicePane.mod.gui.getTextfield("faxText","Invoice").setText(invoice.getContactfax());
+                 invoicePane.mod.gui.getTextfield("emailText","Invoice").setText(invoice.getContactemail());
+                 invoicePane.mod.gui.getTextfield("internetText","Invoice").setText(invoice.getContactweb());
+                 invoicePane.mod.gui.getTextarea("recDescription","Invoice").setText(invoice.getContactdescription());
 
-                 invoicePane.ebiModule.ebiPGFactory.getDataStore("Invoice","ebiEdit",true);
+                 invoicePane.mod.system.getDataStore("Invoice","ebiEdit",true);
 
                  this.dataShowProduct();
                  calculateTotalAmount();
-                 checkIslocked(id,false);
 
             }else{
                 EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_C_RECORD_NOT_FOUND")).Show(EBIMessage.INFO_MESSAGE);
             }
-          invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
+          invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
 
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -239,12 +218,8 @@ public class EBIDataControlInvoice {
         Query query;
         try {
 
-            if(checkIslocked(id,true)){
-                 return;
-            }
-
-            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
-            query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
+            invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+            query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
                     "from Crminvoice where invoiceId=? ").setInteger(0, id);
 
             Iterator iter =  query.iterate();
@@ -255,10 +230,10 @@ public class EBIDataControlInvoice {
 
                     if (inv.getInvoiceid() == id) {
                         try {
-                            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").delete(inv);
+                            invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").delete(inv);
 
-                            invoicePane.ebiModule.ebiPGFactory.getDataStore("Invoice","ebiDelete",true);
-                            invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
+                            invoicePane.mod.system.getDataStore("Invoice","ebiDelete",true);
+                            invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
                         } catch (HibernateException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
@@ -272,10 +247,10 @@ public class EBIDataControlInvoice {
            ex.printStackTrace();  
         }
         dataNew(true);
-        dataShow(-1);
+        dataShow();
     }
 
-    public void dataShow(final int showID) {
+    public void dataShow() {
 
         Thread thr = new Thread(new Runnable() {
             @Override
@@ -284,29 +259,21 @@ public class EBIDataControlInvoice {
                     @Override
                     public void run() {
 
-                        invoicePane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                        invoicePane.mod.system.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-                        int srow = invoicePane.ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getSelectedRow();
-                        EBIAbstractTableModel model = (EBIAbstractTableModel) invoicePane.ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").getModel();
-
-                        String sName = "";
-                        if(showID != -1){
-                            if(srow > -1 && model.data.length >= srow){
-                                sName = model.data[invoicePane.ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(srow)][0].toString();
-                            }
-                        }
+                        EBIAbstractTableModel model = (EBIAbstractTableModel) invoicePane.mod.gui.getTable("tableTotalInvoice","Invoice").getModel();
 
                         Query query;
                         try {
 
-                            if(invoicePane.ebiModule.ebiPGFactory.systemStartCal != null &&  invoicePane.ebiModule.ebiPGFactory.systemEndCal != null){
+                            if(invoicePane.mod.system.systemStartCal != null &&  invoicePane.mod.system.systemEndCal != null){
 
-                                query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery("from Crminvoice cm where cm.date between ? and ? order by createddate desc");
-                                query.setTimestamp(0,invoicePane.ebiModule.ebiPGFactory.systemStartCal.getTime());
-                                query.setTimestamp(1, invoicePane.ebiModule.ebiPGFactory.systemEndCal.getTime());
+                                query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery("from Crminvoice cm where cm.date between ? and ? order by createddate desc");
+                                query.setTimestamp(0,invoicePane.mod.system.systemStartCal.getTime());
+                                query.setTimestamp(1, invoicePane.mod.system.systemEndCal.getTime());
 
                             }else{
-                                query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery("from Crminvoice order by createddate desc");
+                                query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery("from Crminvoice order by createddate desc");
                             }
 
                             if(query.list().size() > 0){
@@ -319,12 +286,6 @@ public class EBIDataControlInvoice {
                                 while (iter.hasNext()) {
 
                                     Crminvoice inv = (Crminvoice) iter.next();
-                                    if((""+inv.getInvoicenr()).equals(sName) && !"".equals(sName)){
-                                        srow = invoicePane.ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToModel(i);
-                                    }else if(inv.getInvoiceid() == showID){
-                                        srow = invoicePane.ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").convertRowIndexToView(i);
-                                    }
-
                                     model.data[i][0] = inv.getBeginchar() +inv.getInvoicenr();
                                     model.data[i][1] = inv.getName() == null ? "" : inv.getName();
                                     model.data[i][2] = inv.getStatus() == null ? "" : inv.getStatus();
@@ -333,7 +294,7 @@ public class EBIDataControlInvoice {
                                     model.data[i][5] = inv.getCompanyname() == null ? "" : inv.getCompanyname();
                                     model.data[i][6] = inv.getContactname() == null ? "" : inv.getContactname();
                                     model.data[i][7] = inv.getContactsurname() == null ? "" : inv.getContactsurname();
-                                    model.data[i][8] = inv.getDate() == null ? "" : invoicePane.ebiModule.ebiPGFactory.getDateToString(inv.getDate());
+                                    model.data[i][8] = inv.getDate() == null ? "" : invoicePane.mod.system.getDateToString(inv.getDate());
                                     model.data[i][9] = inv.getInvoiceid();
                                     i++;
                                 }
@@ -344,10 +305,9 @@ public class EBIDataControlInvoice {
                         }catch(Exception ex){
                             ex.printStackTrace();
                         }finally {
-                            invoicePane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            invoicePane.mod.system.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
 
-                        invoicePane.ebiModule.guiRenderer.getTable("tableTotalInvoice","Invoice").changeSelection(srow,0,false,false);
                     }
                 });
             }
@@ -359,7 +319,7 @@ public class EBIDataControlInvoice {
     public Hashtable<String,Double> getTaxName(int id){
         Hashtable<String,Double> taxTable = null;
     	try{
-   	 	Query y = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery("from Crminvoice where invoiceid=? ").setInteger(0, id);
+   	 	Query y = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery("from Crminvoice where invoiceid=? ").setInteger(0, id);
         
    	 	NumberFormat cashFormat=NumberFormat.getCurrencyInstance();
         cashFormat.setMinimumFractionDigits(2);
@@ -377,9 +337,9 @@ public class EBIDataControlInvoice {
                     if(pos.getTaxtype() != null){
                         if(taxTable.containsKey(pos.getTaxtype())){
 
-                            taxTable.put(pos.getTaxtype(),taxTable.get(pos.getTaxtype())+(((pos.getNetamount() * pos.getQuantity()) * invoicePane.ebiModule.dynMethod.getTaxVal(pos.getTaxtype())) / 100));
+                            taxTable.put(pos.getTaxtype(),taxTable.get(pos.getTaxtype())+(((pos.getNetamount() * pos.getQuantity()) * invoicePane.mod.dynMethod.getTaxVal(pos.getTaxtype())) / 100));
                         }else{
-                            taxTable.put(pos.getTaxtype(),(((pos.getNetamount() * pos.getQuantity()) * invoicePane.ebiModule.dynMethod.getTaxVal(pos.getTaxtype())) / 100));
+                            taxTable.put(pos.getTaxtype(),(((pos.getNetamount() * pos.getQuantity()) * invoicePane.mod.dynMethod.getTaxVal(pos.getTaxtype())) / 100));
 
                         }
                     }
@@ -420,11 +380,11 @@ public class EBIDataControlInvoice {
         map.put("TAXDIFF_TEXT",  taxTypes);
         map.put("TAXDIFF_VALUE",  taxValues);
 
-        invoicePane.ebiModule.ebiPGFactory.getIEBIReportSystemInstance().
+        invoicePane.mod.system.getIEBIReportSystemInstance().
                 useReportSystem(map,
-                invoicePane.ebiModule.ebiPGFactory.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_PRINT_INVOICES")),
+                invoicePane.mod.system.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_PRINT_INVOICES")),
                 getInvoiceNamefromId(id));
-      }catch (Exception ex){}
+      }catch (Exception ex){ ex.printStackTrace();}
     }
 
     public String dataShowAndMailReport(int id, boolean showWindow) {
@@ -461,18 +421,18 @@ public class EBIDataControlInvoice {
 
 
             try {
-                Query query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
+                Query query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
                         "from Crminvoice where invoiceId=? ").setInteger(0, id);
 
                 Iterator iter =  query.iterate();
 
                 if (iter.hasNext()) {
                     Crminvoice inv = (Crminvoice)iter.next();
-                    invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(inv);
+                    invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(inv);
 
                     if(!"".equals(inv.getContactemail())){
-                         fileName = invoicePane.ebiModule.ebiPGFactory.getIEBIReportSystemInstance().useReportSystem(map,
-                                         invoicePane.ebiModule.ebiPGFactory.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_PRINT_INVOICES")),
+                         fileName = invoicePane.mod.system.getIEBIReportSystemInstance().useReportSystem(map,
+                                         invoicePane.mod.system.convertReportCategoryToIndex(EBIPGFactory.getLANG("EBI_LANG_PRINT_INVOICES")),
                                                 getInvoiceNamefromId(id),showWindow,true, inv.getContactemail());
                     }else{
                         EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_NO_RECEIVER_WAS_FOUND")).Show(EBIMessage.ERROR_MESSAGE);
@@ -485,29 +445,22 @@ public class EBIDataControlInvoice {
             }
            
 
-        }catch (Exception ex){}
+        }catch (Exception ex){ex.printStackTrace();}
            return fileName;
     }
 
     public void dataNew(boolean reload) {
        try{
-            // Remove lock
-            lockId = -1;
-            lockModuleName = "";
-            lockUser = "";
-            lockStatus = 0;
-            lockTime =  null;
             id=-1;
-            invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").setID(-1);
+            invoicePane.mod.gui.getVisualPanel("Invoice").setID(-1);
 
             invoice = new Crminvoice();
             invoicePane.initialize();
-            invoicePane.ebiModule.guiRenderer.getButton("selectOrder","Invoice").setEnabled(false);
-            invoicePane.ebiModule.ebiPGFactory.getDataStore("Invoice","ebiNew",true);
+            invoicePane.mod.system.getDataStore("Invoice","ebiNew",true);
             if(reload){
                 this.dataShowProduct();
             }
-       }catch (Exception ex){}
+       }catch (Exception ex){ex.printStackTrace();}
     }
 
     public void dataShowProduct() {
@@ -515,7 +468,7 @@ public class EBIDataControlInvoice {
         Thread thr = new Thread(new Runnable() {
             @Override
             public void run() {
-                invoicePane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                invoicePane.mod.system.getMainFrame().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -537,7 +490,7 @@ public class EBIDataControlInvoice {
                                     invoicePane.tabModProduct.data[i][2] = obj.getProductname() == null ? "" : obj.getProductname();
                                     invoicePane.tabModProduct.data[i][3] = obj.getCategory() == null ? "" : obj.getCategory();
                                     invoicePane.tabModProduct.data[i][4] = obj.getTaxtype() == null ? "" : obj.getTaxtype();
-                                    invoicePane.tabModProduct.data[i][5] = currency.format(obj.getNetamount() == null ? "" : invoicePane.ebiModule.dynMethod.calculatePreTaxPrice(obj.getNetamount(),String.valueOf(obj.getQuantity()),String.valueOf(obj.getDeduction())));
+                                    invoicePane.tabModProduct.data[i][5] = currency.format(obj.getNetamount() == null ? "" : invoicePane.mod.dynMethod.calculatePreTaxPrice(obj.getNetamount(),String.valueOf(obj.getQuantity()),String.valueOf(obj.getDeduction())));
                                     invoicePane.tabModProduct.data[i][6] = obj.getDeduction().equals("")  ? "" : obj.getDeduction()+"%";
                                     invoicePane.tabModProduct.data[i][7] = obj.getDescription() == null ? "" : obj.getDescription();
                                     if(obj.getPositionid() == null || obj.getPositionid() < 0){ obj.setPositionid(((i + 1)*(-1)));}
@@ -548,8 +501,8 @@ public class EBIDataControlInvoice {
                                 invoicePane.tabModProduct.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", "", "", ""}};
                             }
                             invoicePane.tabModProduct.fireTableDataChanged();
-                        }catch (Exception ex){}finally {
-                            invoicePane.ebiModule.ebiPGFactory.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        }catch (Exception ex){ ex.printStackTrace();}finally {
+                            invoicePane.mod.system.getMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
                     }
                 });
@@ -564,9 +517,6 @@ public class EBIDataControlInvoice {
     public void dataDeleteProduct(int id) {
 
         try {
-            if(checkIslocked(id,true)){
-                 return;
-            }
 
             Iterator iter = invoice.getCrminvoicepositions().iterator();
             while (iter.hasNext()) {
@@ -576,9 +526,9 @@ public class EBIDataControlInvoice {
                 if (invpro.getPositionid() == id) {
                   if(id >= 0){
                     try {
-                        invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
-                        invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").delete(invpro);
-                        invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
+                        invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+                        invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").delete(invpro);
+                        invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -603,15 +553,15 @@ public class EBIDataControlInvoice {
         Query query;
         
         try {
-                invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
-                query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
+                invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+                query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
                         "from Crminvoice where invoiceId=? ").setInteger(0, id);
 
                 Iterator iter =  query.iterate();
 
                 if (iter.hasNext()) {
                     Crminvoice invoice = (Crminvoice) iter.next();
-                    invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(invoice);
+                    invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(invoice);
                     name = invoice.getName();
 
                 }
@@ -625,18 +575,18 @@ public class EBIDataControlInvoice {
         Query query;
         boolean ret = false;
         try {
-                invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
-                query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
+                invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+                query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
                         "from Companyorder where orderid=? ").setInteger(0, orderId);
 
                 Iterator iter =  query.iterate();
 
                 if (iter.hasNext()) {
                     Companyorder order = (Companyorder) iter.next();
-                    invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(order);
+                    invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(order);
                     ret = true;
                 }
-           invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit(); 
+           invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -648,19 +598,19 @@ public class EBIDataControlInvoice {
        Query query;
        boolean ret = false;
         try {
-                invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
-                query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
+                invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").begin();
+                query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").createQuery(
                         "from Companyservice where serviceid=? ").setInteger(0, serviceId);
 
                 Iterator iter =  query.iterate();
 
                 if (iter.hasNext()) {
                     Companyservice service = (Companyservice) iter.next();
-                    invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(service);
+                    invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(service);
 
                     ret = true;
                 }
-           invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
+           invoicePane.mod.system.hibernate.getHibernateTransaction("EBIINVOICE_SESSION").commit();
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -695,11 +645,11 @@ public class EBIDataControlInvoice {
             amount = amount - deduction;
             deduction = deduction * (-1);
 
-            invoicePane.ebiModule.guiRenderer.getFormattedTextfield("deductionText","Invoice").setValue(deduction);
-            invoicePane.ebiModule.guiRenderer.getFormattedTextfield("totalNetAmountText","Invoice").setValue(amount);
-            invoicePane.ebiModule.guiRenderer.getFormattedTextfield("taxText","Invoice").setValue(tax);
-            invoicePane.ebiModule.guiRenderer.getFormattedTextfield("totalGrossAmountText","Invoice").setValue(amount+tax);
-       }catch (Exception ex){}
+            invoicePane.mod.gui.getFormattedTextfield("deductionText","Invoice").setValue(deduction);
+            invoicePane.mod.gui.getFormattedTextfield("totalNetAmountText","Invoice").setValue(amount);
+            invoicePane.mod.gui.getFormattedTextfield("taxText","Invoice").setValue(tax);
+            invoicePane.mod.gui.getFormattedTextfield("totalGrossAmountText","Invoice").setValue(amount+tax);
+       }catch (Exception ex){ex.printStackTrace();}
 
     }
 
@@ -707,7 +657,7 @@ public class EBIDataControlInvoice {
         double val = 0.0;
          Query query;
         try {
-            query = invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").
+            query = invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").
                     createQuery("from Companyproducttax where name=? ").setString(0,
                     cat);
 
@@ -715,7 +665,7 @@ public class EBIDataControlInvoice {
 
                     if (it.hasNext()) {
                       Companyproducttax tax = (Companyproducttax) it.next();
-                      invoicePane.ebiModule.ebiPGFactory.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(tax);  
+                      invoicePane.mod.system.hibernate.getHibernateSession("EBIINVOICE_SESSION").refresh(tax);
                       val = tax.getTaxvalue();
                     }
         }catch(Exception ex){
@@ -723,74 +673,4 @@ public class EBIDataControlInvoice {
         }
       return val;
     }
-
-    /**
-     * Check if a loaded record is locked
-     * @param compNr
-     * @param showMessage
-     * @throws Exception
-     */
-
-    public boolean checkIslocked(int compNr, boolean showMessage) throws Exception{
-            boolean ret = false;
-           try{
-            PreparedStatement ps =  invoicePane.ebiModule.ebiPGFactory.database.initPreparedStatement("SELECT * FROM EBIPESSIMISTIC WHERE RECORDID=? AND MODULENAME=?  ");
-            ps.setInt(1,compNr);
-            ps.setString(2,"CRMInvoice");
-            ResultSet rs = invoicePane.ebiModule.ebiPGFactory.database.executePreparedQuery(ps);
-
-            rs.last();
-
-            if (rs.getRow() <= 0) {
-                lockId = compNr;
-                lockModuleName = "CRMInvoice";
-                lockUser = EBIPGFactory.ebiUser;
-                lockStatus = 1;
-                lockTime =  new Timestamp(new Date().getTime());
-                activateLockedInfo(false);
-            }else{
-                rs.beforeFirst();
-                rs.next();
-                lockId = rs.getInt("RECORDID");
-                lockModuleName = rs.getString("MODULENAME");
-                lockUser = rs.getString("USER");
-                lockStatus = rs.getInt("STATUS");
-                lockTime =  rs.getTimestamp("LOCKDATE");
-
-                if(!lockUser.equals(EBIPGFactory.ebiUser)){
-                    activateLockedInfo(true);
-                }
-
-                if(showMessage && !lockUser.equals(EBIPGFactory.ebiUser)){
-                    ret = true;
-                }
-            }
-
-             // Pessimistic Dialog view info
-             invoicePane.ebiModule.guiRenderer.getLabel("userx","pessimisticViewDialog").setText(lockUser);
-             invoicePane.ebiModule.guiRenderer.getLabel("statusx","pessimisticViewDialog").setText(EBIPGFactory.getLANG("EBI_LANG_LOCKED"));
-             invoicePane.ebiModule.guiRenderer.getLabel("timex","pessimisticViewDialog").setText(lockTime.toString());
-           }catch (Exception ex){}
-        return ret;
-    }
-
-    /**
-     * Activate Pessimistic Lock for the GUI
-     * @param enabled
-     */
-
-    public void activateLockedInfo(boolean enabled){
-       try{
-        //show red icon to a visual panel
-        invoicePane.ebiModule.guiRenderer.getVisualPanel("Invoice").showLockIcon(enabled);
-
-        //hide the delete buttons from crm panel
-        invoicePane.ebiModule.guiRenderer.getButton("saveInvoice","Invoice").setEnabled(enabled ? false : true);
-        invoicePane.ebiModule.guiRenderer.getButton("newPosition","Invoice").setVisible(enabled ? false : true);
-        invoicePane.ebiModule.guiRenderer.getButton("deletePosition","Invoice").setVisible(enabled ? false : true);
-
-        invoicePane.ebiModule.guiRenderer.getButton("deleteInvoice","Invoice").setVisible(enabled ? false : true);
-       }catch (Exception ex){}
-    }
-
 }
