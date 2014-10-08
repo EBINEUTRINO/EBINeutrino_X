@@ -16,8 +16,7 @@
 		<formattedtextfield name="productGrossText" tabindex="6" Location="115,43" Size="245,23"/>
 		<label name="productNetamout" title="EBI_LANG_CLEAR_PRICE" Location="9,68" Size="113,20"/>
 		<formattedtextfield name="productNetamoutText" tabindex="7" Location="115,68" Size="245,23"/>
-        <button name="calcClear" Location="370,68" Size="35,35"/>
-        <button name="calcGross" Location="370,35" Size="35,35"/>
+        <button name="taxAdmin" icon="../images/edit_dialog.png" Location="370,11" Size="35,35"/>
 		<label name="salePrice" title="EBI_LANG_SALE_PRICE" Location="10,94" Size="112,20"/>
 		<formattedtextfield name="salePriceText" tabindex="8" Location="115,94" Size="245,23"/>
 </panel>
@@ -64,4 +63,5 @@
 <panel name="descriptionPanel" title="EBI_LANG_DESCRIPTION" Location="6,477" Size="100%,163">
 		<textarea name="productDescription" tabindex="9" Location="9,29" Size="100%,100%"/>
 </panel>
+<codecontrol name="groovy" path="EBICRM/adminTaxDialogProduct.groovy" classname="" />
 </visualpanel>

@@ -1,8 +1,11 @@
 package ebiCRM.gui.panels;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ListSelectionModel;
@@ -68,61 +71,70 @@ public class EBICRMProduct  {
             }
         });
 
-
         mod.gui.getComboBox("ProductCategoryText","Product").setModel(new DefaultComboBoxModel(category));
         mod.gui.getComboBox("ProductTypeText","Product").setModel(new DefaultComboBoxModel(type));
-
         /***************************************************************************/
         // TAX PANEL
         /***************************************************************************/
 
         mod.gui.getComboBox("productTaxTypeTex","Product").setModel(new DefaultComboBoxModel(taxType));
-        mod.gui.getComboBox("productTaxTypeTex","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (!EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString())) {
-                        mod.gui.getButton("calcClear","Product").setEnabled(true);
-                        mod.gui.getButton("calcGross","Product").setEnabled(true);
-                    }
-                }
-        });
-
-         mod.gui.getButton("calcClear","Product").setEnabled(false);
-         mod.gui.getButton("calcClear","Product").setIcon(EBIConstant.ICON_UP);
-         mod.gui.getButton("calcClear","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (!"".equals(mod.gui.getFormattedTextfield("productNetamoutText","Product").getText())) {
+        mod.gui.getComboBox("productTaxTypeTex","Product").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (!"".equals(mod.gui.getFormattedTextfield("productGrossText","Product").getText())) {
+                        mod.gui.getFormattedTextfield("productGrossText", "Product").commitEdit();
+                        dataControlProduct.calculateClearPrice();
+                    }else if (!"".equals(mod.gui.getFormattedTextfield("productNetamoutText","Product").getText())) {
+                        mod.gui.getFormattedTextfield("productNetamoutText","Product").commitEdit();
                         dataControlProduct.calculatePreTaxPrice();
                     }
+
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
                 }
-            });
+            }
+        });
 
+        mod.gui.getFormattedTextfield("productGrossText", "Product").addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {}
 
-         mod.gui.getButton("calcGross","Product").setIcon(EBIConstant.ICON_DOWN);
-         mod.gui.getButton("calcGross","Product").setEnabled(false);
-         mod.gui.getButton("calcGross","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (!"".equals(mod.gui.getFormattedTextfield("productGrossText","Product").getText())) {
-                        dataControlProduct.calculateClearPrice();
-                    }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(!EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString())) {
+                    dataControlProduct.calculateClearPrice();
                 }
-         });
+            }
+        });
+        mod.gui.getFormattedTextfield("productNetamoutText","Product").addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
 
-         NumberFormat taxFormat=NumberFormat.getNumberInstance();
-         taxFormat.setMinimumFractionDigits(2);
-         taxFormat.setMaximumFractionDigits(3);
+            @Override
+            public void keyPressed(KeyEvent e) {}
 
-         mod.gui.getFormattedTextfield("productGrossText","Product").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-         mod.gui.getFormattedTextfield("productNetamoutText","Product").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
-         mod.gui.getFormattedTextfield("salePriceText","Product").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (!EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").equals(mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString())) {
+                     dataControlProduct.calculatePreTaxPrice();
+                }
+            }
+        });
 
+        NumberFormat taxFormat=NumberFormat.getNumberInstance();
+        taxFormat.setMinimumFractionDigits(2);
+        taxFormat.setMaximumFractionDigits(3);
+
+        mod.gui.getFormattedTextfield("productGrossText","Product").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("productNetamoutText","Product").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
+        mod.gui.getFormattedTextfield("salePriceText","Product").setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(taxFormat)));
 
         /**************************************************************************************/
         //  PRODUCT TABLE PROPERTIES
         /**************************************************************************************/
-
         mod.gui.getTable("ProductPropertiesTable","Product").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         mod.gui.getTable("ProductPropertiesTable","Product").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
@@ -144,50 +156,46 @@ public class EBICRMProduct  {
                         mod.gui.getButton("editProperties","Product").setEnabled(true);
                     }
                 }
-            });
+        });
 
-            mod.gui.getButton("newProperties","Product").setIcon(EBIConstant.ICON_SEARCH);
-            mod.gui.getButton("newProperties","Product").addActionListener(new java.awt.event.ActionListener() {
-
+        mod.gui.getButton("newProperties","Product").setIcon(EBIConstant.ICON_SEARCH);
+        mod.gui.getButton("newProperties","Product").addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     newDimension();
                 }
-            });
+        });
 
+        mod.gui.getButton("deleteProperties","Product").setIcon(EBIConstant.ICON_DELETE);
+        mod.gui.getButton("deleteProperties","Product").setEnabled(false);
+        mod.gui.getButton("deleteProperties","Product").addActionListener(new java.awt.event.ActionListener() {
 
-            mod.gui.getButton("deleteProperties","Product").setIcon(EBIConstant.ICON_DELETE);
-            mod.gui.getButton("deleteProperties","Product").setEnabled(false);
-            mod.gui.getButton("deleteProperties","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (selectedDimensionRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                            equals(productModelDimension.data[selectedDimensionRow][0].toString())) {
-                        return;
-                    }
-                    
-                    if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
-                        deleteDimension(Integer.parseInt(productModelDimension.data[selectedDimensionRow][2].toString()));
-                    }
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (selectedDimensionRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                        equals(productModelDimension.data[selectedDimensionRow][0].toString())) {
+                    return;
                 }
-            });
 
-            mod.gui.getButton("editProperties","Product").setEnabled(false);
-            mod.gui.getButton("editProperties","Product").setIcon(EBIConstant.ICON_EDIT);
-            mod.gui.getButton("editProperties","Product").addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (selectedDimensionRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                            equals(productModelDimension.data[selectedDimensionRow][0].toString())) {
-                        return;
-                    }
-
-                    editDimension(Integer.parseInt(productModelDimension.data[selectedDimensionRow][2].toString()));
+                if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
+                    deleteDimension(Integer.parseInt(productModelDimension.data[selectedDimensionRow][2].toString()));
                 }
-            });
+            }
+        });
 
-          /**************************************************************************************/
-          //  PRODUCT TABLE RELATION
-          /**************************************************************************************/
+        mod.gui.getButton("editProperties","Product").setEnabled(false);
+        mod.gui.getButton("editProperties","Product").setIcon(EBIConstant.ICON_EDIT);
+        mod.gui.getButton("editProperties","Product").addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (selectedDimensionRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                        equals(productModelDimension.data[selectedDimensionRow][0].toString())) {
+                    return;
+                }
+                editDimension(Integer.parseInt(productModelDimension.data[selectedDimensionRow][2].toString()));
+            }
+        });
+
+        /**************************************************************************************/
+        //  PRODUCT TABLE RELATION
+        /**************************************************************************************/
             mod.gui.getTable("ProductRelationTable","Product").setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             mod.gui.getTable("ProductRelationTable","Product").getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
@@ -433,7 +441,7 @@ public class EBICRMProduct  {
             mod.gui.getButton("saveProduct","Product").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-               ebiSave();
+                     ebiSave();
                 }
             });
 
@@ -480,21 +488,13 @@ public class EBICRMProduct  {
         isEdit = false;
     }
 
-    public void saveProduct() {
-        if (validateInput()) {
-          final Runnable  run = new Runnable(){
+    public void saveProduct(){
+        if (validateInput()){
+          final Runnable run = new Runnable(){
             public void run(){
-                  try{
-                        int row =0;
-                        if(isEdit){
-                            row = mod.gui.getTable("companyProductTable","Product").getSelectedRow();
-                        }
-                        dataControlProduct.dataStore(isEdit);
-                        mod.gui.getTable("companyProductTable","Product").changeSelection(row,0,false,false);
-                  }catch(Exception ex){}
+                try{ dataControlProduct.dataStore(isEdit); }catch(Exception ex){ex.printStackTrace();}
             }
           };
-
           Thread save = new Thread(run,"Save Product");
           save.start();
         }

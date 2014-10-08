@@ -388,14 +388,13 @@ public class EBICRMAccountStack {
         ebiModule.gui.getButton("deleteCreditDebit","Account").addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (selectedCDRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                            equals(creditDebitMod.data[selectedCDRow][0].toString())) {
-                        return;
-                    }
-                    if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
-                        deleteCreditDebit(Integer.parseInt(creditDebitMod.data[selectedCDRow][2].toString()));
-                    }
-
+                if (selectedCDRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                        equals(creditDebitMod.data[selectedCDRow][0].toString())) {
+                    return;
+                }
+                if (EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_DELETE_RECORD")).Show(EBIMessage.WARNING_MESSAGE_YESNO) == true) {
+                    deleteCreditDebit(Integer.parseInt(creditDebitMod.data[selectedCDRow][2].toString()));
+                }
                 }
          });
 
@@ -574,11 +573,11 @@ public class EBICRMAccountStack {
     }
 
 
-    private void deleteCreditDebit(int i) {
+    private void deleteCreditDebit(int i){
         dataControlAccount.dataDeleteCreditDebit(i);
     }
 
-    private void editCreditDebit(int i) {
+    private void editCreditDebit(int i){
        newCreditDebit(i);
     }
 
@@ -608,8 +607,7 @@ public class EBICRMAccountStack {
 
         ebiModule.gui.getComboBox("creditDebitTypeText","creditDebitDialog").setModel(new DefaultComboBoxModel(creditDebitType));
         ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").setModel(new DefaultComboBoxModel(EBICRMProduct.taxType));
-        ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").addActionListener(new ActionListener() {
-
+        ebiModule.gui.getComboBox("taxTypeText","creditDebitDialog").addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if(((JComboBox)e.getSource()).getSelectedItem() != null){
                     ebiModule.gui.getLabel("taxValue","creditDebitDialog").setText(dataControlAccount.getTaxValue(((JComboBox)e.getSource()).getSelectedItem().toString())+"%");
@@ -713,37 +711,35 @@ public class EBICRMAccountStack {
 
                 public void mouseClicked(java.awt.event.MouseEvent e) {
 
-                    if(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()) != -1){
-                        selectedCDDialogRow = ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").convertRowIndexToModel(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()));
+                if(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()) != -1){
+                    selectedCDDialogRow = ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").convertRowIndexToModel(ebiModule.gui.getTable("abstractTable","abstractSelectionDialog").rowAtPoint(e.getPoint()));
+                }
+
+                if (e.getClickCount() == 2) {
+
+                    if (selectedCDDialogRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                            equals(creditDebitMod.data[selectedCDDialogRow][0].toString())) {
+                        return;
                     }
 
-                    if (e.getClickCount() == 2) {
-
-                        if (selectedCDDialogRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                                equals(creditDebitMod.data[selectedCDDialogRow][0].toString())) {
-                            return;
-                        }
-
-                        showDebitCreditToList(Integer.parseInt(creditDebitMod.data[selectedCDDialogRow][2].toString()));
-                    }
+                    showDebitCreditToList(Integer.parseInt(creditDebitMod.data[selectedCDDialogRow][2].toString()));
+                }
                 }
             });
 
             ebiModule.gui.getButton("closeButton","abstractSelectionDialog").addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
                  ebiModule.gui.getEBIDialog("abstractSelectionDialog").setVisible(false);
                 }
             });
 
             ebiModule.gui.getButton("applyButton","abstractSelectionDialog").addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
-                        if (selectedCDDialogRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
-                                equals(creditDebitMod.data[selectedCDDialogRow][0].toString())) {
-                            return;
-                        }
-                       showDebitCreditToList(Integer.parseInt(creditDebitMod.data[selectedCDDialogRow][2].toString()));
+                    if (selectedCDDialogRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").
+                            equals(creditDebitMod.data[selectedCDDialogRow][0].toString())) {
+                        return;
+                    }
+                   showDebitCreditToList(Integer.parseInt(creditDebitMod.data[selectedCDDialogRow][2].toString()));
                 }
             });
 
@@ -764,20 +760,10 @@ public class EBICRMAccountStack {
         }
     }
 
-    private void saveAccount() {
+    private void saveAccount(){
       final Runnable run = new Runnable(){
     	  public void run(){
-    		  int row = 0;
-    		  
-    		  if(isEdit){
-    			  row = ebiModule.gui.getTable("accountTable","Account").getSelectedRow();
-    		  }
     		  dataControlAccount.dataStore(isEdit);
-    		  
-    		  try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {}
-    		  ebiModule.gui.getTable("accountTable","Account").changeSelection(row,0,false,false);
     	  }
       };
     	

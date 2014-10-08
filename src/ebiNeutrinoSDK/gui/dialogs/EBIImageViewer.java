@@ -1,17 +1,16 @@
 package ebiNeutrinoSDK.gui.dialogs;
 
 import ebiNeutrino.core.EBIMain;
-import ebiNeutrinoSDK.EBIPGFactory;
 import ebiNeutrinoSDK.gui.component.EBIVisualPanelTemplate;
 import ebiNeutrinoSDK.utils.EBIConstant;
 import ebiNeutrinoSDK.utils.HandScrollListener;
+import org.jdesktop.swingx.JXPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
@@ -22,9 +21,10 @@ import javax.swing.SwingConstants;
  */
 public class EBIImageViewer extends EBIDialog {
 
-	private EBIVisualPanelTemplate jContentPane = null;
+	private JXPanel jContentPane = null;
 	private JScrollPane jScrollPane = null;
-	private JLabel imageConstainer = null;
+	private JLabel imageContainer = null;
+    private ImageIcon image=null;
 
 
 	/**
@@ -37,13 +37,8 @@ public class EBIImageViewer extends EBIDialog {
         setName("EBIImageViewer");
 		storeLocation(true);
 		storeSize(true);
+        this.image = image;
 		initialize();
-        jContentPane.setModuleTitle("EBI Image Viewer");
-        jContentPane.setEnableChangeComponent(false);
-        jContentPane.setClosable(true);
-        jContentPane.setModuleIcon(EBIConstant.ICON_NEW);
-
-		this.imageConstainer.setIcon(image);
 	}
 
 	/**
@@ -61,12 +56,12 @@ public class EBIImageViewer extends EBIDialog {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private EBIVisualPanelTemplate getJContentPane() {
+	private JXPanel getJContentPane() {
 		if (jContentPane == null) {
-			jContentPane = new EBIVisualPanelTemplate(false);
-			jContentPane.getPanel().setLayout(new BorderLayout());
+			jContentPane = new JXPanel();
+			jContentPane.setLayout(new BorderLayout());
 			jContentPane.setBackground(Color.black);
-			jContentPane.getPanel().add(getJScrollPane(), BorderLayout.CENTER);
+			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -82,18 +77,18 @@ public class EBIImageViewer extends EBIDialog {
             HandScrollListener scrollListener = new HandScrollListener(getImageContainer());
             jScrollPane.getViewport().addMouseMotionListener(scrollListener);
             jScrollPane.getViewport().addMouseListener(scrollListener);
-            jScrollPane.setBackground(Color.black);
 			jScrollPane.setViewportView(getImageContainer());
-
+            jScrollPane.revalidate();
 		}
 		return jScrollPane;
 	}
 	
 	private JLabel getImageContainer(){
-		if(this.imageConstainer == null){
-			imageConstainer = new JLabel();
-			imageConstainer.setHorizontalAlignment(SwingConstants.CENTER);
+		if(this.imageContainer == null){
+			imageContainer = new JLabel();
+			imageContainer.setHorizontalAlignment(SwingConstants.CENTER);
+            imageContainer.setIcon(this.image);
 		}
-		return this.imageConstainer;
+		return this.imageContainer;
 	}
 }

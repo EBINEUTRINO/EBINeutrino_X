@@ -127,18 +127,18 @@ public class EBICRMLead {
                     ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
                     if(ebiModule.gui.getTable("leadsTable","Leads").getSelectedRow() != -1 &&
-                    				ebiModule.gui.getTable("leadsTable","Leads").getSelectedRow() < tabModel.data.length){
-                      
-                    	selectedRow =  ebiModule.gui.getTable("leadsTable","Leads").convertRowIndexToModel(lsm.getMinSelectionIndex());
- 
+                            ebiModule.gui.getTable("leadsTable","Leads").getSelectedRow() < tabModel.data.length){
+
+                        selectedRow =  ebiModule.gui.getTable("leadsTable","Leads").convertRowIndexToModel(lsm.getMinSelectionIndex());
+
                         if(selectedRow < tabModel.data.length){
-	                        if (lsm.isSelectionEmpty()) {
-	                            ebiModule.gui.getButton("deleteLeads","Leads").setEnabled(false);
-	                            ebiModule.gui.getButton("copyLeads","Leads").setEnabled(false);
-	                        } else if (!tabModel.data[selectedRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-	                            ebiModule.gui.getButton("deleteLeads","Leads").setEnabled(true);
-	                            ebiModule.gui.getButton("copyLeads","Leads").setEnabled(true);
-	                        }
+                            if (lsm.isSelectionEmpty()) {
+                                ebiModule.gui.getButton("deleteLeads","Leads").setEnabled(false);
+                                ebiModule.gui.getButton("copyLeads","Leads").setEnabled(false);
+                            }else if(!tabModel.data[selectedRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))){
+                                ebiModule.gui.getButton("deleteLeads","Leads").setEnabled(true);
+                                ebiModule.gui.getButton("copyLeads","Leads").setEnabled(true);
+                            }
                         }
 
                         if (selectedRow < 0 || EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT").

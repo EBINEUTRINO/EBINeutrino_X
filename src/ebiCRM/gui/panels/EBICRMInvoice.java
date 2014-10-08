@@ -524,7 +524,7 @@ public class EBICRMInvoice {
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_SELECT_STATUS")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }
-        if("".equals(mod.gui.getTextfield("invoiceName", "Invoice").getText())){
+        if("".equals(mod.gui.getTextfield("invoiceNameText", "Invoice").getText())){
             EBIExceptionDialog.getInstance(EBIPGFactory.getLANG("EBI_LANG_MESSAGE_INSERT_NAME")).Show(EBIMessage.ERROR_MESSAGE);
             return false;
         }

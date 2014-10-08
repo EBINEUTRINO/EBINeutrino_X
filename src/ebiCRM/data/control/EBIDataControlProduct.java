@@ -36,6 +36,7 @@ public class EBIDataControlProduct {
     private Crmproductdependency dependency = null;
     private Crmproductdimension dimension = null;
     private EBICRMProduct productPane = null;
+    private Companyproducttax tax=null;
     private int id = -1;
     public Timestamp lockTime = null;
     public String lockUser ="";
@@ -123,7 +124,7 @@ public class EBIDataControlProduct {
             	productPane.mod.gui.getVisualPanel("Product").setID(product.getProductid());
             }
             dataNew();
-
+            dataShow();
             productPane.mod.ebiContainer.showInActionStatus("Product", false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -321,11 +322,10 @@ public class EBIDataControlProduct {
                                 set.last();
                                 productPane.productModel.data = new Object[set.getRow()][6];
 
-                                if (set.getRow() > 0) {
+                                if(set.getRow() > 0){
                                     set.beforeFirst();
                                     int i = 0;
                                     while (set.next()) {
-
                                         productPane.productModel.data[i][0] = set.getString("PRODUCTNR") == null ? "" : set.getString("PRODUCTNR");
                                         productPane.productModel.data[i][1] = set.getString("PRODUCTNAME") == null ? "" : set.getString("PRODUCTNAME");
                                         productPane.productModel.data[i][2] = set.getString("CATEGORY") == null ? "" : set.getString("CATEGORY");
@@ -334,7 +334,6 @@ public class EBIDataControlProduct {
                                         productPane.productModel.data[i][5] = set.getInt("PRODUCTID");
                                         i++;
                                     }
-
                                 } else {
                                     productPane.productModel.data = new Object[][]{{EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"), "", "", "", "", ""}};
                                 }
@@ -690,33 +689,32 @@ public class EBIDataControlProduct {
 
 
     public void calculateClearPrice() {
-        Query query;
 
         try {
 
-            query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
-                    createQuery("from Companyproducttax where name=? ").setString(0,
-                    productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
+            if(tax == null || !productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString().equals(tax.getName())){
+                final Query query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
+                        createQuery("from Companyproducttax where name=? ").setString(0,
+                        productPane.mod.gui.getComboBox("productTaxTypeTex", "Product").getSelectedItem().toString());
 
-
-            Iterator it = query.iterate();
-
-            if (it.hasNext()) {
-
-                Companyproducttax tax = (Companyproducttax) it.next();
-                productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
-                double pre = new Double(productPane.mod.gui.getFormattedTextfield("productGrossText","Product").getValue().toString());
-
-                double mwst = (tax.getTaxvalue() / 100 ) + 1.0;
-
-                double clear = (pre / mwst);
-
-                BigDecimal bd = new BigDecimal(clear);
-                BigDecimal bd_round = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-                productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").setValue(new Double(bd_round.doubleValue()));
-
+                Iterator it = query.iterate();
+                if (it.hasNext()){
+                    tax = (Companyproducttax)it.next();
+                    productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
+                }
             }
-            
+
+            double pre=0.0;
+            if(!"".equals(productPane.mod.gui.getFormattedTextfield("productGrossText","Product").getText())){
+                productPane.mod.gui.getFormattedTextfield("productGrossText","Product").commitEdit();
+                pre = Double.parseDouble(productPane.mod.gui.getFormattedTextfield("productGrossText","Product").getValue().toString());
+            }
+
+            double clear = pre - (pre * tax.getTaxvalue() / 100 );
+            BigDecimal bd = new BigDecimal(clear);
+            BigDecimal bd_round = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+            productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").setValue(new Double(bd_round.doubleValue()));
+
         } catch (HibernateException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -726,26 +724,30 @@ public class EBIDataControlProduct {
 
     public void calculatePreTaxPrice() {
 
-        Query query;
         try {
-            query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
-                    createQuery("from Companyproducttax where name=? ").setString(0,
-                    productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString());
 
-                    Iterator it = query.iterate();
+            if(tax == null || !productPane.mod.gui.getComboBox("productTaxTypeTex","Product").getSelectedItem().toString().equals(tax.getName())) {
+                final Query query = productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").
+                        createQuery("from Companyproducttax where name=? ").setString(0,
+                        productPane.mod.gui.getComboBox("productTaxTypeTex", "Product").getSelectedItem().toString());
 
-                    if (it.hasNext()) {
+                Iterator it = query.iterate();
+                if(it.hasNext()){
+                    tax = (Companyproducttax)it.next();
+                    productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
+                }
+            }
+            double clear =0.0;
+            if(!"".equals(productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").getText())){
+                productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").commitEdit();
+                clear = Double.parseDouble(productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").getValue().toString());
+            }
 
-                        Companyproducttax tax = (Companyproducttax) it.next();
-                        productPane.mod.system.hibernate.getHibernateSession("EBIPRODUCT_SESSION").refresh(tax);
-                        double clear = new Double(productPane.mod.gui.getFormattedTextfield("productNetamoutText","Product").getValue().toString());
+            double pre = (clear + ((clear * tax.getTaxvalue()) / 100));
 
-                        double pre = (clear + ((clear * tax.getTaxvalue()) / 100));
-
-                        BigDecimal bd = new BigDecimal(pre);
-                        BigDecimal bd_round = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-                        productPane.mod.gui.getFormattedTextfield("productGrossText","Product").setValue(new Double(bd_round.doubleValue()));
-                    }
+            BigDecimal bd = new BigDecimal(pre);
+            BigDecimal bd_round = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+            productPane.mod.gui.getFormattedTextfield("productGrossText","Product").setValue(new Double(bd_round.doubleValue()));
             
         } catch (HibernateException e) {
             e.printStackTrace();
