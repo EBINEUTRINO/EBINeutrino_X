@@ -518,6 +518,11 @@ public class EBICRMAccountStack {
         ebiModule.gui.getFormattedTextfield("creditCal","Account").setHorizontalAlignment(SwingConstants.RIGHT);
         ebiModule.gui.getFormattedTextfield("creditCal","Account").setEditable(false);
 
+        ebiModule.gui.getTimepicker("dateText","Account").setDate(new Date());
+        ebiModule.gui.getTimepicker("dateText","Account").getEditor().setText("");
+        ebiModule.gui.getTimepicker("dateText","Account").setFormats(EBIPGFactory.DateFormat);
+
+
         try {
 
              if(!"null".equals(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT")) && !"".equals(dataControlAccount.properties.getValue("SELECTED_ACCOUNTYEAR_TEXT"))){
@@ -644,7 +649,7 @@ public class EBICRMAccountStack {
        if(type == 3){
            ebiModule.gui.loadGUI("CRMDialog/crmSelectionDialog.xml");
        }else{
-           ebiModule.gui.loadGUI("CRMDialog/crmAccountingSelectionDialog.xml");
+           ebiModule.gui.loadGUI("CRMDialog/crmDebitCreditSelectionDialog.xml");
            ebiModule.gui.getComboBox("accoutingType","abstractSelectionDialog").setModel(new DefaultComboBoxModel(selCreditDebitType));
            ebiModule.gui.getComboBox("accoutingType","abstractSelectionDialog").addActionListener(new ActionListener() {
                public void actionPerformed(ActionEvent e) {
@@ -740,6 +745,7 @@ public class EBICRMAccountStack {
                         return;
                     }
                    showDebitCreditToList(Integer.parseInt(creditDebitMod.data[selectedCDDialogRow][2].toString()));
+                   ebiModule.gui.getEBIDialog("abstractSelectionDialog").setVisible(false);
                 }
             });
 

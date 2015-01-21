@@ -6,7 +6,7 @@
 		<label name="number" title="EBI_LANG_NUMBER" Location="201,31" Size="100,20"/>
 		<label name="name" title="EBI_LANG_NAME" Location="20,79" Size="100,20"/>
 		<label name="amount" title="EBI_LANG_TOTAL_AMOUNT" Location="311,80" Size="147,20"/>
-		<label name="debit" Location="21,130" Size="100,20"/>
+		<label name="debit" title="EBI_LANG_CREDIT_DEBIT" Location="21,130" Size="100,20"/>
 		<label name="credit" title="EBI_LANG_DEPOSIT" Location="21,160" Size="100,20"/>
 		<label name="description" title="EBI_LANG_DESCRIPTION" Location="21,194" Size="100,20"/>
 		<textarea name="descriptionText" tabindex="7" Location="21,218" Size="378,81"/>
@@ -65,5 +65,4 @@
 		<combobox name="selectCreditDebitText" Location="133,18" Size="188,27"/>
 </panel>
 		<codecontrol name="groovy" path="EBICRM/showTax.groovy" classname="" />
-		<codecontrol name="groovy" path="EBICRM/ActionAccounting.groovy" classname="" />
 </visualpanel>

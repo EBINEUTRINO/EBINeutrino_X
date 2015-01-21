@@ -26,7 +26,6 @@ public class EBISetup extends EBIDialog{
 	private JMenu helpMenu           	  = null;
 	private JMenuItem exitMenuItem   	  = null;
 	private JMenuItem aboutMenuItem  	  = null;
-	private JTabbedPane jTabbedPane  	  = null;
 	public  EBISetupDB dbSetup 		 	  = null;
     public EBIPGFactory _ebifunction      = null;
     public boolean DBConfigured           = false;
@@ -43,8 +42,8 @@ public class EBISetup extends EBIDialog{
         setName("EBISetup");
         _ebifunction = func;
         dbSetup    = new EBISetupDB(this);
-        getJTabbedPane().addTab("EBI Database setup",dbSetup);
 		initialize();
+		this.setContentPane(dbSetup);
 
 	}
 
@@ -72,21 +71,11 @@ public class EBISetup extends EBIDialog{
 			jContentPane.getPanel().setLayout(new BorderLayout());
             jContentPane.setModuleIcon(EBIConstant.ICON_APP);
             jContentPane.setModuleTitle("EBI Database setup");
-			jContentPane.add(getJTabbedPane(), null);
             jContentPane.updateUI();
-
 		}
 		return jContentPane;
 	}
-	
-	public JTabbedPane getJTabbedPane() {
-		if (jTabbedPane == null) {
-			jTabbedPane = new JTabbedPane();
-			jTabbedPane.setName("jTabbedPane");
-			jTabbedPane.setTabPlacement(javax.swing.JTabbedPane.TOP);
-		}
-		return jTabbedPane;
-	}
+
 	/**
 	 * This method initializes jJMenuBar	
 	 * 	

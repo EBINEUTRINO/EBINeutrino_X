@@ -16,15 +16,19 @@ public class EBIVisualPanelTemplate extends EBIVisualPanel implements ComponentL
     private EBIPGFactory ebiPGFactory = null;
 
     public EBIVisualPanelTemplate(boolean showStripe){
+
         super(showStripe);
+
         tPanel.setDoubleBuffered(true);
         panel.setDoubleBuffered(true);
         tPanel.setLayout(null);
+
         if(showStripe) {
             tPanel.setLocation(0, 21);
         }else{
             tPanel.setLocation(0, 0);
         }
+
         super.add(tPanel, null);
 
         addComponentListener(this);

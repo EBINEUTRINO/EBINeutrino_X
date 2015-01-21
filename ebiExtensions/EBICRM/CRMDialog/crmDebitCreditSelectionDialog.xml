@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog name="abstractSelectionDialog" title="Selection Dialog" Location="100,100" Size="550,480" visualproperties="false" assignable="false" modal="true" resizable="true" >
+    <button name="closeButton" tabindex="3" title="EBI_LANG_CANCEL" fitonresize="true" Location="433,422" Size="107,29"/>
+    <button name="applyButton" tabindex="2" title="EBI_LANG_APPLY" fitonresize="true" Location="297,422" Size="132,29"/>
+    <table name="abstractTable" tabindex="1" title="abstractTable" Location="12,41" Size="100%,90%"/>
+    <textfield name="filterTableText" Location="101,13" Size="276,20"/>
+    <combobox name="accoutingType" Location="420,10" size="250,21"/>
+    <label name="filterTable" title="EBI_LANG_FILTER" Location="12,13" Size="89,20"/>
+</dialog>

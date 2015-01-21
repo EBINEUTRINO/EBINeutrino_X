@@ -100,7 +100,9 @@ public class EBIVisualPanel extends JDesktopPane {
 	}
 	
 	public void paintComponent(Graphics g){
+
         if(isShowStripe()){
+
             Graphics2D g2 = (Graphics2D) g;
             // Draw bg top
             Color startColor = new Color(150, 150, 150);
@@ -114,20 +116,6 @@ public class EBIVisualPanel extends JDesktopPane {
             g2.setColor(new Color(250, 250, 250));
             g2.drawLine(0, 20, getWidth(), 20);
 
-            setOpaque(true);
-
-            if (isPessimistic()) {
-                if (pessimisticLocked) {
-                    g2.drawImage(new ImageIcon("images/red.png").getImage(), 280, 5, null);
-                    lockButton.setVisible(true);
-                }else{
-                    //g2.drawImage(new ImageIcon("images/green.png").getImage(), 280, 5 ,null);
-                    lockButton.setVisible(false);
-                }
-            }
-            //g.setColor(new Color(250,250,250));
-            //g.drawLine(0, 21, getWidth(), 21);
-
             if (closable) {
                 BufferedImage bi = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
                 Graphics gx = bi.getGraphics();
@@ -137,6 +125,8 @@ public class EBIVisualPanel extends JDesktopPane {
             }
 
         }
+
+        setOpaque(true);
 	}
 
     /**
@@ -203,14 +193,14 @@ public class EBIVisualPanel extends JDesktopPane {
 
 	private JLabel getJTextFieldAddedFrom() {
 		if (jTextFieldAddedFrom == null) {
-			jTextFieldAddedFrom = new JLabel();
-			jTextFieldAddedFrom.setBounds(new Rectangle(548, 0, 98, 20));
-			jTextFieldAddedFrom.setForeground(new Color(240,240,240));
-			jTextFieldAddedFrom.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
-			jTextFieldAddedFrom.setOpaque(false);
-			jTextFieldAddedFrom.setFocusable(false);
+            jTextFieldAddedFrom = new JLabel();
+            jTextFieldAddedFrom.setBounds(new Rectangle(548, 0, 98, 20));
+            jTextFieldAddedFrom.setForeground(new Color(240,240,240));
+            jTextFieldAddedFrom.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
+            jTextFieldAddedFrom.setOpaque(false);
+            jTextFieldAddedFrom.setFocusable(false);
 
-		}
+        }
 		return jTextFieldAddedFrom;
 	}
 
@@ -221,15 +211,18 @@ public class EBIVisualPanel extends JDesktopPane {
 			jTextComboAddedFrom.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
 			jTextComboAddedFrom.setFocusable(false);
 			jTextComboAddedFrom.setVisible(false);
+
             if(EBIPGFactory.systemUsers != null){
                 jTextComboAddedFrom.setModel(new DefaultComboBoxModel(EBIPGFactory.systemUsers));
             }
+
 			jTextComboAddedFrom.addActionListener(new ActionListener(){
                  public void actionPerformed(ActionEvent e) {
                    jTextFieldAddedFrom.setText(jTextComboAddedFrom.getSelectedItem() == null ?
                                               EBIPGFactory.ebiUser : jTextComboAddedFrom.getSelectedItem().toString());
                  }
             });
+
 		}
 		return jTextComboAddedFrom;
 	}

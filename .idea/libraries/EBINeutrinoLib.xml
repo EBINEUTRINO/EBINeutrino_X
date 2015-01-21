@@ -18,16 +18,13 @@
       <root url="jar://$PROJECT_DIR$/lib/smtp.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/swingx.jar!/" />
       <root url="file://$PROJECT_DIR$/hibernate" />
-      <root url="jar://$PROJECT_DIR$/lib/jasperreports-5.6.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jasperreports-applet-5.6.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jasperreports-javaflow-5.6.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jta-1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/poi-3.11-beta.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/poi-ooxml-3.11-beta.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jasperreports-6.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jasperreports-javaflow-6.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
