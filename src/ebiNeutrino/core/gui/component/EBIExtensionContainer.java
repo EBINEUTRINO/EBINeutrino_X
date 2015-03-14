@@ -32,6 +32,7 @@ public class EBIExtensionContainer implements IEBIContainer {
     public DefaultListModel myListmodel=null;
     private JSplitPane splitVerticalPane = null;
 
+
     public EBIExtensionContainer(EBIMain main) {
         ebiMain = main;
         myListmodel = new DefaultListModel();
@@ -51,12 +52,14 @@ public class EBIExtensionContainer implements IEBIContainer {
 
         jListnames = new JList(myListmodel);
         jListnames.setCellRenderer(new EBIListCellRenderer());
+
         jListnames.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent e) {
                 int index = jListnames.locationToIndex(e.getPoint());
                 loadSelectedListIndex(index);
             }
         });
+
         jListnames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jListnames.setSelectedIndex(0);
 
@@ -140,12 +143,15 @@ public class EBIExtensionContainer implements IEBIContainer {
     }
 
     public void loadSelectedListIndex(int index){
+
         EBIListItem itm =  (EBIListItem)myListmodel.get(index);
+
         if(itm.isApp()) {
             ebiMain.mod_management.loadScript(itm.getModname(), itm.getPath());
         }else{
             ebiMain.mod_management.loadCRM(itm.getModname(), itm.getPath());
         }
+
         jListnames.setSelectedIndex(index);
 
     }

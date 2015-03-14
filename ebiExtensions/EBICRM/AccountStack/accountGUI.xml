@@ -64,5 +64,5 @@
         <button name="deleteCreditDebit" Location="80,15"  Size="35,35"/>
 		<combobox name="selectCreditDebitText" Location="133,18" Size="188,27"/>
 </panel>
-		<codecontrol name="groovy" path="EBICRM/showTax.groovy" classname="" />
+		<codecontrol name="groovy" path="EBICRM/AccountStack/CODE_ACCOUNTING/showTax.groovy" classname="" />
 </visualpanel>

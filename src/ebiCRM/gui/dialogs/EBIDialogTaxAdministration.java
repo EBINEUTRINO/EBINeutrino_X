@@ -121,14 +121,18 @@ public class EBIDialogTaxAdministration  {
 
                 public void mouseClicked(java.awt.event.MouseEvent e) {
 
-                    selRow = ebiModule.gui.getTable("taxValueTable","taxAdminDialog").convertRowIndexToModel(ebiModule.gui.getTable("taxValueTable","taxAdminDialog").rowAtPoint(e.getPoint()));
+                    if(ebiModule.gui.getTable("taxValueTable","taxAdminDialog").rowAtPoint(e.getPoint()) != -1) {
 
-                    if (e.getClickCount() == 2) {
+                        selRow = ebiModule.gui.getTable("taxValueTable", "taxAdminDialog").convertRowIndexToModel(ebiModule.gui.getTable("taxValueTable", "taxAdminDialog").rowAtPoint(e.getPoint()));
 
-                        if (!tabModel.data[selRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
-                            editTax(selRow);
+                        if (e.getClickCount() == 2) {
+
+                            if (!tabModel.data[selRow][0].toString().equals(EBIPGFactory.getLANG("EBI_LANG_PLEASE_SELECT"))) {
+                                editTax(selRow);
+                            }
                         }
                     }
+
                 }
         });
 

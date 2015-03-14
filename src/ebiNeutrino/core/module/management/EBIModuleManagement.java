@@ -237,9 +237,16 @@ public class EBIModuleManagement {
       }catch(Exception ex){ ex.printStackTrace();}
     }
 
+    /**
+     * Load a groovy script from a specified location
+     * @param name
+     * @param path
+     */
 
     public void loadScript(String name,String path){
+
         List<Object> toScript = new ArrayList<Object>();
+
         if ("groovy".equals(name)) {
             EBIGUIScripts script = new EBIGUIScripts();
             script.setType("groovy");
@@ -247,8 +254,10 @@ public class EBIModuleManagement {
             script.setName(name);
             toScript.add(script);
         }
+
         ebiMain.guiRenderer.getScriptContainer().put("app",toScript);
         ebiMain.guiRenderer.excScript("app");
+
     }
 
 

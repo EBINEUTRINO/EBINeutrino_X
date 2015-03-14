@@ -1,15 +1,26 @@
 <component name="libraryTable">
   <library name="EBINeutrinoLib">
+    <ANNOTATIONS>
+      <root url="file://$PROJECT_DIR$/hibernate" />
+    </ANNOTATIONS>
     <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/dom4j-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ebiNeutrinoSDK.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/groovy-all-2.0.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate-jpa-2.0-api-1.0.1.Final.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate-tools.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate-validator.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/hibernate3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/iText-2.1.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jasperreports-6.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jasperreports-javaflow-6.0.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javassist-3.12.0.GA.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jdom.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jta-1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/mysql-connector.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/pop3.jar!/" />
@@ -18,13 +29,6 @@
       <root url="jar://$PROJECT_DIR$/lib/smtp.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/swingx.jar!/" />
       <root url="file://$PROJECT_DIR$/hibernate" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jta-1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-digester.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jasperreports-6.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jasperreports-javaflow-6.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

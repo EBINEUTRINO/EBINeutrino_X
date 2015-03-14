@@ -4,7 +4,7 @@
 <!-- **************************************** -->
 
 <project name="Destribute EBINeutrino R1" basedir=".">
-    <property name="destLinux" value="/home/franz"/>
+    <property name="destLinux" value="/Users/Bramante/Downloads"/>
     <property name="destWindows" value="d:\\"/>
     <property name="bin" value="bin"/>
     <property name="lib" value="lib"/>
@@ -39,18 +39,14 @@
     <path id="toolslib">
         <path location="../${lib}/hibernate-tools.jar"/>
         <path location="../${lib}/hibernate3.jar"/>
-        <path location="../${lib}/freemarker.jar"/>
         <path location="../${lib}/commons-logging.jar"/>
         <path location="../${lib}/commons-collections-3.1.jar"/>
-        <path location="../${lib}/commons-javaflow.jar"/>
         <path location="../${lib}/mysql-connector.jar"/>
-        <path location="../${lib}/jtidy-r8-20060801.jar"/>
         <path location="../${lib}/dom4j-1.6.1.jar"/>
     	<path location="../${lib}/log4j-1.2.15.jar"/>
         <path location="../${lib}/slf4j-api-1.5.8.jar"/>
         <path location="../${lib}/slf4j-log4j12-1.5.8.jar"/>
-        <path location="../${lib}/ojdbc14.jar"/>
-        <path location="../${lib}/hsqldb.jar"/>        
+        <path location="../${lib}/hsqldb.jar"/>
         <pathelement path="../${hibernateIncubator}/ebiNeutrinoSDK/model/hibernate"/>
     </path>
 
@@ -319,13 +315,13 @@
             <fileset dir="../${language}" excludes="**/*.java"/>
         </copy>
 		
-		<copy todir="${destLinux}/${EBINeutrino}/${system}">
+		<!-- <copy todir="${destLinux}/${EBINeutrino}/${system}">
             <fileset dir="../${system}" excludes="**/*.java"/>
         </copy>
 
         <copy todir="${destLinux}/${EBINeutrino}/${script}">
             <fileset dir="../${script}" excludes="**/*.java"/>
-        </copy>
+        </copy> -->
 
         <copy todir="${destLinux}/${EBINeutrino}/">
             <fileset dir="../${buildFiles}" excludes="build.xml">
@@ -346,9 +342,9 @@
     <target name="init">
         <mkdir dir="../${build}"/>
         <mkdir dir="../${build}/Icon"/>
-        <copy todir="../${build}/Icon">
+       <!-- <copy todir="../${build}/Icon">
             <fileset dir="../${src}/Icon" />
-        </copy>
+        </copy> -->
     </target>
 
 

@@ -394,20 +394,10 @@ public class EBIReportSystem implements IEBIReportSystem{
         if(EBIPGFactory.isWindows()){
             map.put("SUBREPORT_DIR",".\\reports\\");
         }else{
-            map.put("SUBREPORT_DIR","./reports/");
+           map.put("SUBREPORT_DIR","./reports/");
         }
 
         try {
-
-            PreparedStatement ps0 = ebiPGFunction.getIEBIDatabase().initPreparedStatement("SELECT * FROM COMPANYTAXOFFICE order by ID desc ");
-            set2 = ebiPGFunction.getIEBIDatabase().executePreparedQuery(ps0);
-
-            set2.last();
-            if (set2.getRow() > 0) {
-                set2.beforeFirst();
-                set2.next();
-                map.put("TAXOFFICE",set2.getString("NAME"));
-            }
 
             PreparedStatement ps1 = ebiPGFunction.getIEBIDatabase().initPreparedStatement("SELECT * FROM COMPANY com " +
                     "LEFT JOIN COMPANYBANK bnk ON com.COMPANYID=bnk.COMPANYID WHERE com.ISACTUAL=? ");

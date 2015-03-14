@@ -2,8 +2,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Account Stack Report" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="36c745c4-0159-46b5-87de-a963fe6b13ad">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="4.0"/>
-	<property name="ireport.x" value="1545"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
@@ -133,7 +133,7 @@
 	<queryString>
 		<![CDATA[SELECT
 act.* , comp.NAME as COMPNAME, comp.CUSTOMERNR, comp.ISACTUAL
-FROM COMPANY as comp, ACCOUNTSTACK act WHERE comp.ISACTUAL = 1 and act.ACCOUNTDATE BETWEEN $P{startDate} AND $P{endDate} order by act.ACCOUNTDATE asc]]>
+FROM COMPANY as comp, ACCOUNTSTACK as act WHERE comp.ISACTUAL = 1 and act.ACCOUNTDATE BETWEEN $P{startDate} AND $P{endDate} order by act.ACCOUNTDATE asc]]>
 	</queryString>
 	<field name="ACSTACKID" class="java.lang.Integer"/>
 	<field name="ACCOUNTNR" class="java.lang.String"/>

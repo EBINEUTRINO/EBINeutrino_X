@@ -6,7 +6,6 @@ import java.io.FilenameFilter;
 import javax.swing.JFrame;
 
 import org.hibernate.cfg.Configuration;
-
 import ebiNeutrino.core.gui.Dialogs.EBISplashScreen;
 import ebiNeutrino.core.setup.EBILanguageSetup;
 import ebiNeutrino.core.setup.EBISetup;
@@ -26,8 +25,8 @@ import ebiNeutrinoSDK.utils.Encrypter;
 public class EBINeutrinoSystemInit extends EBIPGFactory {
 
 	private EBIPGFactory ebiPGFactory = null;
-	public static boolean isConfigured = false; 
-	private EBIPropertiesRW properties =  null;
+    public static boolean isConfigured = false;
+    private EBIPropertiesRW properties =  null;
     private boolean toReturn;
 
 	public EBINeutrinoSystemInit(EBIPGFactory func,EBISplashScreen spl){
@@ -74,71 +73,70 @@ public class EBINeutrinoSystemInit extends EBIPGFactory {
 	private boolean Init(final String data){
 
 		try {
-		Encrypter encrypter = new Encrypter("EBINeutrino");
+                Encrypter encrypter = new Encrypter("EBINeutrino");
 
-        EBIPGFactory.USE_ASB2C = Boolean.parseBoolean(properties.getValue("EBI_Neutrino_UserAsB2C"));
-		EBIPGFactory.host = properties.getValue("EBI_Neutrino_Host");
-		final String password = encrypter.decrypt(properties.getValue("EBI_Neutrino_Password"));
-		final String user = encrypter.decrypt(properties.getValue("EBI_Neutrino_User"));
-		EBIPGFactory.updateServer = properties.getValue("EBI_Neutrino_Update_Server");
-		EBIPGFactory.DateFormat = "".equals(properties.getValue("EBI_Neutrino_Date_Format")) ? "dd.MM.yyyy" : properties.getValue("EBI_Neutrino_Date_Format");
-		final String Driver  = properties.getValue("EBI_Neutrino_Database_Driver");
-		final String dbType  = properties.getValue("EBI_Neutrino_Database");
-		final String oracSID = properties.getValue("EBI_Neutrino_Oracle_SID");
-        final String useUpperCase = properties.getValue("EBI_Neutrino_Database_UpperCase");
-		EBIPGFactory.lastLoggedUser = properties.getValue("EBI_Neutrino_Last_Logged_User");
-		getLanguageInstance("".equals(properties.getValue("EBI_Neutrino_Language_File")) ? "language/EBINeutrinoLanguage_English.properties" : properties.getValue("EBI_Neutrino_Language_File"),false);
+                EBIPGFactory.USE_ASB2C = Boolean.parseBoolean(properties.getValue("EBI_Neutrino_UserAsB2C"));
+                EBIPGFactory.host = properties.getValue("EBI_Neutrino_Host");
+                final String password = encrypter.decrypt(properties.getValue("EBI_Neutrino_Password"));
+                final String user = encrypter.decrypt(properties.getValue("EBI_Neutrino_User"));
+                EBIPGFactory.updateServer = properties.getValue("EBI_Neutrino_Update_Server");
+                EBIPGFactory.DateFormat = "".equals(properties.getValue("EBI_Neutrino_Date_Format")) ? "dd.MM.yyyy" : properties.getValue("EBI_Neutrino_Date_Format");
+                final String Driver  = properties.getValue("EBI_Neutrino_Database_Driver");
+                final String dbType  = properties.getValue("EBI_Neutrino_Database");
+                final String oracSID = properties.getValue("EBI_Neutrino_Oracle_SID");
+                final String useUpperCase = properties.getValue("EBI_Neutrino_Database_UpperCase");
+                EBIPGFactory.lastLoggedUser = properties.getValue("EBI_Neutrino_Last_Logged_User");
+                getLanguageInstance("".equals(properties.getValue("EBI_Neutrino_Language_File")) ? "language/EBINeutrinoLanguage_English.properties" : properties.getValue("EBI_Neutrino_Language_File"),false);
 
-        //Set global database system    
-        DATABASE_SYSTEM = dbType.toLowerCase();
+                //Set global database system
+                DATABASE_SYSTEM = dbType.toLowerCase();
 
-		if(!"".equals(Driver)){
-            toReturn = ebiPGFactory.getIEBIDatabase().connect(Driver, EBIPGFactory.host.trim(),data,password,user,dbType.toLowerCase(),oracSID,useUpperCase);
-		}else{
-		    toReturn = false;
-		}
+                if(!"".equals(Driver)){
+                    toReturn = ebiPGFactory.getIEBIDatabase().connect(Driver, EBIPGFactory.host.trim(),data,password,user,dbType.toLowerCase(),oracSID,useUpperCase);
+                }else{
+                    toReturn = false;
+                }
 
-		isConfigured = toReturn;
-		if(toReturn == false){
-			return toReturn;
-		}
+                isConfigured = toReturn;
+                if(toReturn == false){
+                    return toReturn;
+                }
 
-		ebiPGFactory.fillComboWithUser();
-        ebiPGFactory.updateSystemYears();
-		/***************************************************************/
-		/** Configure Hibernate **/
-		/**************************************************************/
+                ebiPGFactory.fillComboWithUser();
+                ebiPGFactory.updateSystemYears();
 
-                    Configuration cfg  = new Configuration();
-                    File dir = new File("hibernate/");
+                /***************************************************************/
+                /** Configure Hibernate **/
+                /**************************************************************/
+                System.out.println("actual working directory:"+System.getProperty("user.dir"));
+                Configuration cfg  = new Configuration();
+                File dir = new File("hibernate/");
 
-                    FilenameFilter filter = new FilenameFilter() {
+                FilenameFilter filter = new FilenameFilter() {
                          public boolean accept(File dir, String name) {
-                            return name.endsWith(".hbm.xml");
-                         }
-                    };
-                
-				    String[] children = dir.list(filter);
-				    if (children == null) {
-				        EBIExceptionDialog.getInstance("No Hibernate files found, system will exit now! ").Show(EBIMessage.ERROR_MESSAGE);
-				    } else {
-				        for (int i=0; i<children.length; i++) {
-				            // Get filename of file or directory
-				            String filename = children[i];
-	                        cfg.addResource(filename);
-	                    }
-				    }
+                        return name.endsWith(".hbm.xml");
+                     }
+                };
 
-				    if("mysql".equals(dbType.toLowerCase())){
-				     cfg.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
-				    }else if("oracle".equals(dbType.toLowerCase())){
-				     cfg.setProperty("hibernate.dialect","org.hibernate.dialect.Oracle10gDialect");
-				    }else if("hsqldb".equals(dbType.toLowerCase())){
-				     cfg.setProperty("hibernate.dialect","org.hibernate.dialect.HSQLDialect");
-				    }
+                String[] children = dir.list(filter);
+                if (children == null) {
+                    EBIExceptionDialog.getInstance("No Hibernate files found, system will exit now! ").Show(EBIMessage.ERROR_MESSAGE);
+                } else {
+                    for (int i=0; i<children.length; i++) {
+                        // Get filename of file or directory
+                        String filename = children[i];
+                        cfg.addResource(filename);
+                    }
+                }
 
-                    cfg.setProperty("hibernate.connection.schema", data);
-                    ebiPGFactory.hibernate = new EBIHibernateSessionPooling(ebiPGFactory,cfg);
+                if("mysql".equals(dbType.toLowerCase())){
+                 cfg.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
+                }else if("oracle".equals(dbType.toLowerCase())){
+                 cfg.setProperty("hibernate.dialect","org.hibernate.dialect.Oracle10gDialect");
+                }
+
+                cfg.setProperty("hibernate.connection.schema", data);
+                ebiPGFactory.hibernate = new EBIHibernateSessionPooling(ebiPGFactory,cfg);
 
 		  } catch (Exception ex) {
 			 ex.printStackTrace();
@@ -151,14 +149,16 @@ public class EBINeutrinoSystemInit extends EBIPGFactory {
 	
 	/**
 	 * Check if we have a connection to the database
-	 * then a setup dialog will appear
+	 * otherwise a setup dialog will appear
 	 */
 	public boolean checkConnection(){
 		if(isConfigured == false){
+
             JFrame frame = new JFrame("EBI Neutrino R1 Setup");
             frame.setUndecorated( true );
             frame.setVisible( true );
             frame.setLocationRelativeTo( null );
+
 			if(EBIExceptionDialog.getInstance("No database connection possible\nWould you like to configure a connection?\n").Show(EBIMessage.INFO_MESSAGE_YESNO) == true){
 
                 EBILanguageSetup setLanguage = new EBILanguageSetup();

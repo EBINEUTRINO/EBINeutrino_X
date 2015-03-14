@@ -2,7 +2,7 @@ package ebiCRM;
 
 import org.apache.log4j.Logger;
 import ebiCRM.functionality.EBICRMDynamicFunctionalityMethods;
-import ebiCRM.gui.component.EBICRMTabcontrol;
+import ebiCRM.gui.component.EBICRMTopStripeControl;
 import ebiCRM.gui.panels.EBICRMAccountStack;
 import ebiCRM.gui.panels.EBICRMInvoice;
 import ebiCRM.gui.panels.EBICRMLead;
@@ -23,7 +23,7 @@ public class EBICRMModule implements IEBIExtension {
     public int companyID = -1;
     public static boolean RELOAD = false;
     public static boolean isExistCompany = false;
-    public EBICRMTabcontrol ebiContainer = null;
+    public EBICRMTopStripeControl ebiContainer= null;
     public EBICRMDynamicFunctionalityMethods dynMethod = null;
     public int EBICRM_SESSION = 0;
     public IEBIGUIRenderer gui = null;
@@ -47,7 +47,7 @@ public class EBICRMModule implements IEBIExtension {
         }
         
         dynMethod = new EBICRMDynamicFunctionalityMethods(this);
-        ebiContainer = new EBICRMTabcontrol(this);
+        ebiContainer = new EBICRMTopStripeControl(this);
     }
 
 

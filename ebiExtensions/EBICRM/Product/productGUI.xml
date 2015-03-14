@@ -63,5 +63,5 @@
 <panel name="descriptionPanel" title="EBI_LANG_DESCRIPTION" Location="6,477" Size="100%,163">
 		<textarea name="productDescription" tabindex="9" Location="9,29" Size="100%,100%"/>
 </panel>
-<codecontrol name="groovy" path="EBICRM/adminTaxDialogProduct.groovy" classname="" />
+<codecontrol name="groovy" path="EBICRM/Product/CODE_PRODUCT/adminTaxDialogProduct.groovy" classname="" />
 </visualpanel>

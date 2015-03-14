@@ -94,17 +94,20 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
     }
 
     public final synchronized void loadProject(final String path){
-   
+
+        //Initialize module and renderer
         final EBIXMLGUIReader xmlGui1 = new EBIXMLGUIReader();
         xmlGui1.setXmlPath(new File("ebiExtensions/" + path));
         init();
+
         ebiMain.container.resetListItem();
 
+        //load module
         if(xmlGui1.loadXMLGUI()){
 
-              final Iterator ix = xmlGui1.getCompObjects().getSubWidgets().iterator();
+            final Iterator ix = xmlGui1.getCompObjects().getSubWidgets().iterator();
 
-              while(ix.hasNext()) {
+            while(ix.hasNext()) {
                 final EBIGUIWidgetsBean bx = (EBIGUIWidgetsBean)ix.next();
                 ebiMain.container.addListItem(new EBIListItem(bx.getIcon(), EBIPGFactory.getLANG(bx.getTitle()), bx.getPath(), bx.getName(), false));
             }
@@ -113,8 +116,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
            canShow = false;
         }
 
+        //load app module
         final File dir = new File("ebiExtensions/EBICRM/");
-
         final FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.endsWith(".app.xml");
@@ -122,8 +125,8 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
         };
 
         final List<Object> toScript = new ArrayList<Object>();
-
         final String[] children = dir.list(filter);
+
         if (children != null) {
             for (int i=0; i<children.length; i++) {
                 // Get filename of file or directory
@@ -137,7 +140,9 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                     final EBIGUIWidgetsBean bean = xmlApps.getWidgetsObject();
 
                     if("appmodule".equals(bean.getType().toLowerCase())){
+
                         Iterator iter  = bean.getSubWidgets().iterator();
+
                         while(iter.hasNext()){
 
                             EBIGUIWidgetsBean bx = (EBIGUIWidgetsBean)iter.next();
@@ -161,9 +166,14 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                     script.setClassName(bx.getClassName());
                                     toScript.add(script);
                                 }
+
                                 scriptContainer.put("app",toScript);
+
                             }else if("application".equals(bx.getType().toLowerCase())){
+
+                                //Append a module to main menu left container
                                 ebiMain.container.myListmodel.addElement(new EBIListItem(bx.getIcon(), EBIPGFactory.getLANG(bx.getTitle()),bx.getPath(),bx.getName(),true));
+
                             }
                         }
                     }
@@ -1343,11 +1353,14 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                         binding.setVariable("core", ebiMain);
 
                                         if(resizeContainer.get(componentName) != null){
+
                                             for(int i=0; i< resizeContainer.get(componentName).size(); i++){
                                                 final EBIGUINBean bx = (EBIGUINBean) resizeContainer.get(componentName).get(i);
                                                 binding.setVariable(componentName+"_"+bx.getName(),bx.getComponent() );
                                             }
+
                                         }else{
+
                                             Iterator itx = resizeContainer.keySet().iterator();
                                             while(itx.hasNext()){
                                                 String compName = (String)itx.next();
@@ -1356,12 +1369,14 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                                     binding.setVariable(compName+"_"+bx.getName(),bx.getComponent() );
                                                 }
                                             }
+
                                         }
                                         gse.run(script.getPath(),binding);
 
                                         final Script scr = gse.createScript(script.getPath(),binding);
 
                                         if(!"app".equals(componentName)){
+
                                             if(scr.getMetaClass().getMetaMethod("ebiEdit",null) != null ||
                                                     scr.getMetaClass().getMetaMethod("ebiDelete",null) != null ||
                                                     scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
@@ -1369,6 +1384,7 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
 
                                                 ebiMain.system.setDataStore(componentName, scr);
                                             }
+
                                         }else{
 
                                             if(scr.getMetaClass().getMetaMethod("ebiEdit",null) != null ||
@@ -1376,10 +1392,13 @@ public class EBIGUIRenderer implements IEBIGUIRenderer {
                                                     scr.getMetaClass().getMetaMethod("ebiNew",null) != null  ||
                                                     scr.getMetaClass().getMetaMethod("ebiSave",null) != null){
                                                 final String cmpName = (String)scr.getMetaClass().invokeMethod(scr,"useComponent",null);
+
                                                 if(!"".equals(cmpName)){
                                                     ebiMain.system.setDataStore(cmpName, scr);
                                                 }
+
                                             }
+
                                         }
 
                                         script.setExecuted(true);

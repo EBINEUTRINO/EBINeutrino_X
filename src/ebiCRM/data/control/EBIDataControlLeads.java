@@ -39,7 +39,9 @@ public class EBIDataControlLeads {
     }
 
     public boolean dataStore() {
-      try{
+
+        try{
+
           ebiLeadsPanel.ebiModule.ebiContainer.showInActionStatus("Leads", true);
 
           if (isEdit == true) {
